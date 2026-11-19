@@ -866,6 +866,7 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
               const SizedBox(width: 2),
               Text(
                 '¡EXPLORAR!',
+                semanticsLabel: 'Explorar ${widget.mundo.temas[index].titulo}',
                 style: TextStyle(
                   color: const Color(0xFF75451B),
                   fontSize: isMobile ? 9 : 11,

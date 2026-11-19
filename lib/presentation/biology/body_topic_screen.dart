@@ -15,88 +15,88 @@ const _background = 'assets/images/biology/biology_background.png';
 const _navy = Color(0xFF183E49);
 
 IconData _systemIcon(BodySystem system) => switch (system) {
-  BodySystem.circulation => Icons.favorite,
-  BodySystem.breathing => Icons.air,
-  BodySystem.defense => Icons.shield,
-  BodySystem.teamwork => Icons.explore,
-};
+      BodySystem.circulation => Icons.favorite,
+      BodySystem.breathing => Icons.air,
+      BodySystem.defense => Icons.shield,
+      BodySystem.teamwork => Icons.explore,
+    };
 
 class BodyTopicScreen extends StatelessWidget {
   const BodyTopicScreen({super.key});
 
   @override
   Widget build(BuildContext context) => _LaboratoryPage(
-    title: 'Tema 1 · El cuerpo humano',
-    child: ListenableBuilder(
-      listenable: store,
-      builder: (context, _) {
-        final completed = bodyMissions
-            .where((mission) => store.completadas.contains(mission.id))
-            .length;
-        final integrated = store.completadas.contains(bodyMissions.last.id);
-        final biology = mundos.firstWhere((world) => world.id == 'bio');
-        final explored = biology.temas
-            .where((topic) => isTopicInvestigated(topic, store.completadas))
-            .length;
-        final recovered = recoveredCompassPieces(
-          store.completadas,
-        ).contains(biology.id);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const _Panel(
-              child: Column(
-                children: [
-                  Text(
-                    'El cuerpo humano',
-                    style: TextStyle(
-                      fontFamily: 'LilitaOne',
-                      fontSize: 32,
-                      color: _navy,
-                    ),
+        title: 'Tema 1 · El cuerpo humano',
+        child: ListenableBuilder(
+          listenable: store,
+          builder: (context, _) {
+            final completed = bodyMissions
+                .where((mission) => store.completadas.contains(mission.id))
+                .length;
+            final integrated = store.completadas.contains(bodyMissions.last.id);
+            final biology = mundos.firstWhere((world) => world.id == 'bio');
+            final explored = biology.temas
+                .where((topic) => isTopicInvestigated(topic, store.completadas))
+                .length;
+            final recovered = recoveredCompassPieces(
+              store.completadas,
+            ).contains(biology.id);
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const _Panel(
+                  child: Column(
+                    children: [
+                      Text(
+                        'El cuerpo humano',
+                        style: TextStyle(
+                          fontFamily: 'LilitaOne',
+                          fontSize: 32,
+                          color: _navy,
+                        ),
+                      ),
+                      _ZatiLine(
+                        '¿Qué cambia en tu cuerpo cuando juegas, corres o descansas? ¡Pongamos tus ideas a prueba!',
+                      ),
+                      BodyDiagram(system: BodySystem.teamwork),
+                    ],
                   ),
-                  _ZatiLine(
-                    '¿Qué cambia en tu cuerpo cuando juegas, corres o descansas? ¡Pongamos tus ideas a prueba!',
+                ),
+                _Panel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '$completed de ${bodyMissions.length} investigaciones completadas',
+                      ),
+                      const SizedBox(height: 8),
+                      LinearProgressIndicator(
+                        value: completed / bodyMissions.length,
+                        semanticsLabel: 'Avance del tema',
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Brújula de la Ciencia · Biología: $explored de ${biology.temas.length} temas completados.',
+                      ),
+                      Text(
+                        recovered
+                            ? 'Pieza de Biología recuperada.'
+                            : integrated
+                                ? 'El cuerpo humano investigado. La pieza se recupera al completar Biología.'
+                                : 'Completa la investigación del cuerpo humano para avanzar hacia la pieza de Biología.',
+                      ),
+                    ],
                   ),
-                  BodyDiagram(system: BodySystem.teamwork),
-                ],
-              ),
-            ),
-            _Panel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$completed de ${bodyMissions.length} investigaciones completadas',
+                ),
+                for (final (index, mission) in bodyMissions.indexed)
+                  _Panel(
+                    child: _MissionCard(index: index, mission: mission),
                   ),
-                  const SizedBox(height: 8),
-                  LinearProgressIndicator(
-                    value: completed / bodyMissions.length,
-                    semanticsLabel: 'Avance del tema',
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Brújula de la Ciencia · Biología: $explored de ${biology.temas.length} temas completados.',
-                  ),
-                  Text(
-                    recovered
-                        ? 'Pieza de Biología recuperada.'
-                        : integrated
-                        ? 'El cuerpo humano investigado. La pieza se recupera al completar Biología.'
-                        : 'Completa la investigación del cuerpo humano para avanzar hacia la pieza de Biología.',
-                  ),
-                ],
-              ),
-            ),
-            for (final (index, mission) in bodyMissions.indexed)
-              _Panel(
-                child: _MissionCard(index: index, mission: mission),
-              ),
-          ],
-        );
-      },
-    ),
-  );
+              ],
+            );
+          },
+        ),
+      );
 }
 
 class _MissionCard extends StatelessWidget {
@@ -150,15 +150,15 @@ class _MissionCard extends StatelessWidget {
             locked
                 ? Icons.lock
                 : completed
-                ? Icons.replay
-                : Icons.play_arrow,
+                    ? Icons.replay
+                    : Icons.play_arrow,
           ),
           label: Text(
             locked
                 ? 'Bloqueada'
                 : completed
-                ? 'Repetir misión'
-                : 'Investigar',
+                    ? 'Repetir misión'
+                    : 'Investigar',
           ),
         ),
       ],
@@ -179,36 +179,37 @@ class _LaboratoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xFFDAEFE7),
-    appBar: AppBar(
-      title: Text(title),
-      backgroundColor: _navy,
-      foregroundColor: Colors.white,
-    ),
-    body: DecoratedBox(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(_background),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(Color(0xBBDFF4E9), BlendMode.srcOver),
+        backgroundColor: const Color(0xFFDAEFE7),
+        appBar: AppBar(
+          title: Text(title),
+          backgroundColor: _navy,
+          foregroundColor: Colors.white,
         ),
-      ),
-      child: SafeArea(
-        child: SizedBox.expand(
-          child: SingleChildScrollView(
-            controller: controller,
-            padding: const EdgeInsets.all(12),
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 780),
-                child: child,
+        body: DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(_background),
+              fit: BoxFit.cover,
+              colorFilter:
+                  ColorFilter.mode(Color(0xBBDFF4E9), BlendMode.srcOver),
+            ),
+          ),
+          child: SafeArea(
+            child: SizedBox.expand(
+              child: SingleChildScrollView(
+                controller: controller,
+                padding: const EdgeInsets.all(12),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 780),
+                    child: child,
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
-    ),
-  );
+      );
 }
 
 class _Panel extends StatelessWidget {
@@ -218,16 +219,16 @@ class _Panel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Theme(
-    data: ThemeData(
-      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF286B57)),
-      fontFamily: 'Fredoka',
-    ),
-    child: Card(
-      color: const Color(0xFFF8FFF9),
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(padding: const EdgeInsets.all(16), child: child),
-    ),
-  );
+        data: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF286B57)),
+          fontFamily: 'Fredoka',
+        ),
+        child: Card(
+          color: const Color(0xFFF8FFF9),
+          margin: const EdgeInsets.only(bottom: 12),
+          child: Padding(padding: const EdgeInsets.all(16), child: child),
+        ),
+      );
 }
 
 class _ZatiLine extends StatelessWidget {
@@ -237,24 +238,24 @@ class _ZatiLine extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-    children: [
-      Image.asset(_zati, width: 70, height: 78, semanticLabel: 'Zati'),
-      const SizedBox(width: 10),
-      Expanded(
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: const Color(0xFFE7F2E9),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFF76A191)),
+        children: [
+          Image.asset(_zati, width: 70, height: 78, semanticLabel: 'Zati'),
+          const SizedBox(width: 10),
+          Expanded(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: const Color(0xFFE7F2E9),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: const Color(0xFF76A191)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(message),
+              ),
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(message),
-          ),
-        ),
-      ),
-    ],
-  );
+        ],
+      );
 }
 
 enum _Stage {
@@ -303,9 +304,9 @@ class _BodyMissionScreenState extends State<_BodyMissionScreen> {
   }
 
   void selectStructure(int index) => setState(() {
-    selected = index;
-    visited.add(index);
-  });
+        selected = index;
+        visited.add(index);
+      });
 
   Future<void> finish() async {
     if (saving ||
@@ -359,26 +360,31 @@ class _BodyMissionScreenState extends State<_BodyMissionScreen> {
                   semanticsLabel: 'Etapa de la investigación',
                 ),
                 const SizedBox(height: 12),
-                Text(heading, style: Theme.of(context).textTheme.headlineSmall),
+                Text(
+                  heading,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(color: _navy),
+                ),
                 const SizedBox(height: 8),
                 switch (stage) {
                   _Stage.prediction => buildPrediction(),
                   _Stage.exploration => buildExploration(),
                   _Stage.experiment => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const _ZatiLine(
-                        'Observa con atención. ¿Qué cambió al probar otra condición?',
-                      ),
-                      BodyExperiment(
-                        system: mission.system,
-                        reduceMotion:
-                            store.reducirAnim ||
-                            MediaQuery.disableAnimationsOf(context),
-                        onObserved: () => goTo(_Stage.challenge),
-                      ),
-                    ],
-                  ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const _ZatiLine(
+                          'Observa con atención. ¿Qué cambió al probar otra condición?',
+                        ),
+                        BodyExperiment(
+                          system: mission.system,
+                          reduceMotion: store.reducirAnim ||
+                              MediaQuery.disableAnimationsOf(context),
+                          onObserved: () => goTo(_Stage.challenge),
+                        ),
+                      ],
+                    ),
                   _Stage.challenge => buildChallenge(),
                   _Stage.reflection => buildReflection(),
                   _Stage.complete => buildSummary(),
@@ -392,69 +398,70 @@ class _BodyMissionScreenState extends State<_BodyMissionScreen> {
   }
 
   Widget buildPrediction() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _ZatiLine(mission.question),
-      Wrap(
-        spacing: 8,
-        runSpacing: 4,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final (index, text) in mission.predictions.indexed)
-            ChoiceChip(
-              label: Text(text),
-              selected: prediction == index,
-              onSelected: (_) => setState(() => prediction = index),
-            ),
+          _ZatiLine(mission.question),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final (index, text) in mission.predictions.indexed)
+                ChoiceChip(
+                  label: Text(text),
+                  selected: prediction == index,
+                  onSelected: (_) => setState(() => prediction = index),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          FilledButton(
+            onPressed:
+                prediction == null ? null : () => goTo(_Stage.exploration),
+            child: const Text('Explorar mi predicción'),
+          ),
         ],
-      ),
-      const SizedBox(height: 12),
-      FilledButton(
-        onPressed: prediction == null ? null : () => goTo(_Stage.exploration),
-        child: const Text('Explorar mi predicción'),
-      ),
-    ],
-  );
+      );
 
   Widget buildExploration() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text('Selecciona cada estructura en el dibujo o en la lista.'),
-      BodyDiagram(
-        system: mission.system,
-        structures: mission.structures,
-        selected: selected,
-        onSelect: selectStructure,
-      ),
-      Wrap(
-        spacing: 8,
-        runSpacing: 4,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (final (index, structure) in mission.structures.indexed)
-            ChoiceChip(
-              label: Text(structure.name),
-              selected: selected == index,
-              avatar: visited.contains(index)
-                  ? const Icon(Icons.check, size: 16)
-                  : null,
-              onSelected: (_) => selectStructure(index),
+          const Text('Selecciona cada estructura en el dibujo o en la lista.'),
+          BodyDiagram(
+            system: mission.system,
+            structures: mission.structures,
+            selected: selected,
+            onSelect: selectStructure,
+          ),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final (index, structure) in mission.structures.indexed)
+                ChoiceChip(
+                  label: Text(structure.name),
+                  selected: selected == index,
+                  avatar: visited.contains(index)
+                      ? const Icon(Icons.check, size: 16)
+                      : null,
+                  onSelected: (_) => selectStructure(index),
+                ),
+            ],
+          ),
+          if (selected case final int index)
+            Semantics(
+              liveRegion: true,
+              child: _ZatiLine(mission.structures[index].explanation),
             ),
+          BodyResourcePanel(system: mission.system),
+          const SizedBox(height: 8),
+          FilledButton(
+            onPressed: visited.length == mission.structures.length
+                ? () => goTo(_Stage.experiment)
+                : null,
+            child: const Text('Ir al experimento'),
+          ),
         ],
-      ),
-      if (selected case final int index)
-        Semantics(
-          liveRegion: true,
-          child: _ZatiLine(mission.structures[index].explanation),
-        ),
-      BodyResourcePanel(system: mission.system),
-      const SizedBox(height: 8),
-      FilledButton(
-        onPressed: visited.length == mission.structures.length
-            ? () => goTo(_Stage.experiment)
-            : null,
-        child: const Text('Ir al experimento'),
-      ),
-    ],
-  );
+      );
 
   Widget buildChallenge() {
     final route = mission.route;
@@ -541,48 +548,48 @@ class _BodyMissionScreenState extends State<_BodyMissionScreen> {
   }
 
   Widget buildReflection() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      _ZatiLine(mission.reflection),
-      TextField(
-        controller: reflection,
-        maxLength: 600,
-        minLines: 2,
-        maxLines: 5,
-        onChanged: (_) => setState(() {}),
-        decoration: const InputDecoration(
-          labelText: 'Mi reflexión',
-          border: OutlineInputBorder(),
-        ),
-      ),
-      if (saveError case final String error)
-        Semantics(liveRegion: true, child: Text(error)),
-      FilledButton(
-        onPressed: saving || reflection.text.trim().isEmpty ? null : finish,
-        child: Text(saving ? 'Guardando…' : 'Completar investigación'),
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ZatiLine(mission.reflection),
+          TextField(
+            controller: reflection,
+            maxLength: 600,
+            minLines: 2,
+            maxLines: 5,
+            onChanged: (_) => setState(() {}),
+            decoration: const InputDecoration(
+              labelText: 'Mi reflexión',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          if (saveError case final String error)
+            Semantics(liveRegion: true, child: Text(error)),
+          FilledButton(
+            onPressed: saving || reflection.text.trim().isEmpty ? null : finish,
+            child: Text(saving ? 'Guardando…' : 'Completar investigación'),
+          ),
+        ],
+      );
 
   Widget buildSummary() => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const _ZatiLine(
-        '¡Lo descubriste investigando! Puedes volver al laboratorio y repetir el experimento.',
-      ),
-      ListTile(
-        leading: Icon(_systemIcon(mission.system), color: _navy),
-        title: Text(mission.badge),
-        subtitle: Text(mission.comparison),
-      ),
-      if (mission.isFinal)
-        const Text(
-          'Registramos el avance del cuerpo humano en la Brújula de la Ciencia.',
-        ),
-      FilledButton(
-        onPressed: () => Navigator.of(context).pop(),
-        child: const Text('Volver al tema'),
-      ),
-    ],
-  );
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const _ZatiLine(
+            '¡Lo descubriste investigando! Puedes volver al laboratorio y repetir el experimento.',
+          ),
+          ListTile(
+            leading: Icon(_systemIcon(mission.system), color: _navy),
+            title: Text(mission.badge),
+            subtitle: Text(mission.comparison),
+          ),
+          if (mission.isFinal)
+            const Text(
+              'Registramos el avance del cuerpo humano en la Brújula de la Ciencia.',
+            ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Volver al tema'),
+          ),
+        ],
+      );
 }
