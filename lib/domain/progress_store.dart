@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../data/body_topic.dart';
+
 /// Progreso local, sin cuenta. Claves versionadas para migraciones futuras.
 class ProgressStore extends ChangeNotifier {
   static const _v = 'v1';
@@ -8,7 +10,6 @@ class ProgressStore extends ChangeNotifier {
   String nombre = '';
   int grado = 5;
   String? ultimaMision;
-  int monedas = 0;
   bool sonido = true, musica = true, textoGrande = false, reducirAnim = false;
   String avatar = 'zati';
   final Set<String> completadas = {};
@@ -21,7 +22,7 @@ class ProgressStore extends ChangeNotifier {
     nombre = _p.getString('$_v.nombre') ?? '';
     grado = _p.getInt('$_v.grado') ?? 5;
     ultimaMision = _p.getString('$_v.ultima');
-    monedas = _p.getInt('$_v.monedas') ?? 0;
+    if (_p.containsKey('$_v.monedas')) await _p.remove('$_v.monedas');
     sonido = _p.getBool('$_v.sonido') ?? true;
     musica = _p.getBool('$_v.musica') ?? true;
     textoGrande = _p.getBool('$_v.textoGrande') ?? false;
@@ -29,6 +30,9 @@ class ProgressStore extends ChangeNotifier {
     avatar = _p.getString('$_v.avatar') ?? 'zati';
     completadas.addAll(_p.getStringList('$_v.completadas') ?? []);
     recompensas.addAll(_p.getStringList('$_v.recompensas') ?? []);
+    for (final mission in bodyMissions) {
+      if (completadas.contains(mission.id)) recompensas.add(mission.badgeId);
+    }
   }
 
   Future<void> registrar(String n, int g) async {
@@ -61,7 +65,6 @@ class ProgressStore extends ChangeNotifier {
     nombre = '';
     grado = 5;
     ultimaMision = null;
-    monedas = 0;
     sonido = musica = true;
     textoGrande = reducirAnim = false;
     completadas.clear();
@@ -77,14 +80,27 @@ class ProgressStore extends ChangeNotifier {
 
   /// Repetir una misión nunca quita progreso ni duplica recompensas.
   Future<bool> completar(String misionId, {String? recompensaId}) async {
-    final primera = completadas.add(misionId);
-    if (primera) monedas += 15; // monedas de conocimiento: solo la primera vez
+    completadas.add(misionId);
     final nueva = recompensaId != null && recompensas.add(recompensaId);
-    await _p.setInt('$_v.monedas', monedas);
     await _p.setStringList('$_v.completadas', completadas.toList());
     await _p.setStringList('$_v.recompensas', recompensas.toList());
     notifyListeners();
     return nueva;
+  }
+
+  /// The persisted completion is also the source of truth for Topic 1 badges.
+  Future<void> completeBodyInvestigation(int index) async {
+    if (!bodyMissionUnlocked(index, completadas)) {
+      throw StateError('The required investigation is incomplete.');
+    }
+    final mission = bodyMissions[index];
+    final updated = {...completadas, mission.id};
+    if (!await _p.setStringList('$_v.completadas', updated.toList())) {
+      throw StateError('Could not save investigation progress.');
+    }
+    completadas.add(mission.id);
+    recompensas.add(mission.badgeId);
+    notifyListeners();
   }
 
   double progresoMundo(List<String> ids) =>

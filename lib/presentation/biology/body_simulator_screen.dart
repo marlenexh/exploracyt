@@ -75,7 +75,7 @@ class _BodySimulatorScreenState
         const SnackBar(
           content: Text(
             '¡Investigación completada! '
-            'Revisa tus monedas de conocimiento.',
+            'Revisa tus descubrimientos.',
           ),
         ),
       );

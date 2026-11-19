@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -18,21 +18,38 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Investiga el cuerpo humano y explora seis mundos de ciencia.">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="explora_ciencia">
+  <meta name="apple-mobile-web-app-title" content="Explora Ciencia">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>explora_ciencia</title>
+  <title>Explora Ciencia y Tecnología</title>
   <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#183e49">
+  <style>
+    #offline-status {
+      position: fixed; inset-inline-end: .5rem; top: .5rem; z-index: 99999;
+      max-width: min(23rem, 80vw); padding: .3rem .55rem; border-radius: .5rem;
+      color: #183e49; background: #f8fff9; border: 1px solid #52786c;
+      font: .8rem system-ui;
+    }
+    #offline-status summary { cursor: pointer; min-height: 1.5rem; }
+    #offline-status button { min-height: 2.75rem; }
+  </style>
+  <script src="offline-status.js" defer></script>
 </head>
 <body>
+  <details id="offline-status">
+    <summary>Preparación sin conexión</summary>
+    <p role="status">Verificando recursos locales…</p>
+    <button type="button">Preparar sin conexión</button>
+  </details>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader

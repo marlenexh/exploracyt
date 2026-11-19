@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../core/theme.dart';
 import '../data/models.dart';
+import '../data/body_topic.dart';
 import '../data/worlds.dart';
 import '../main.dart' show store;
 import 'game_widgets.dart';
@@ -528,7 +529,7 @@ class Home extends StatelessWidget {
                         builder: (c2) => AlertDialog(
                           title: const Text('¿Borrar todo?'),
                           content: const Text(
-                            'Se perderán tu nombre, monedas, '
+                            'Se perderán tu nombre, '
                             'insignias y misiones completadas.',
                           ),
                           actions: [
@@ -1214,7 +1215,7 @@ class Insignias extends StatelessWidget {
                             size: 36,
                           ),
                           title: Text(
-                            r,
+                            bodyBadgeName(r),
                             style: const TextStyle(fontSize: 18),
                           ),
                         ),
@@ -1715,77 +1716,6 @@ class _MapaState extends State<MapaMundos>
     ),
   ),
 ),
-
-const SizedBox(width: 8),
-Container(
-  padding: const EdgeInsets.symmetric(
-    horizontal: 13,
-    vertical: 7,
-    ),
-    decoration: BoxDecoration(
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color(0xFFFFE889),
-          Color(0xFFFFBD35),
-          Color(0xFFE99420),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(25),
-        border: Border.all(
-          color: const Color(0xFF9B5B19),
-          width: 2.5,
-          ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black38,
-              blurRadius: 5,
-              offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 29,
-                height: 29,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF4C4),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: const Color(0xFFD18A20),
-                    width: 2,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.monetization_on_rounded,
-                      color: Color(0xFFDB941C),
-                      size: 23,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${store.monedas}',
-                    style: const TextStyle(
-                      fontFamily: 'LilitaOne',
-                      fontSize: 19,
-                      color: Color(0xFF563719),
-                      shadows: [
-                        Shadow(
-                          color: Colors.white54,
-                          blurRadius: 2,
-                          offset: Offset(0, 1),
-                          ),
-                        ],
-                      ),
-                  ),
-                ],
-            ),
-          ),
 
           const Spacer(),
 
