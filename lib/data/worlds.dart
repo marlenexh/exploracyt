@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'models.dart';
+import 'body_topic.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
+  if (id == 'bio-t1') {
+    return Tema(id, titulo, [
+      for (final mission in bodyMissions)
+        Mision(mission.id, mission.title,
+            implementada: true,
+            recompensa: Recompensa(mission.badgeId, mission.badge)),
+    ]);
+  }
   if (id == 'ele-t1') {
     // Única misión jugable por ahora (Fase 2 la generaliza con datos).
     return Tema(id, titulo, [

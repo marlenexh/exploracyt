@@ -4,7 +4,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../data/models.dart';
+import '../data/science_compass.dart';
 import '../main.dart' show store;
+import 'biology/body_topic_screen.dart';
 
 // =====================================================
 // BIOLOGY ASSETS
@@ -206,13 +208,8 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
   // TOPIC PROGRESS
   // ===================================================
 
-  bool isTopicCompleted(Tema topic) {
-    return topic.misiones.isNotEmpty &&
-        topic.misiones.every(
-          (mission) =>
-              store.completadas.contains(mission.id),
-        );
-  }
+  bool isTopicCompleted(Tema topic) =>
+      isTopicInvestigated(topic, store.completadas);
 
   // ===================================================
   // TOPIC NAVIGATION
@@ -226,10 +223,9 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => BiologyTopicScreen(
-          tema: widget.mundo.temas[index],
-          index: index,
-        ),
+        builder: (_) => index == 0
+            ? const BodyTopicScreen()
+            : BiologyTopicScreen(tema: widget.mundo.temas[index], index: index),
       ),
     );
   }
@@ -397,15 +393,6 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
                     top: safeTop + 12,
                     left: 16,
                     child: buildBackButton(context),
-                  ),
-
-                  // ==================================
-                  // COIN COUNTER
-                  // ==================================
-                  Positioned(
-                    top: safeTop + 12,
-                    right: 16,
-                    child: buildCoinCounter(),
                   ),
                 ],
               );
@@ -954,45 +941,6 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
           Icons.arrow_back_rounded,
           color: Colors.white,
         ),
-      ),
-    );
-  }
-
-  // =====================================================
-  // COIN COUNTER
-  // =====================================================
-
-  Widget buildCoinCounter() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 13,
-        vertical: 9,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xDD204D81),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: const Color(0xFFFFD875),
-          width: 1.5,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.stars_rounded,
-            color: Color(0xFFFFD65C),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            '${store.monedas}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
       ),
     );
   }
