@@ -47,6 +47,8 @@ El progreso, las preferencias y los recursos quedan en el almacenamiento local d
 
 ## Recursos del Tema 1
 
+Desde **Biología → El cuerpo humano → Jugar Misión Cuerpo Humano** puedes abrir los recorridos 3D, los laboratorios y el reto final. Las insignias del videojuego duran lo que dura la partida. Para añadir videos y créditos, actualiza las entradas de tipo `video` de `bodyResources` siguiendo la guía de video. Esas entradas se muestran tanto en las investigaciones como en el juego.
+
 - [Lista y estado de recursos](docs/biology_asset_checklist.md)
 - [Ilustración y animación 2D](docs/biology_2d_asset_guide.md)
 - [Selección, licencias y subtítulos de video](docs/biology_video_guide.md)
