@@ -130,9 +130,10 @@ const bodyResources = [
 ];
 
 class BodyResourcePanel extends StatefulWidget {
-  const BodyResourcePanel({super.key, required this.system});
+  const BodyResourcePanel({super.key, required this.system, this.type});
 
   final BodySystem system;
+  final BodyResourceType? type;
 
   @override
   State<BodyResourcePanel> createState() => _BodyResourcePanelState();
@@ -147,18 +148,25 @@ class _BodyResourcePanelState extends State<BodyResourcePanel> {
   @override
   Widget build(BuildContext context) {
     final resources = bodyResources.where(
-      (resource) => resource.system == widget.system,
+      (resource) =>
+          resource.system == widget.system &&
+          (widget.type == null || resource.type == widget.type),
     );
     if (resources.isEmpty) return const SizedBox.shrink();
     return FutureBuilder<Set<String>>(
       future: bundledAssets,
-      builder: (context, snapshot) => ExpansionTile(
-        title: const Text('Recursos complementarios'),
-        children: [
+      builder: (context, snapshot) {
+        final entries = [
           for (final resource in resources)
             buildResource(resource, snapshot.data ?? const {}),
-        ],
-      ),
+        ];
+        return widget.type == null
+            ? ExpansionTile(
+                title: const Text('Recursos complementarios'),
+                children: entries,
+              )
+            : Column(children: entries);
+      },
     );
   }
 

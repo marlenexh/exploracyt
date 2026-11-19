@@ -9,6 +9,7 @@ import '../../main.dart' show store;
 import 'body_diagram.dart';
 import 'body_experiment.dart';
 import 'body_resources.dart';
+import 'mision_cuerpo/mision_cuerpo.dart';
 
 const _zati = 'assets/images/biology/zati.png';
 const _background = 'assets/images/biology/biology_background.png';
@@ -88,6 +89,7 @@ class BodyTopicScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                const _Panel(child: _MisionCuerpoCard()),
                 for (final (index, mission) in bodyMissions.indexed)
                   _Panel(
                     child: _MissionCard(index: index, mission: mission),
@@ -96,6 +98,32 @@ class BodyTopicScreen extends StatelessWidget {
             );
           },
         ),
+      );
+}
+
+class _MisionCuerpoCard extends StatelessWidget {
+  const _MisionCuerpoCard();
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Misión Cuerpo Humano',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const Text(
+            'Explora los tres sistemas en 3D, pon a prueba tus predicciones y gana insignias en el juego.',
+          ),
+          const SizedBox(height: 8),
+          FilledButton.icon(
+            onPressed: () => Navigator.of(context).push<void>(
+              MaterialPageRoute(builder: (_) => const MisionCuerpo()),
+            ),
+            icon: const Icon(Icons.sports_esports_outlined),
+            label: const Text('Jugar Misión Cuerpo Humano'),
+          ),
+        ],
       );
 }
 
