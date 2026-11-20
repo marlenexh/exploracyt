@@ -53,3 +53,45 @@ Desde **Biología → El cuerpo humano → Jugar Misión Cuerpo Humano** puedes 
 - [Ilustración y animación 2D](docs/biology_2d_asset_guide.md)
 - [Selección, licencias y subtítulos de video](docs/biology_video_guide.md)
 - [Producción e integración de modelos GLB](docs/biology_blender_guide.md)
+
+## Biología · Tema 1: El cuerpo humano y sus sistemas
+
+Al elegir el Tema 1 en el Laboratorio de Biología se abre el juego de `lib/presentation/biology/tema1/` a través de `lib/presentation/biology/tema1_screen.dart`.
+
+### Flujo
+
+1. **Intro del tema**: Zati, la misión de la Estación del Cuerpo Humano y el botón "Comenzar".
+2. **Menú de misiones**: las misiones se desbloquean en orden.
+   - Misión 1: ¡El corazón en acción!
+   - Misión 2: ¡El viaje del aire!
+   - Misión 3: ¡Defensores del cuerpo!
+   - Actividad Integradora
+3. **Misión 1**: se juega paso a paso.
+   1. ¿Qué es el cuerpo humano?
+   2. El cuerpo humano y sus sistemas
+   3. Sistema circulatorio
+   4. El corazón y los vasos sanguíneos
+   5. El viaje de la sangre
+   6. Video del tema
+   7. Laboratorio del corazón: 3D de sus partes, mide tu pulso, registra y compara, y frecuencia ideal
+   8. Mini misión
+4. Al terminar una misión se pasa a la siguiente.
+
+### Progreso
+
+- Las estrellas del juego se guardan en `shared_preferences` con la clave `v1.tema1.juego`.
+- Al completar cada misión se marca su id en `ProgressStore` (`bio-t1-m1`, `bio-t1-m2`, `bio-t1-m3`, `bio-t1-integration`) y se entrega su insignia.
+- Los ids son los mismos que antes, así que se conserva el avance que ya tenían los alumnos.
+
+### Video del tema
+
+- Coloca el video en `assets/videos/sistema_circulatorio.mp4`, o pasa una dirección de internet con `CuerpoHumanoJuego(videos: {'circulatorio': 'https://…'})`.
+- Si no hay video, se muestra un espacio reservado y el alumno puede continuar.
+- Usa el paquete oficial `video_player`.
+
+### Imágenes
+
+- Zati: `assets/images/biology/zati.png`
+- Fondo: `assets/images/biology/fondo_biologia_tema1.jpg`
+
+La pantalla gira a horizontal mientras se juega el tema y regresa a su orientación al salir.
