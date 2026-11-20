@@ -1544,8 +1544,9 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
     if (!fuente.startsWith('http')) {
       try {
         final manifiesto = await AssetManifest.loadFromAssetBundle(rootBundle);
-        if (!manifiesto.listAssets().contains(fuente))
+        if (!manifiesto.listAssets().contains(fuente)) {
           throw StateError('sin video');
+        }
       } catch (_) {
         if (mounted) {
           setState(() {
@@ -1799,7 +1800,6 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
 class _DatosPulso {
   static int? pulso;
   static int? reposo;
-  static int? despues;
 }
 
 class PantallaLabCorazon extends StatefulWidget {
@@ -2495,8 +2495,9 @@ class _PantallaMidePulsoState extends State<PantallaMidePulso> {
                                   ? null
                                   : () => setState(() {
                                         if (!_intento &&
-                                            i == _pregunta.correcta)
+                                            i == _pregunta.correcta) {
                                           _primer = true;
+                                        }
                                         _intento = true;
                                         _elegida = i;
                                       }),
@@ -2664,7 +2665,6 @@ class _PantallaRegistraComparaState extends State<PantallaRegistraCompara> {
               color: const Color(0xFFFF6B3D),
               onResultado: (v) => setState(() {
                 _despues = v;
-                _DatosPulso.despues = v;
               }),
             ),
             if (_despues != null) ...[
@@ -3655,7 +3655,9 @@ class _PantallaMiniMisionCirculatorioState
                                 ? null
                                 : () => setState(() {
                                       if (!_intentadas.contains(_pregunta) &&
-                                          i == q.correcta) _primerIntento++;
+                                          i == q.correcta) {
+                                        _primerIntento++;
+                                      }
                                       _intentadas.add(_pregunta);
                                       _elegida = i;
                                     }),

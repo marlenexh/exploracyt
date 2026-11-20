@@ -1206,8 +1206,9 @@ class _LabVacunasState extends State<LabVacunas>
       AnimationController(vsync: this, duration: const Duration(seconds: 7))
         ..addListener(() => setState(() {}))
         ..addStatusListener((s) {
-          if (s == AnimationStatus.completed)
+          if (s == AnimationStatus.completed) {
             setState(() => _corridas.add(_conVacuna));
+          }
         });
 
   static double germenes(bool vac, double d) => vac
