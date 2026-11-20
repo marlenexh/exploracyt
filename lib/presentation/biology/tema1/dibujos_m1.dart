@@ -59,14 +59,15 @@ void corazonAnatomico(
       : Color.lerp(col, Colors.white, 0.45)!;
 
   if (resaltar != null) {
-    final grupo = resaltar!;
+    final grupo = resaltar;
     final halo = Paint()
       ..color = (grupo == 'venas' ? azulVena : rojoArteria).withValues(
         alpha: 0.25,
       )
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
-    if (grupo == 'corazon')
+    if (grupo == 'corazon') {
       c.drawCircle(r.center + Offset(0, w * 0.15), w * 0.42, halo);
+    }
   }
 
   // Venas cavas (azules)

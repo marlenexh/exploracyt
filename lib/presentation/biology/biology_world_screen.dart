@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class BiologyWorldScreen extends StatelessWidget {
@@ -57,13 +56,11 @@ class BiologyWorldScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
-
               Positioned.fill(
                 child: Container(
                   color: Colors.indigo.withValues(alpha: 0.08),
                 ),
               ),
-
               SafeArea(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
@@ -78,10 +75,8 @@ class BiologyWorldScreen extends StatelessWidget {
                         children: [
                           _buildHeader(context),
                           const SizedBox(height: 28),
-
                           _buildIntroduction(isWide),
                           const SizedBox(height: 32),
-
                           Text(
                             '¿Qué tema quieres explorar?',
                             textAlign: TextAlign.center,
@@ -97,9 +92,7 @@ class BiologyWorldScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-
                           const SizedBox(height: 24),
-
                           Wrap(
                             spacing: 14,
                             runSpacing: 18,
@@ -112,9 +105,7 @@ class BiologyWorldScreen extends StatelessWidget {
                                 ),
                             ],
                           ),
-
                           const SizedBox(height: 35),
-
                           _buildFooter(),
                         ],
                       ),

@@ -300,8 +300,9 @@ Future<void> abrirMision(BuildContext context, Mision m) async {
         '${siguiente == null ? '\n¡Restauraste toda la Estación del Cuerpo Humano!' : '\n¡Ahora sigue “${siguiente.titulo}: ${siguiente.subtitulo}”!'}',
     estrellas: 3,
   );
-  if (siguiente != null && context.mounted)
+  if (siguiente != null && context.mounted) {
     await abrirMision(context, siguiente);
+  }
 }
 
 /// Opciones del juego disponibles en todas las pantallas.

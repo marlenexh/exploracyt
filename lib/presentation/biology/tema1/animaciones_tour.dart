@@ -1601,10 +1601,12 @@ class _AnimFagocitoState extends State<_AnimFagocito> {
         continue;
       }
       g.pos += g.vel * dt;
-      if (g.pos.dx < 0.05 || g.pos.dx > 0.95)
+      if (g.pos.dx < 0.05 || g.pos.dx > 0.95) {
         g.vel = Offset(-g.vel.dx, g.vel.dy);
-      if (g.pos.dy < 0.08 || g.pos.dy > 0.92)
+      }
+      if (g.pos.dy < 0.08 || g.pos.dy > 0.92) {
         g.vel = Offset(g.vel.dx, -g.vel.dy);
+      }
     }
     final terminados = _germenes.where((g) => g.comido > 1.2).length;
     if (terminados > 0) {
@@ -1630,8 +1632,9 @@ class _AnimFagocitoState extends State<_AnimFagocito> {
       final d = meta - _fago;
       final paso = 0.12 * dt;
       _fago = d.distance < paso ? meta : _fago + d / d.distance * paso;
-      if (_objetivo != null && (_objetivo! - _fago).distance < 0.01)
+      if (_objetivo != null && (_objetivo! - _fago).distance < 0.01) {
         _objetivo = null;
+      }
     }
     for (final g in _germenes) {
       if (g.comido == 0 && (g.pos - _fago).distance < 0.07) g.comido = 0.01;

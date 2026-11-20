@@ -66,8 +66,9 @@ class _Tema1ScreenState extends State<Tema1Screen> {
     if (p == null) return;
     for (var i = 0; i < bodyMissions.length && i < misionesTema1.length; i++) {
       final id = bodyMissions[i].id;
-      if (!misionesTema1[i].completa(p) || store.completadas.contains(id))
+      if (!misionesTema1[i].completa(p) || store.completadas.contains(id)) {
         continue;
+      }
       if (!bodyMissionUnlocked(i, store.completadas)) break;
       try {
         await store.completeBodyInvestigation(i);

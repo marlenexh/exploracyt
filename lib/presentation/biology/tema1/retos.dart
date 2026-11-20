@@ -664,8 +664,7 @@ class _RetoRutaState extends State<RetoRuta> {
           Expanded(
             child: ReorderableListView(
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              onReorder: (a, b) => setState(() {
-                if (b > a) b--;
+              onReorderItem: (a, b) => setState(() {
                 final x = _orden.removeAt(a);
                 _orden.insert(b, x);
                 _revisado = false;
@@ -824,10 +823,12 @@ class _RetoDefensaState extends State<RetoDefensa>
       }
       e.pos += e.vel * dt;
       if (!e.malo) {
-        if (e.pos.dx < 0.05 || e.pos.dx > 0.95)
+        if (e.pos.dx < 0.05 || e.pos.dx > 0.95) {
           e.vel = Offset(-e.vel.dx, e.vel.dy);
-        if (e.pos.dy < 0.05 || e.pos.dy > 0.95)
+        }
+        if (e.pos.dy < 0.05 || e.pos.dy > 0.95) {
           e.vel = Offset(e.vel.dx, -e.vel.dy);
+        }
       } else if ((e.pos - const Offset(0.5, 0.5)).distance < 0.09) {
         e.muerte = 0.01;
         _vidas--;
