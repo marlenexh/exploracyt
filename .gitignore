@@ -1,3 +1,6 @@
 build/
 .dart_tool/
 .idea/
+
+# Generado por Flutter al instalar plugins
+.flutter-plugins-dependencies
