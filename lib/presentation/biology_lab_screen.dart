@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../data/models.dart';
 import '../data/science_compass.dart';
 import '../main.dart' show store;
-import 'biology/body_topic_screen.dart';
+import 'biology/tema1_screen.dart';
 
 // =====================================================
 // BIOLOGY ASSETS
@@ -224,7 +224,7 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
       context,
       MaterialPageRoute(
         builder: (_) => index == 0
-            ? const BodyTopicScreen()
+            ? const Tema1Screen()
             : BiologyTopicScreen(tema: widget.mundo.temas[index], index: index),
       ),
     );

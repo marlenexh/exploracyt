@@ -1,0 +1,5 @@
+Coloca aquí el video del sistema circulatorio con el nombre:
+  sistema_circulatorio.mp4
+El juego lo mostrará en el paso "Video del tema" de la Misión 1.
+También puedes usar una dirección de internet:
+  CuerpoHumanoJuego(videos: {'circulatorio': 'https://.../video.mp4'})
