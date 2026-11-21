@@ -707,16 +707,18 @@ class _PantallaTarjetasState extends State<PantallaTarjetas> {
 /// Texto que reduce su tamaño si una palabra no cabe completa en el ancho,
 /// para que nunca se parta a la mitad (p. ej. "reproduce-n").
 class TextoSinCortar extends StatelessWidget {
-  const TextoSinCortar(this.texto, {super.key, this.tam = 13.5});
+  const TextoSinCortar(this.texto, {super.key, this.tam = 13.5, this.alineacion = TextAlign.start, this.color});
   final String texto;
   final double tam;
+  final TextAlign alineacion;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
         var t = tam;
         TextStyle estilo(double f) => DefaultTextStyle.of(context)
             .style
-            .merge(TextStyle(fontSize: f, fontWeight: FontWeight.w700, height: 1.1));
+            .merge(TextStyle(fontSize: f, fontWeight: FontWeight.w700, height: 1.1, color: color));
         double anchoMax(double f) {
           var m = 0.0;
           for (final palabra in texto.split(RegExp(r'\s+'))) {
@@ -735,6 +737,6 @@ class TextoSinCortar extends StatelessWidget {
             t -= 0.5;
           }
         }
-        return Text(texto, style: estilo(t));
+        return Text(texto, textAlign: alineacion, style: estilo(t));
       });
 }

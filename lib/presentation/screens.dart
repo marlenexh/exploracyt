@@ -5,6 +5,7 @@ import '../main.dart' show store;
 import 'game_widgets.dart';
 import 'mission_screen.dart';
 import 'biology_lab_screen.dart';
+import 'electronica/electronica_screen.dart';
 
 
 class RutaMundo extends StatelessWidget {
@@ -13,6 +14,7 @@ class RutaMundo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (m.id == 'bio') return BiologyLabScreen(mundo: m);
+    if (m.id == 'ele') return ElectronicaScreen(mundo: m);
     final fondo = Color.lerp(m.color, C.noche, .6)!;
     return Scaffold(
       body: Container(

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import '../tema1/aventura.dart' show BannerTitulo, BotonRedondo, GloboTexto, LetreroMadera, moradoBanner;
 import '../tema1/comunes.dart';
 import '../tema1/escenario.dart';
+import '../tema1/estilo_mundo.dart';
 import '../tema1/juego.dart' show PantallaGirable;
 import '../tema1/misiones.dart' show ConfiguracionJuego;
 import '../tema1/progreso.dart';
@@ -73,8 +74,16 @@ class TemaBio {
     required this.emojisPanel,
     required this.misiones,
     this.videos = const {},
+    this.mundo = 'bio',
+    this.estilo,
   });
   final int numero;
+
+  /// Id del mundo en la app ('bio', 'ele', …).
+  final String mundo;
+
+  /// Fondo y letrero propios del mundo; si es null se usa el bosque.
+  final EstiloMundo? estilo;
   final String titulo;
 
   /// Texto de Zati en la intro (después de "¡Hola, …!").
@@ -93,7 +102,7 @@ class TemaBio {
   /// clave → archivo o URL del video (para PantallaVideoTema).
   final Map<String, String> videos;
 
-  String get id => 'bio-t$numero';
+  String get id => '$mundo-t$numero';
   List<String> get idsMisiones => [for (var i = 0; i < misiones.length; i++) i == misiones.length - 1 ? '$id-integration' : '$id-m${i + 1}'];
   int get estrellasPosibles => misiones.fold(0, (a, m) => a + m.pasos.length * 3);
   bool completo(ProgresoJuego p) => misiones.every((m) => m.completa(p));
@@ -185,7 +194,7 @@ class _TemaBioJuegoState extends State<TemaBioJuego> {
             tema: widget.tema,
             child: Theme(
               data: temaJuego(),
-              child: PantallaGirable(
+              child: _conEstilo(PantallaGirable(
                 child: NavigatorPopHandler(
                   onPopWithResult: (_) => _navegador.currentState?.maybePop(),
                   child: ScaffoldMessenger(
@@ -195,11 +204,16 @@ class _TemaBioJuegoState extends State<TemaBioJuego> {
                     ),
                   ),
                 ),
-              ),
+              )),
             ),
           ),
         ),
       );
+
+  Widget _conEstilo(Widget hijo) {
+    final e = widget.tema.estilo;
+    return e == null ? hijo : FondoJuego(estilo: e, child: hijo);
+  }
 }
 
 /// Botón para regresar: dentro del juego o, en la primera pantalla, a la app.

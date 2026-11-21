@@ -3,9 +3,11 @@
 ///
 /// El contenido jugable vive en `lib/presentation/biology/temas/`. Los títulos
 /// van en el mismo orden que las misiones de cada `TemaBio`.
-class BioTopicInfo {
-  const BioTopicInfo(this.numero, this.missions, this.badge);
+/// Datos de un tema jugable de cualquier mundo (3 misiones + integradora).
+class TopicInfo {
+  const TopicInfo(this.numero, this.missions, this.badge, {this.mundo = 'bio'});
   final int numero;
+  final String mundo;
 
   /// 3 misiones + actividad integradora.
   final List<String> missions;
@@ -13,13 +15,15 @@ class BioTopicInfo {
   /// Insignia que se gana al terminar la actividad integradora.
   final String badge;
 
-  String get id => 'bio-t$numero';
+  String get id => '$mundo-t$numero';
   List<String> get missionIds => [
         for (var i = 0; i < missions.length; i++)
           i == missions.length - 1 ? '$id-integration' : '$id-m${i + 1}'
       ];
   String get badgeId => '$id-integration-badge';
 }
+
+typedef BioTopicInfo = TopicInfo;
 
 const bioTopics = {
   2: BioTopicInfo(2, ['¿Qué es una célula?', 'Células animales y vegetales', 'Seres de una y muchas células', 'La feria de ciencias'],

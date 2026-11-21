@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'models.dart';
 import 'body_topic.dart';
 import 'bio_topics.dart';
+import 'ele_topics.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
@@ -15,21 +16,18 @@ Tema _t(String w, int n, String titulo) {
                 : Recompensa(mission.badgeId!, mission.badge!)),
     ]);
   }
-  final bio = w == 'bio' ? bioTopics[n] : null;
-  if (bio != null) {
-    final ids = bio.missionIds;
+  final info = switch (w) {
+    'bio' => bioTopics[n],
+    'ele' => eleTopics[n],
+    _ => null,
+  };
+  if (info != null) {
+    final ids = info.missionIds;
     return Tema(id, titulo, [
       for (var i = 0; i < ids.length; i++)
-        Mision(ids[i], bio.missions[i],
+        Mision(ids[i], info.missions[i],
             implementada: true,
-            recompensa: i == ids.length - 1 ? Recompensa(bio.badgeId, bio.badge) : null),
-    ]);
-  }
-  if (id == 'ele-t1') {
-    // Única misión jugable por ahora (Fase 2 la generaliza con datos).
-    return Tema(id, titulo, [
-      Mision('$id-m1', '¡Que vuelva la luz!',
-          implementada: true, recompensa: const Recompensa('robot-brazo-izq', 'Brazo izquierdo', piezaRobot: 'brazo_izq'))
+            recompensa: i == ids.length - 1 ? Recompensa(info.badgeId, info.badge) : null),
     ]);
   }
   return Tema(id, titulo, [Mision('$id-m1', 'Misión 1: $titulo')]);
@@ -72,8 +70,8 @@ final mundos = <Mundo>[
     'Fuerzas en acción', 'La montaña rusa', 'El poder de la energía',
     'Luz, sombras y sonido', 'El desafío de las máquinas'])),
   Mundo('ele', 'Electrónica', 'La ciudad de los circuitos', Icons.memory, const Color.fromARGB(255, 255, 174, 0), _temas('ele', [
-    '¡Que vuelva la luz!', 'Guardianes de la corriente', 'Interruptores secretos',
-    'Sensores exploradores', 'Construye un invento'])),
+    'Conoce los componentes', 'Conecta y enciende', 'Detectives electrónicos',
+    'Máquinas en movimiento', 'Crea tu invento'])),
   Mundo('ia', 'Inteligencia Artificial', 'La estación de las máquinas inteligentes', Icons.psychology, const Color.fromARGB(255, 255, 18, 188), _temas('ia', [
     '¿Cómo aprende un robot?', 'La máquina detective', 'Cazadores de errores',
     '¿Podemos confiar en la IA?', 'IA para ayudar a la comunidad'])),
