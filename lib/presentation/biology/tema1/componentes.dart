@@ -692,12 +692,7 @@ class _PantallaTarjetasState extends State<PantallaTarjetas> {
                   children: [
                     Icon(t.icono, color: g.color, size: 30),
                     const SizedBox(width: 6),
-                    Expanded(
-                        child: Text(t.titulo,
-                            style: const TextStyle(
-                                fontSize: 13.5,
-                                fontWeight: FontWeight.w700,
-                                height: 1.1))),
+                    Expanded(child: TextoSinCortar(t.titulo)),
                     const Icon(Icons.touch_app_rounded,
                         size: 16, color: Colors.black26),
                   ],
@@ -706,4 +701,40 @@ class _PantallaTarjetasState extends State<PantallaTarjetas> {
       ),
     );
   }
+}
+
+
+/// Texto que reduce su tamaño si una palabra no cabe completa en el ancho,
+/// para que nunca se parta a la mitad (p. ej. "reproduce-n").
+class TextoSinCortar extends StatelessWidget {
+  const TextoSinCortar(this.texto, {super.key, this.tam = 13.5});
+  final String texto;
+  final double tam;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(builder: (context, c) {
+        var t = tam;
+        TextStyle estilo(double f) => DefaultTextStyle.of(context)
+            .style
+            .merge(TextStyle(fontSize: f, fontWeight: FontWeight.w700, height: 1.1));
+        double anchoMax(double f) {
+          var m = 0.0;
+          for (final palabra in texto.split(RegExp(r'\s+'))) {
+            final tp = TextPainter(
+                text: TextSpan(text: palabra, style: estilo(f)),
+                textDirection: TextDirection.ltr,
+                textScaler: MediaQuery.textScalerOf(context))
+              ..layout();
+            if (tp.width > m) m = tp.width;
+          }
+          return m;
+        }
+
+        if (c.maxWidth.isFinite) {
+          while (t > 9 && anchoMax(t) > c.maxWidth) {
+            t -= 0.5;
+          }
+        }
+        return Text(texto, style: estilo(t));
+      });
 }

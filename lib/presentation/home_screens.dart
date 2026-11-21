@@ -1215,7 +1215,7 @@ class Insignias extends StatelessWidget {
                             size: 36,
                           ),
                           title: Text(
-                            bodyBadgeName(r),
+                            nombreRecompensa(r),
                             style: const TextStyle(fontSize: 18),
                           ),
                         ),
