@@ -932,12 +932,8 @@ class _EtiquetarPartesState extends State<EtiquetarPartes>
                 offset: const Offset(0, 2))
           ],
         ),
-        child: Text(widget.nombres[id]!,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w700,
-                color: ColoresJuego.texto)),
+        child: TextoSinCortar(widget.nombres[id]!,
+            tam: 14.5, alineacion: TextAlign.center, color: ColoresJuego.texto),
       );
 
   @override

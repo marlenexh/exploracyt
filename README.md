@@ -153,3 +153,24 @@ Actividades reutilizables (`temas/pasos.dart`): clasificar, ordenar (con ciclos 
 - Videos en `assets/videos/` (ver `assets/videos/LEEME.txt`). Si falta un archivo se muestra un espacio reservado y el alumno puede continuar.
 - Las ilustraciones usan emojis. En la web sin conexión puede faltar la fuente de emojis del navegador; en Android e iOS se usan los del sistema.
 - Pruebas: `test/temas_bio_test.dart`.
+
+## Electrónica · La ciudad de los circuitos
+
+Propósito: conocer el funcionamiento básico de los dispositivos electrónicos y comprender cómo sus componentes trabajan juntos. Al entrar al mundo de Electrónica se abre `lib/presentation/electronica/electronica_screen.dart` (mapa sobre una placa de circuito animada) y cada tema usa el mismo motor de los temas de Biología, con **fondos propios** pintados en código (`electronica/fondos.dart`): taller, ciudad de noche, laboratorio de detectives, fábrica y planos de inventor.
+
+| Tema | Misiones | Simulaciones principales | Insignia |
+| --- | --- | --- | --- |
+| 1. Conoce los componentes | La caja de componentes · El LED y la resistencia · Pilas, interruptores y más · Integradora: La linterna de emergencia | Código de colores de resistencias; primer LED, LED al revés, elegir resistencia; linterna y timbre | Conocedor de Componentes |
+| 2. Conecta y enciende | ¿Qué es un circuito? · Serie y paralelo · Conductores y seguridad · Integradora: La ciudad a oscuras | Circuito con interruptor, encontrar la falla, LED en serie y en paralelo, cortocircuito | Maestro de los Circuitos |
+| 3. Detectives electrónicos | ¿Qué es un sensor? · ¿Cómo funcionan? · Sensores a nuestro alrededor · Integradora: El misterio del museo | Laboratorio de 4 sensores (luz, temperatura, PIR, ultrasónico); fotorresistencia en un circuito | Detective Electrónico |
+| 4. Máquinas en movimiento | El motor eléctrico · Mecanismos · Máquinas de todos los días · Integradora: El carrito de la feria | Encender, invertir y regular un motor; engranes (velocidad, fuerza, rueda loca); ventilador con luz piloto | Ingeniero en Movimiento |
+| 5. Crea tu invento | Sistemas automáticos · Programa con bloques · Diseña tu invento · Integradora: El invernadero automático | Programación por bloques (lámpara automática, ventilador, alarma, barrera, invernadero con 2 reglas); prototipo de alarma | Inventor Electrónico |
+
+Basado en los conceptos de Tinkercad Circuits:
+
+- **Taller de circuitos** (`electronica/taller.dart`): se toca una terminal y luego otra para poner un cable, se presiona “Iniciar simulación”, se tocan interruptores y botones durante la simulación, hay inspector de componentes y multímetro. Los LED tienen ánodo (pata doblada) y cátodo, se queman sin resistencia (💥) y hay aviso de cortocircuito.
+- **Simulador** (`electronica/circuito.dart`): análisis nodal real con pilas de 9 V y 3 V, LED (rojo, verde, amarillo, azul), resistencias, interruptor, botón, zumbador, motor CD, foco, fotorresistencia y potenciómetro. Pruebas en `test/electronica_circuito_test.dart`.
+- **Bloques de código** (`electronica/bloques.dart`): entradas moradas, control naranja (si… entonces… si no…) y salidas azules, como en la pestaña Código de Tinkercad.
+- Progreso: clave `v1.ele.temaN.juego`; misiones `ele-tN-m1..m3` y `ele-tN-integration`; insignia `ele-tN-integration-badge` (`lib/data/ele_topics.dart`).
+- Videos en `assets/videos/` (ver `assets/videos/LEEME.txt`).
+- Pruebas: `test/electronica_test.dart` resuelve todos los retos de circuitos, los programas y los laboratorios.

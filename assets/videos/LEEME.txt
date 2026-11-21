@@ -23,3 +23,16 @@ en lib/presentation/biology/temas/; también aceptan direcciones https://...):
     ecosistemas_que_son.mp4        (Misión 1)
     ecosistemas_cadenas.mp4        (Misión 2)
     ecosistemas_biodiversidad.mp4  (Misión 3)
+
+Electrónica (los nombres se cambian en el mapa "videos" de cada ele_temaN.dart,
+en lib/presentation/electronica/):
+  Tema 1 · Conoce los componentes
+    componentes_basicos.mp4, componentes_led_resistencia.mp4, componentes_pilas_interruptores.mp4
+  Tema 2 · Conecta y enciende
+    circuitos_que_es.mp4, circuitos_serie_paralelo.mp4, circuitos_conductores.mp4
+  Tema 3 · Detectives electrónicos
+    sensores_que_son.mp4, sensores_como_funcionan.mp4, sensores_donde_se_usan.mp4
+  Tema 4 · Máquinas en movimiento
+    maquinas_motor.mp4, maquinas_mecanismos.mp4, maquinas_aparatos.mp4
+  Tema 5 · Crea tu invento
+    inventos_sistemas.mp4, inventos_bloques.mp4, inventos_disena.mp4

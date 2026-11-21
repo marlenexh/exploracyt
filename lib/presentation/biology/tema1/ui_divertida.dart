@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 
 import 'aventura.dart' show BannerTitulo, BotonRedondo;
+import 'estilo_mundo.dart';
 
 /// Componentes visuales "de videojuego" para niños de 10 a 12 años:
 /// fondos animados, botones que rebotan, entradas escalonadas, confeti,
@@ -53,6 +54,10 @@ class FondoAnimado extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final estilo = FondoJuego.maybeOf(context);
+    if (estilo != null) {
+      return Stack(children: [Positioned.fill(child: estilo.fondo(context)), Positioned.fill(child: child)]);
+    }
     return Stack(
       children: [
         // Fondo del bosque del Tema 1, cubierto con un velo del color de la sección.

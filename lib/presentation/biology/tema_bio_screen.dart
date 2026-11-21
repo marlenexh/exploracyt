@@ -15,26 +15,39 @@ import 'temas/tema5.dart';
 /// Juegos de los temas 2 a 5, por número de tema.
 final temasBio = <int, TemaBio>{2: tema2, 3: tema3, 4: tema4, 5: tema5};
 
-/// Abre el juego de un tema de Biología (2 a 5) y conecta su progreso con el
-/// de Explora Ciencia, igual que `Tema1Screen`:
-/// - Las estrellas de cada actividad se guardan en el dispositivo.
-/// - Al completar una misión se marca en [store]; la insignia se entrega solo
-///   al terminar la actividad integradora.
-class TemaBioScreen extends StatefulWidget {
+/// Abre el juego de un tema de Biología (2 a 5).
+class TemaBioScreen extends StatelessWidget {
   const TemaBioScreen({super.key, required this.numero});
   final int numero;
 
   static String claveProgreso(int numero) => 'v1.tema$numero.juego';
 
   @override
-  State<TemaBioScreen> createState() => _TemaBioScreenState();
+  Widget build(BuildContext context) => TemaJuegoScreen(tema: temasBio[numero]!, info: bioTopics[numero]!);
 }
 
-class _TemaBioScreenState extends State<TemaBioScreen> {
+/// Abre el juego de un tema (de cualquier mundo) y conecta su progreso con el
+/// de Explora Ciencia, igual que `Tema1Screen`:
+/// - Las estrellas de cada actividad se guardan en el dispositivo.
+/// - Al completar una misión se marca en [store]; la insignia se entrega solo
+///   al terminar la actividad integradora.
+class TemaJuegoScreen extends StatefulWidget {
+  const TemaJuegoScreen({super.key, required this.tema, required this.info});
+  final TemaBio tema;
+  final TopicInfo info;
+
+  /// Biología conserva su clave original; los demás mundos llevan su id.
+  static String clave(TopicInfo info) => info.mundo == 'bio' ? TemaBioScreen.claveProgreso(info.numero) : 'v1.${info.mundo}.tema${info.numero}.juego';
+
+  @override
+  State<TemaJuegoScreen> createState() => _TemaJuegoScreenState();
+}
+
+class _TemaJuegoScreenState extends State<TemaJuegoScreen> {
   ProgresoJuego? _progreso;
   SharedPreferences? _prefs;
 
-  TemaBio get _tema => temasBio[widget.numero]!;
+  String get _clave => TemaJuegoScreen.clave(widget.info);
 
   @override
   void initState() {
@@ -46,7 +59,7 @@ class _TemaBioScreenState extends State<TemaBioScreen> {
     final prefs = await SharedPreferences.getInstance();
     ProgresoJuego progreso;
     try {
-      final guardado = prefs.getString(TemaBioScreen.claveProgreso(widget.numero));
+      final guardado = prefs.getString(_clave);
       progreso = guardado == null ? ProgresoJuego() : ProgresoJuego.fromJson(jsonDecode(guardado) as Map<String, dynamic>);
     } catch (_) {
       progreso = ProgresoJuego();
@@ -63,21 +76,20 @@ class _TemaBioScreenState extends State<TemaBioScreen> {
   void _alCambiar() {
     final p = _progreso;
     if (p == null) return;
-    _prefs?.setString(TemaBioScreen.claveProgreso(widget.numero), jsonEncode(p.toJson()));
+    _prefs?.setString(_clave, jsonEncode(p.toJson()));
     _sincronizar();
   }
 
   /// Marca en la app, en orden, las misiones ya completadas dentro del juego.
   Future<void> _sincronizar() async {
     final p = _progreso;
-    final info = bioTopics[widget.numero];
-    if (p == null || info == null) return;
-    final ids = info.missionIds;
-    for (var i = 0; i < ids.length && i < _tema.misiones.length; i++) {
-      if (!_tema.misiones[i].completa(p)) break;
+    if (p == null) return;
+    final ids = widget.info.missionIds;
+    for (var i = 0; i < ids.length && i < widget.tema.misiones.length; i++) {
+      if (!widget.tema.misiones[i].completa(p)) break;
       if (store.completadas.contains(ids[i])) continue;
       try {
-        await store.completar(ids[i], recompensaId: i == ids.length - 1 ? info.badgeId : null);
+        await store.completar(ids[i], recompensaId: i == ids.length - 1 ? widget.info.badgeId : null);
       } catch (_) {
         break;
       }
@@ -101,6 +113,6 @@ class _TemaBioScreenState extends State<TemaBioScreen> {
       );
     }
     final nombre = store.nombre.trim();
-    return TemaBioJuego(tema: _tema, progreso: p, nombreAlumno: nombre.isEmpty ? null : nombre);
+    return TemaBioJuego(tema: widget.tema, progreso: p, nombreAlumno: nombre.isEmpty ? null : nombre);
   }
 }

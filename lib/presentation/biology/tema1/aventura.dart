@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'comunes.dart';
+import 'estilo_mundo.dart';
 import 'contenido.dart';
 import 'integradora.dart' show PantallaInsigniaFinal;
 import 'misiones.dart';
@@ -118,18 +119,19 @@ class LetreroMadera extends StatelessWidget {
   final double tam;
   @override
   Widget build(BuildContext context) {
+    final e = FondoJuego.maybeOf(context) ?? EstiloMundo(fondo: (_) => const SizedBox());
     return Container(
       padding: EdgeInsets.symmetric(horizontal: tam * 1.2, vertical: tam * 0.3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFE9B36B), Color(0xFFC98A3E)],
+          colors: e.letrero,
         ),
-        border: Border.all(color: const Color(0xFF8A5A24), width: 3),
-        boxShadow: const [
-          BoxShadow(color: Color(0xFF6B4219), offset: Offset(0, 5)),
+        border: Border.all(color: e.bordeLetrero, width: 3),
+        boxShadow: [
+          BoxShadow(color: e.sombraLetrero, offset: const Offset(0, 5)),
         ],
       ),
       child: Text(
@@ -137,7 +139,7 @@ class LetreroMadera extends StatelessWidget {
         style: TextStyle(
           fontSize: tam,
           fontWeight: FontWeight.w700,
-          color: const Color(0xFF4A2A0C),
+          color: e.textoLetrero,
           shadows: const [
             Shadow(color: Color(0x66FFFFFF), offset: Offset(0, 1.5)),
           ],
@@ -438,10 +440,12 @@ class FondoBosque extends StatelessWidget {
   final Widget child;
   final double velo;
   @override
-  Widget build(BuildContext context) => Stack(
+  Widget build(BuildContext context) {
+    final estilo = FondoJuego.maybeOf(context);
+    return Stack(
         children: [
           Positioned.fill(
-            child: Image.asset(
+            child: estilo != null ? estilo.fondo(context) : Image.asset(
               rutaFondoTema1,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) => const DecoratedBox(
@@ -466,6 +470,7 @@ class FondoBosque extends StatelessWidget {
           Positioned.fill(child: child),
         ],
       );
+  }
 }
 
 // ---------------------------------------------------------------------------
