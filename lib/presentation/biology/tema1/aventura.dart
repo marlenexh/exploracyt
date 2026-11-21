@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'comunes.dart';
 import 'contenido.dart';
+import 'integradora.dart' show PantallaInsigniaFinal;
 import 'misiones.dart';
 import 'progreso.dart';
 
@@ -621,13 +622,15 @@ class PantallaIntroTema extends StatelessWidget {
 class _BotonSalir extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Regresa a la app que abrió el juego (si existe).
-    final ruta = ModalRoute.of(context);
-    final puede = ruta != null && !ruta.isFirst;
+    // Regresa a la app que abrió el juego (navegador principal).
+    final raiz = Navigator.of(context, rootNavigator: true);
+    final propio = Navigator.of(context);
+    final puede = propio.canPop() || raiz.canPop();
     if (!puede) return const SizedBox(width: 52, height: 52);
     return BotonRedondo(
       icono: Icons.arrow_back_rounded,
-      onTap: () => Navigator.of(context).maybePop(),
+      etiqueta: 'Salir del tema',
+      onTap: () => propio.canPop() ? propio.maybePop() : raiz.maybePop(),
     );
   }
 }
@@ -1191,18 +1194,22 @@ class _PantallaMisionState extends State<PantallaMision> {
     if (completa && !_estabaCompleta) {
       _estabaCompleta = true;
       // Se muestra cuando se cierra la celebración de la actividad.
-      Future.delayed(const Duration(milliseconds: 900), () {
+      Future.delayed(const Duration(milliseconds: 900), () async {
         if (!mounted) return;
         final i = misionesTema1.indexOf(widget.mision);
         final siguiente =
             i + 1 < misionesTema1.length ? misionesTema1[i + 1] : null;
-        mostrarCelebracion(
+        await mostrarCelebracion(
           context,
           titulo: '¡Misión cumplida!',
           mensaje: '${widget.mision.mensajeFinal}'
               '${siguiente == null ? '\n¡Restauraste toda la Estación del Cuerpo Humano!' : '\n¡Desbloqueaste “${siguiente.titulo}: ${siguiente.subtitulo}”!'}',
           estrellas: 3,
         );
+        if (siguiente == null && mounted) {
+          await abrirPantalla(context, const PantallaInsigniaFinal(),
+              conFondo: false);
+        }
       });
     }
   }

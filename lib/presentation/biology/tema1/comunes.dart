@@ -124,6 +124,7 @@ Future<T?> abrirPantalla<T>(
       builder: (_) => ConfiguracionJuego(
         desbloquearTodo: config.desbloquearTodo,
         videos: config.videos,
+        nombreAlumno: config.nombreAlumno,
         child: ProgresoScope(
           progreso: progreso,
           child: Theme(
@@ -591,48 +592,20 @@ class ZatiMascota extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Zati se muestra quieto (sin flotar ni rebotar).
     return SizedBox(
       width: tam,
       height: tam,
-      child: Reloj(
-        builder: (_, t) {
-          final flota = math.sin(t * 2.2) * tam * 0.02;
-          final salto = hablando ? (math.sin(t * 9)).abs() * tam * 0.025 : 0.0;
-          final giro = switch (emocion) {
-            EmocionCora.triste => -0.08,
-            EmocionCora.pensando => 0.05 * math.sin(t * 1.5),
-            EmocionCora.sorprendida => 0.04 * math.sin(t * 12),
-            EmocionCora.feliz => 0.025 * math.sin(t * 2.6),
-          };
-          final escala = emocion == EmocionCora.sorprendida
-              ? 1.04
-              : 1 + 0.015 * math.sin(t * 4.4);
-          return Transform.translate(
-            offset: Offset(0, flota - salto),
-            child: Transform.rotate(
-              angle: giro,
-              alignment: Alignment.bottomCenter,
-              child: Transform.scale(
-                scaleY: escala,
-                scaleX: voltear ? -1 : 1,
-                alignment: Alignment.bottomCenter,
-                child: Image.asset(
-                  rutaZatiTema1,
-                  fit: BoxFit.contain,
-                  alignment: Alignment.bottomCenter,
-                  filterQuality: FilterQuality.medium,
-                  errorBuilder: (_, __, ___) => CustomPaint(
-                    painter: PintorCora(
-                      t / 3.2 % 1,
-                      emocion,
-                      hablando: hablando,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
+      child: Transform.flip(
+        flipX: voltear,
+        child: Image.asset(
+          rutaZatiTema1,
+          fit: BoxFit.contain,
+          alignment: Alignment.bottomCenter,
+          filterQuality: FilterQuality.medium,
+          errorBuilder: (_, __, ___) =>
+              CustomPaint(painter: PintorCora(0, emocion)),
+        ),
       ),
     );
   }
@@ -1122,6 +1095,7 @@ Future<void> mostrarCelebracion(
 }) {
   HapticFeedback.mediumImpact();
   return showGeneralDialog(
+    useRootNavigator: false,
     context: context,
     barrierDismissible: false,
     barrierColor: Colors.black54,

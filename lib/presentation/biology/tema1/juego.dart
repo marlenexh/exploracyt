@@ -68,16 +68,69 @@ class _CuerpoHumanoJuegoState extends State<CuerpoHumanoJuego> {
     super.dispose();
   }
 
+  final _navegador = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) => ConfiguracionJuego(
         desbloquearTodo: widget.desbloquearTodo,
         videos: widget.videos,
+        nombreAlumno: widget.nombreAlumno,
         child: ProgresoScope(
           progreso: _progreso,
           child: Theme(
             data: temaJuego(),
-            child: PantallaIntroTema(nombre: widget.nombreAlumno),
+            child: PantallaGirable(
+              child: NavigatorPopHandler(
+                onPopWithResult: (_) => _navegador.currentState?.maybePop(),
+                child: ScaffoldMessenger(
+                  child: Navigator(
+                    key: _navegador,
+                    onGenerateRoute: (_) => MaterialPageRoute(
+                      builder: (_) =>
+                          PantallaIntroTema(nombre: widget.nombreAlumno),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       );
+}
+
+/// Muestra el juego siempre en horizontal (como los bocetos).
+///
+/// En una pantalla vertical (celular sin girar o navegador angosto) gira el
+/// contenido 90° y ajusta [MediaQuery], así todo cabe y se puede tocar. En
+/// pantallas horizontales (computadora, tableta, celular girado) no cambia nada.
+class PantallaGirable extends StatelessWidget {
+  const PantallaGirable({super.key, required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final mq = MediaQuery.of(context);
+    final vertical = mq.size.height > mq.size.width * 1.05;
+    final p = mq.padding;
+    final datos = vertical
+        ? mq.copyWith(
+            size: Size(mq.size.height, mq.size.width),
+            padding: EdgeInsets.only(
+                left: p.top, right: p.bottom, top: p.right, bottom: p.left),
+            viewPadding: EdgeInsets.only(
+              left: mq.viewPadding.top,
+              right: mq.viewPadding.bottom,
+              top: mq.viewPadding.right,
+              bottom: mq.viewPadding.left,
+            ),
+          )
+        : mq;
+    return ColoredBox(
+      color: const Color(0xFF183E73),
+      child: RotatedBox(
+        quarterTurns: vertical ? 1 : 0,
+        child: MediaQuery(data: datos, child: child),
+      ),
+    );
+  }
 }

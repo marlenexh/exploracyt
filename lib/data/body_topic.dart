@@ -8,17 +8,26 @@ class BodyMission {
   const BodyMission(
       {required this.numero,
       required this.title,
-      required this.badge,
+      this.badge,
       this.isFinal = false});
 
   final int numero;
   final String title;
-  final String badge;
+
+  /// Solo la última misión entrega insignia (al terminar todo el Tema 1).
+  final String? badge;
   final bool isFinal;
 
   String get id => 'bio-t1-${isFinal ? 'integration' : 'm$numero'}';
-  String get badgeId => '$id-badge';
+  String? get badgeId => badge == null ? null : '$id-badge';
 }
+
+/// Insignias por misión de versiones anteriores (ya no se entregan).
+const legacyBodyBadgeIds = {
+  'bio-t1-m1-badge',
+  'bio-t1-m2-badge',
+  'bio-t1-m3-badge'
+};
 
 bool bodyMissionUnlocked(int index, Set<String> completed) =>
     index >= 0 &&
@@ -27,28 +36,20 @@ bool bodyMissionUnlocked(int index, Set<String> completed) =>
 
 String bodyBadgeName(String id) {
   for (final mission in bodyMissions) {
-    if (mission.badgeId == id) return mission.badge;
+    if (mission.badgeId == id) return mission.badge!;
   }
   return id;
 }
 
 /// En el mismo orden que `misionesTema1` del juego.
 const bodyMissions = [
+  BodyMission(numero: 1, title: '¡El corazón en acción!'),
+  BodyMission(numero: 2, title: '¡El viaje del aire!'),
+  BodyMission(numero: 3, title: '¡Defensores del cuerpo!'),
   BodyMission(
-      numero: 1,
-      title: '¡El corazón en acción!',
-      badge: 'Explorador del Corazón'),
-  BodyMission(
-      numero: 2,
-      title: '¡El viaje del aire!',
-      badge: 'Explorador de la Respiración'),
-  BodyMission(
-      numero: 3,
-      title: '¡Defensores del cuerpo!',
-      badge: 'Guardián de las Defensas'),
-  BodyMission(
-      numero: 4,
-      title: '¡Tu cuerpo trabaja en equipo!',
-      badge: 'Investigador del Cuerpo Humano',
-      isFinal: true),
+    numero: 4,
+    title: '¡Tu cuerpo trabaja en equipo!',
+    badge: 'Explorador del Cuerpo Humano',
+    isFinal: true,
+  ),
 ];

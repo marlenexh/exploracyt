@@ -30,8 +30,14 @@ class ProgressStore extends ChangeNotifier {
     avatar = _p.getString('$_v.avatar') ?? 'zati';
     completadas.addAll(_p.getStringList('$_v.completadas') ?? []);
     recompensas.addAll(_p.getStringList('$_v.recompensas') ?? []);
+    // Tema 1: solo hay insignia al terminar todo el tema.
+    if (recompensas.any(legacyBodyBadgeIds.contains)) {
+      recompensas.removeAll(legacyBodyBadgeIds);
+      await _p.setStringList('$_v.recompensas', recompensas.toList());
+    }
     for (final mission in bodyMissions) {
-      if (completadas.contains(mission.id)) recompensas.add(mission.badgeId);
+      final badge = mission.badgeId;
+      if (badge != null && completadas.contains(mission.id)) recompensas.add(badge);
     }
   }
 
@@ -99,7 +105,10 @@ class ProgressStore extends ChangeNotifier {
       throw StateError('Could not save investigation progress.');
     }
     completadas.add(mission.id);
-    recompensas.add(mission.badgeId);
+    final badge = mission.badgeId;
+    if (badge != null && recompensas.add(badge)) {
+      await _p.setStringList('$_v.recompensas', recompensas.toList());
+    }
     notifyListeners();
   }
 

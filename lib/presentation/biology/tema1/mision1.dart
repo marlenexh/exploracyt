@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 
 import 'aventura.dart';
+import 'componentes.dart';
 import 'comunes.dart';
 import 'contenido.dart';
 import 'dibujos_m1.dart';
@@ -1510,9 +1511,21 @@ class PantallaVideoTema extends StatefulWidget {
     super.key,
     this.clave = 'circulatorio',
     this.titulo = 'Video: el sistema circulatorio',
+    this.actividad = Actividades.m1Video,
+    this.tema = 'cómo viaja la sangre por tu cuerpo',
+    this.siguiente = '¡Ahora vamos a ver el corazón en 3D!',
   });
   final String clave;
   final String titulo;
+
+  /// Actividad que se registra al terminar.
+  final String actividad;
+
+  /// Lo que se repasa en el video (para el globo de Zati).
+  final String tema;
+
+  /// Mensaje al terminar.
+  final String siguiente;
   @override
   State<PantallaVideoTema> createState() => _PantallaVideoTemaState();
 }
@@ -1713,19 +1726,19 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
         const Positioned(
           left: 64,
           top: 14,
-          child: EtiquetaSeccion('4. Video del tema'),
+          child: EtiquetaSeccion('Video del tema'),
         ),
         Positioned(
           left: 300,
           top: 4,
           child: BannerTitulo(widget.titulo, tam: 22),
         ),
-        const Positioned(
+        Positioned(
           left: 0,
           top: 80,
           child: ZatiConGlobo(
             texto:
-                '¡Hora del cine científico! 🎬\n\nMira este video para repasar cómo viaja la sangre por tu cuerpo. ¡Pon mucha atención!',
+                '¡Hora del cine científico! 🎬\n\nMira este video para repasar ${widget.tema}. ¡Pon mucha atención!',
             tamZati: 170,
             anchoGlobo: 200,
             altoGlobo: 190,
@@ -1764,11 +1777,10 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
             onTap: puedeSeguir
                 ? () => _terminarPaso(
                       context,
-                      actividad: Actividades.m1Video,
+                      actividad: widget.actividad,
                       estrellas: _sinVideo ? 2 : 3,
                       titulo: _sinVideo ? '¡Seguimos!' : '¡Video completado!',
-                      mensaje:
-                          '¡Ahora a experimentar en el laboratorio del corazón!',
+                      mensaje: widget.siguiente,
                     )
                 : null,
           ),
@@ -1793,40 +1805,28 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
 }
 
 // ===========================================================================
-// 6. Laboratorio del corazón: 3D + reto + dato interesante
+// 6. Simulación 3D: las partes del corazón
 // ===========================================================================
 
-/// Pulsos medidos en el laboratorio (se comparten entre las actividades).
-class _DatosPulso {
-  static int? pulso;
-  static int? reposo;
-}
-
-class PantallaLabCorazon extends StatefulWidget {
-  const PantallaLabCorazon({super.key});
+class PantallaSim3DCorazon extends StatefulWidget {
+  const PantallaSim3DCorazon({super.key});
   @override
-  State<PantallaLabCorazon> createState() => _PantallaLabCorazonState();
+  State<PantallaSim3DCorazon> createState() => _PantallaSim3DCorazonState();
 }
 
-class _PantallaLabCorazonState extends State<PantallaLabCorazon>
+class _PantallaSim3DCorazonState extends State<PantallaSim3DCorazon>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _reloj = AnimationController(
-    vsync: this,
-    duration: const Duration(days: 1),
-  );
+  late final AnimationController _reloj =
+      AnimationController(vsync: this, duration: const Duration(days: 1));
   final _cache = CacheSeleccion();
-  late final Escena3D _escena = escenaPartesCorazon(
-    separar: () => _separar,
-    bpm: () => 60,
-  );
+  late final Escena3D _escena =
+      escenaPartesCorazon(separar: () => _separar, bpm: () => 60);
   double _t = 0, _ultimo = 0, _yaw = 0.3, _pitch = 0.05, _separar = 0.5;
   bool _autoGiro = true, _nombres = true;
   String? _sel;
   final _descubiertas = <String>{};
-  final _hechas = <int>{};
-  bool _preguntaPrimer = false;
 
-  static const _nombresPartes = {
+  static const nombresPartes = {
     'auricula_der': 'Aurícula derecha',
     'auricula_izq': 'Aurícula izquierda',
     'ventriculo_der': 'Ventrículo derecho',
@@ -1838,6 +1838,7 @@ class _PantallaLabCorazonState extends State<PantallaLabCorazon>
     'cavas': 'Venas cavas',
     'venas_pulmonares': 'Venas pulmonares',
   };
+  static const _minimo = 6;
 
   @override
   void initState() {
@@ -1859,119 +1860,25 @@ class _PantallaLabCorazonState extends State<PantallaLabCorazon>
     super.dispose();
   }
 
-  Future<void> _actividad(int i) async {
-    final Widget w = switch (i) {
-      0 => const PantallaMidePulso(),
-      1 => const PantallaRegistraCompara(),
-      _ => const PantallaFrecuenciaIdeal(),
-    };
-    final r = await Navigator.of(context).push<bool>(
-      RutaJuego(
-        builder: (_) => ProgresoScope(
-          progreso: ProgresoScope.read(context),
-          child: Theme(data: temaJuego(), child: w),
-        ),
-      ),
-    );
-    if (r != null && mounted) {
-      setState(() {
-        _hechas.add(i);
-        if (i == 0 && r) _preguntaPrimer = true;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final info = _sel == null ? null : infoOrganos[_sel];
-    final listo = _hechas.length == 3;
-    Widget actividad(
-      int i,
-      String titulo,
-      String sub,
-      IconData icono,
-      Color color,
-    ) =>
-        Rebote(
-          onTap: () => _actividad(i),
-          child: Container(
-            height: 62,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [aclarar(color, 0.15), color]),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white, width: 3),
-              boxShadow: [
-                BoxShadow(
-                  color: oscurecer(color, 0.35),
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 19,
-                  backgroundColor: Colors.white,
-                  child: Icon(icono, color: color, size: 24),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        titulo,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15.5,
-                          fontWeight: FontWeight.w700,
-                          height: 1.05,
-                        ),
-                      ),
-                      Text(
-                        sub,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11.5,
-                          height: 1.1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  _hechas.contains(i)
-                      ? Icons.check_circle_rounded
-                      : Icons.play_circle_fill_rounded,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ],
-            ),
-          ),
-        );
+    final listo = _descubiertas.length >= _minimo;
     return Escenario(
       velo: 0.18,
       colorVelo: const Color(0xFF3D5AFE),
       children: [
         const BotonVolverEscena(),
         const Positioned(
-          left: 64,
-          top: 14,
-          child: EtiquetaSeccion('5. Laboratorio'),
-        ),
+            left: 64, top: 14, child: EtiquetaSeccion('Simulación 3D')),
         const Positioned(
-          left: 260,
-          top: 4,
-          child: BannerTitulo('Laboratorio del corazón', tam: 24),
-        ),
-        // Visor 3D
+            left: 250,
+            top: 4,
+            child: BannerTitulo('Las partes del corazón', tam: 24)),
         Positioned(
           left: 10,
           top: 64,
-          width: 462,
+          width: 530,
           height: 406,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
@@ -2001,26 +1908,8 @@ class _PantallaLabCorazonState extends State<PantallaLabCorazon>
                         zoom: 1.05,
                         cache: _cache,
                         seleccionado: _sel,
-                        etiquetas: _nombres ? _nombresPartes : const {},
+                        etiquetas: _nombres ? nombresPartes : const {},
                       ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 10,
-                  top: 10,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black45,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      'Partes descubiertas: ${_descubiertas.length}/${_nombresPartes.length}',
-                      style: const TextStyle(color: Colors.white, fontSize: 13),
                     ),
                   ),
                 ),
@@ -2056,50 +1945,23 @@ class _PantallaLabCorazonState extends State<PantallaLabCorazon>
                   right: 8,
                   bottom: 8,
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(10, 4, 10, 6),
+                    padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.95),
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.open_with_rounded,
-                              size: 18,
-                              color: Color(0xFF4361EE),
-                            ),
-                            const SizedBox(width: 4),
-                            const Text(
-                              'Separar partes',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                fontSize: 13.5,
-                              ),
-                            ),
-                            Expanded(
-                              child: SliderTheme(
-                                data: SliderTheme.of(context)
-                                    .copyWith(trackHeight: 6),
-                                child: Slider(
-                                  value: _separar,
-                                  onChanged: (v) =>
-                                      setState(() => _separar = v),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          info == null
-                              ? 'Gira el corazón con tu dedo y toca cada parte para saber qué hace.'
-                              : '${info.nombre}: ${info.descripcion}',
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontSize: 12.5, height: 1.15),
+                        const Icon(Icons.open_with_rounded,
+                            size: 18, color: Color(0xFF4361EE)),
+                        const SizedBox(width: 4),
+                        const Text('Separar partes',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 13.5)),
+                        Expanded(
+                          child: Slider(
+                              value: _separar,
+                              onChanged: (v) => setState(() => _separar = v)),
                         ),
                       ],
                     ),
@@ -2109,112 +1971,97 @@ class _PantallaLabCorazonState extends State<PantallaLabCorazon>
             ),
           ),
         ),
-        // Actividades
         Positioned(
-          left: 484,
+          left: 552,
           top: 64,
-          width: 370,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              actividad(
-                0,
-                'Reto interactivo: Mide tu pulso',
-                'Siente tu corazón y responde la pregunta',
-                Icons.play_arrow_rounded,
-                const Color(0xFF8B5CF6),
+          width: 302,
+          height: 220,
+          child: PanelInfo(
+            titulo: info == null ? '¿Cómo está formado?' : info.nombre,
+            icono: Icons.touch_app_rounded,
+            color: const Color(0xFF4361EE),
+            child: SingleChildScrollView(
+              child: Text(
+                info == null
+                    ? 'Gira el corazón con tu dedo y toca cada parte. Usa “Separar partes” para ver por dentro: tiene 4 cavidades (2 aurículas y 2 ventrículos), válvulas, un tabique y vasos sanguíneos.'
+                    : '${info.descripcion}\n\n💡 ${info.dato}',
+                style: const TextStyle(fontSize: 14, height: 1.3),
               ),
-              const SizedBox(height: 8),
-              actividad(
-                1,
-                'Registra y compara',
-                'Antes y después del movimiento',
-                Icons.assignment_rounded,
-                const Color(0xFFF5A700),
-              ),
-              const SizedBox(height: 8),
-              actividad(
-                2,
-                'Descubre tu frecuencia cardiaca ideal',
-                '¿Cuántos latidos son normales para tu edad?',
-                Icons.monitor_heart_rounded,
-                const Color(0xFFFF3D68),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFFF8E1),
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(
-                    color: const Color(0xFFFFC107),
-                    width: 2.5,
-                  ),
-                ),
-                child: const Row(
-                  children: [
-                    Movimiento(
-                      tipo: TipoMovimiento.latir,
-                      child: Text('💡', style: TextStyle(fontSize: 30)),
-                    ),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Dato interesante: ',
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                            TextSpan(
-                              text:
-                                  'en un solo día tu corazón late unas 100,000 veces y bombea más de 7,000 litros de sangre. ¡Eso llenaría unas 35 tinas de baño!',
-                            ),
-                          ],
-                        ),
-                        style: TextStyle(fontSize: 13, height: 1.2),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          left: 484,
-          top: 424,
-          child: Text(
-            listo
-                ? '¡Completaste las 3 actividades!'
-                : 'Actividades: ${_hechas.length}/3',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              shadows: [Shadow(blurRadius: 4)],
             ),
           ),
         ),
         Positioned(
+          left: 552,
+          top: 294,
+          width: 302,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF8E1),
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: const Color(0xFFFFC107), width: 2.5),
+            ),
+            child: const Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                      text: '💡 Dato interesante: ',
+                      style: TextStyle(fontWeight: FontWeight.w700)),
+                  TextSpan(
+                    text:
+                        'en un solo día tu corazón late unas 100,000 veces y bombea más de 7,000 litros de sangre. ¡Eso llenaría unas 35 tinas de baño!',
+                  ),
+                ],
+              ),
+              style: TextStyle(fontSize: 12.5, height: 1.2),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 552,
+          top: 396,
+          child: Text(
+            'Partes descubiertas: ${_descubiertas.length}/${nombresPartes.length}',
+            style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                shadows: [Shadow(blurRadius: 4)]),
+          ),
+        ),
+        Positioned(
           left: 690,
-          top: 418,
+          top: 420,
           child: BotonSiguiente(
             latir: listo,
             onTap: listo
                 ? () => _terminarPaso(
                       context,
-                      actividad: Actividades.m1Lab,
-                      estrellas: 1 +
-                          (_descubiertas.length >= 5 ? 1 : 0) +
-                          (_preguntaPrimer ? 1 : 0),
-                      titulo: '¡Laboratorio completado!',
+                      actividad: Actividades.m1Sim3d,
+                      estrellas: _descubiertas.length >= nombresPartes.length
+                          ? 3
+                          : (_descubiertas.length >= 8 ? 2 : 1),
+                      titulo: '¡Conoces el corazón por dentro!',
                       mensaje:
-                          'Conociste las partes del corazón y mediste tu propio pulso. ¡Ahora la mini misión final!',
+                          'Descubriste ${_descubiertas.length} partes del corazón. ¡Ahora al laboratorio de la frecuencia cardiaca!',
                     )
                 : null,
           ),
         ),
+        if (!listo)
+          Positioned(
+            left: 552,
+            top: 424,
+            width: 130,
+            child: Text(
+              'Descubre al menos $_minimo partes',
+              style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  shadows: [Shadow(blurRadius: 4)]),
+            ),
+          ),
       ],
     );
   }
@@ -2329,230 +2176,59 @@ class _MedidorPulsoState extends State<MedidorPulso> {
   }
 }
 
-/// Reto interactivo: mide tu pulso + 1 pregunta con opciones.
-class PantallaMidePulso extends StatefulWidget {
-  const PantallaMidePulso({super.key});
+// ===========================================================================
+// 7. Laboratorio: la frecuencia cardiaca (método científico)
+// ===========================================================================
+
+class PantallaLabFrecuencia extends StatefulWidget {
+  const PantallaLabFrecuencia({super.key});
   @override
-  State<PantallaMidePulso> createState() => _PantallaMidePulsoState();
+  State<PantallaLabFrecuencia> createState() => _PantallaLabFrecuenciaState();
 }
 
-class _PantallaMidePulsoState extends State<PantallaMidePulso> {
-  int? _pulso;
-  int? _elegida;
+class _PantallaLabFrecuenciaState extends State<PantallaLabFrecuencia> {
+  int _etapa = 0;
+  int? _hipotesis, _reposo, _despues, _respuesta;
+  int _edad = 11;
+  int _segMover = 30;
   bool _intento = false, _primer = false;
+  Timer? _timer;
 
+  static const _etapas = [
+    'Pregunta',
+    'En reposo',
+    '¡Muévete!',
+    'Después',
+    'Analiza',
+    'Concluye'
+  ];
+  static const _hipotesisOpc = [
+    'Va a aumentar',
+    'Va a disminuir',
+    'Se quedará igual'
+  ];
   static const _pregunta = PreguntaQuiz(
-    pregunta: '¿Qué es lo que sientes cuando te tomas el pulso?',
+    pregunta: '¿Por qué aumenta la frecuencia cardiaca al hacer ejercicio?',
     opciones: [
-      'La sangre que el corazón empuja por las arterias',
-      'El aire que entra a los pulmones',
-      'La comida que viaja al estómago',
+      'Porque los músculos necesitan más oxígeno y el corazón bombea más rápido para llevarlo',
+      'Porque el corazón se cansa y se detiene',
+      'Porque los pulmones dejan de funcionar',
     ],
     correcta: 0,
     explicacion:
-        'Cada latido empuja la sangre por las arterias. Ese empujón es el pulso que sientes.',
+        'Al moverte, tus músculos trabajan más y necesitan más oxígeno y energía.',
   );
 
-  @override
-  Widget build(BuildContext context) {
-    final acerto = _elegida == _pregunta.correcta;
-    return Escenario(
-      velo: 0.2,
-      colorVelo: const Color(0xFF8B5CF6),
-      children: [
-        const BotonVolverEscena(),
-        const Positioned(
-          left: 240,
-          top: 4,
-          child: BannerTitulo('Reto interactivo: Mide tu pulso', tam: 22),
-        ),
-        Positioned(
-          left: 14,
-          top: 66,
-          width: 300,
-          height: 400,
-          child: PanelInfo(
-            titulo: '1. Encuentra tu pulso',
-            icono: Icons.touch_app_rounded,
-            color: const Color(0xFF8B5CF6),
-            child: Reloj(
-              builder: (_, t) => Column(
-                children: [
-                  const Text(
-                    'Pon dos dedos (no el pulgar) en tu muñeca o a un lado de tu cuello. Quédate quieto hasta sentir el “tum-tum”.',
-                    style: TextStyle(fontSize: 14, height: 1.25),
-                  ),
-                  const SizedBox(height: 6),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Center(
-                            child: AspectRatio(
-                              aspectRatio: 1.25,
-                              child: CustomPaint(
-                                painter: PintorMuneca(t),
-                                size: Size.infinite,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: AspectRatio(
-                              aspectRatio: 1.25,
-                              child: CustomPaint(
-                                painter: PintorCuello(t),
-                                size: Size.infinite,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text(
-                        'En la muñeca',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        'En el cuello',
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          left: 326,
-          top: 66,
-          width: 230,
-          height: 400,
-          child: PanelInfo(
-            titulo: '2. Cuenta tus latidos',
-            icono: Icons.timer_rounded,
-            color: ColoresJuego.circulatorio,
-            child: Center(
-              child: MedidorPulso(
-                onResultado: (v) {
-                  setState(() => _pulso = v);
-                  _DatosPulso.pulso = v;
-                },
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          left: 568,
-          top: 66,
-          width: 286,
-          height: 400,
-          child: PanelInfo(
-            titulo: '3. Pregunta del reto',
-            icono: Icons.psychology_alt_rounded,
-            color: const Color(0xFFFF8A00),
-            child: _pulso == null
-                ? const Center(
-                    child: Text(
-                      'Primero mide tu pulso para desbloquear la pregunta. 🔒',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          _pregunta.pregunta,
-                          style: const TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        for (var i = 0; i < 3; i++)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 6),
-                            child: BotonOpcion(
-                              letra: 'ABC'[i],
-                              texto: _pregunta.opciones[i],
-                              estado: _elegida == i
-                                  ? (i == _pregunta.correcta
-                                      ? EstadoOpcion.correcta
-                                      : EstadoOpcion.incorrecta)
-                                  : EstadoOpcion.normal,
-                              onTap: acerto
-                                  ? null
-                                  : () => setState(() {
-                                        if (!_intento &&
-                                            i == _pregunta.correcta) {
-                                          _primer = true;
-                                        }
-                                        _intento = true;
-                                        _elegida = i;
-                                      }),
-                            ),
-                          ),
-                        if (_elegida != null)
-                          Text(
-                            acerto
-                                ? '✅ ${_pregunta.explicacion}'
-                                : '🤔 ¡Inténtalo otra vez!',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: acerto
-                                  ? ColoresJuego.correcto
-                                  : ColoresJuego.incorrecto,
-                            ),
-                          ),
-                        if (acerto) const SizedBox(height: 50),
-                      ],
-                    ),
-                  ),
-          ),
-        ),
-        if (acerto)
-          Positioned(
-            left: 600,
-            top: 414,
-            child: BotonJuego(
-              texto: 'Terminar reto',
-              icono: Icons.check_rounded,
-              color: ColoresJuego.correcto,
-              onTap: () => Navigator.of(context).pop(_primer),
-            ),
-          ),
-        if (acerto)
-          Positioned.fill(child: ExplosionConfeti(key: const ValueKey('reto'))),
-      ],
-    );
-  }
-}
+  static const _textosZati = [
+    'Los científicos empiezan con una pregunta y una hipótesis: lo que creen que pasará. ¿Qué crees tú?',
+    'Siéntate tranquilo un minuto. Pon dos dedos en tu muñeca o en tu cuello y cuenta tus latidos.',
+    '¡Ahora a moverte! Salta en tu lugar o haz sentadillas durante 30 segundos.',
+    '¡Rápido! Mide tu pulso justo después de moverte, antes de que baje.',
+    'Compara tus dos medidas y revisa si están dentro de lo normal para tu edad.',
+    '¿Tu hipótesis fue correcta? Responde la pregunta final para terminar el experimento.',
+  ];
 
-/// Registra y compara: pulso en reposo y después del movimiento.
-class PantallaRegistraCompara extends StatefulWidget {
-  const PantallaRegistraCompara({super.key});
-  @override
-  State<PantallaRegistraCompara> createState() =>
-      _PantallaRegistraComparaState();
-}
-
-class _PantallaRegistraComparaState extends State<PantallaRegistraCompara> {
-  int _etapa = 0; // 0 reposo, 1 moverse, 2 después, 3 comparar
-  int? _reposo = _DatosPulso.reposo, _despues;
-  int _segMover = 30;
-  Timer? _timer;
+  (int, int) get _rango => _edad >= 13 ? (60, 100) : (70, 110);
 
   @override
   void dispose() {
@@ -2567,75 +2243,120 @@ class _PantallaRegistraComparaState extends State<PantallaRegistraCompara> {
       setState(() => _segMover--);
       if (_segMover <= 0) {
         t.cancel();
-        setState(() => _etapa = 2);
+        setState(() => _etapa = 3);
       }
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final etapas = ['1. En reposo', '2. ¡Muévete!', '3. Después', '4. Compara'];
-    Widget contenido;
+  Widget _medir(
+      {required int? valor,
+      required ValueChanged<int> onValor,
+      required int ejemplo,
+      required Color color}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        MedidorPulso(color: color, onResultado: onValor),
+        const SizedBox(height: 6),
+        TextButton.icon(
+          onPressed: () => onValor(ejemplo),
+          icon: const Icon(Icons.help_outline_rounded, size: 18),
+          label:
+              Text('No logro sentir mi pulso: usar un ejemplo ($ejemplo lpm)'),
+        ),
+        if (valor != null) ...[
+          Text('Registrado: $valor latidos por minuto',
+              style: TextStyle(fontWeight: FontWeight.w700, color: color)),
+          const SizedBox(height: 6),
+          BotonJuego(
+            texto: 'Guardar y seguir',
+            icono: Icons.arrow_forward_rounded,
+            color: const Color(0xFF2DB84C),
+            onTap: () => setState(() => _etapa++),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _contenido() {
     switch (_etapa) {
       case 0:
-        contenido = Column(
+        return Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const Text('Pregunta de investigación:',
+                style: TextStyle(
+                    fontWeight: FontWeight.w700, color: moradoBanner)),
             const Text(
-              'Siéntate tranquilo un minuto y mide tu pulso en reposo.',
-              style: TextStyle(fontSize: 16),
+                '¿Qué le pasa a tu frecuencia cardiaca cuando haces ejercicio?',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            const Text(
+                'La frecuencia cardiaca es el número de veces que late tu corazón en un minuto (lpm).',
+                style: TextStyle(fontSize: 13.5)),
+            const SizedBox(height: 10),
+            const Text('Mi hipótesis:',
+                style: TextStyle(
+                    fontWeight: FontWeight.w700, color: moradoBanner)),
+            const SizedBox(height: 4),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (var i = 0; i < 3; i++) ...[
+                  if (i > 0) const SizedBox(width: 6),
+                  Expanded(
+                    child: BotonOpcion(
+                      letra: 'ABC'[i],
+                      texto: _hipotesisOpc[i],
+                      estado: _hipotesis == i
+                          ? EstadoOpcion.correcta
+                          : EstadoOpcion.normal,
+                      onTap: () => setState(() => _hipotesis = i),
+                    ),
+                  ),
+                ],
+              ],
             ),
             const SizedBox(height: 8),
-            MedidorPulso(
-              onResultado: (v) => setState(() {
-                _reposo = v;
-                _DatosPulso.reposo = v;
-              }),
-            ),
-            if (_reposo != null) ...[
-              const SizedBox(height: 8),
-              BotonJuego(
-                texto: 'Guardar y seguir',
-                icono: Icons.arrow_forward_rounded,
-                color: const Color(0xFF2DB84C),
-                onTap: () => setState(() => _etapa = 1),
+            if (_hipotesis != null)
+              Align(
+                alignment: Alignment.centerRight,
+                child: BotonJuego(
+                  texto: '¡A experimentar!',
+                  icono: Icons.science_rounded,
+                  color: const Color(0xFF2DB84C),
+                  onTap: () => setState(() => _etapa = 1),
+                ),
               ),
-            ],
           ],
         );
       case 1:
-        contenido = Column(
+        return _medir(
+            valor: _reposo,
+            onValor: (v) => setState(() => _reposo = v),
+            ejemplo: 84,
+            color: const Color(0xFF00A6FB));
+      case 2:
+        return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Salta en tu lugar o haz sentadillas durante 30 segundos.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 6),
-            Reloj(
-              builder: (_, t) {
-                final salto = _timer?.isActive == true
-                    ? (math.sin(t * 9)).abs() * 26
-                    : 0.0;
-                return Transform.translate(
-                  offset: Offset(0, -salto),
-                  child: const Icon(
-                    Icons.sports_gymnastics_rounded,
-                    size: 90,
-                    color: Color(0xFFFF6B3D),
-                  ),
-                );
-              },
-            ),
+            Reloj(builder: (_, t) {
+              final salto =
+                  _timer?.isActive == true ? (math.sin(t * 9)).abs() * 26 : 0.0;
+              return Transform.translate(
+                offset: Offset(0, -salto),
+                child: const Icon(Icons.sports_gymnastics_rounded,
+                    size: 100, color: Color(0xFFFF6B3D)),
+              );
+            }),
             if (_timer?.isActive == true)
-              Text(
-                '$_segMover s',
-                style: const TextStyle(
-                  fontSize: 34,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFFFF6B3D),
-                ),
-              )
+              Text('$_segMover s',
+                  style: const TextStyle(
+                      fontSize: 38,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFFFF6B3D)))
             else
               BotonJuego(
                 texto: '¡Empezar a moverme!',
@@ -2646,139 +2367,177 @@ class _PantallaRegistraComparaState extends State<PantallaRegistraCompara> {
             TextButton(
               onPressed: () {
                 _timer?.cancel();
-                setState(() => _etapa = 2);
+                setState(() => _etapa = 3);
               },
               child: const Text('Ya me moví, continuar'),
             ),
           ],
         );
-      case 2:
-        contenido = Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              '¡Rápido! Mide tu pulso justo después de moverte.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            MedidorPulso(
-              color: const Color(0xFFFF6B3D),
-              onResultado: (v) => setState(() {
-                _despues = v;
-              }),
-            ),
-            if (_despues != null) ...[
-              const SizedBox(height: 8),
-              BotonJuego(
-                texto: 'Comparar',
-                icono: Icons.bar_chart_rounded,
-                color: const Color(0xFF2DB84C),
-                onTap: () => setState(() => _etapa = 3),
-              ),
-            ],
-          ],
-        );
-      default:
+      case 3:
+        return _medir(
+            valor: _despues,
+            onValor: (v) => setState(() => _despues = v),
+            ejemplo: 128,
+            color: const Color(0xFFFF6B3D));
+      case 4:
         final r = _reposo ?? 0, d = _despues ?? 0;
-        final subio = d > r;
-        contenido = Row(
+        final (min, max) = _rango;
+        final enRango = r >= min && r <= max;
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 260,
-              height: 230,
-              child: CustomPaint(
-                painter: _PintorComparar(r.toDouble(), d.toDouble()),
-              ),
-            ),
-            const SizedBox(width: 14),
+                width: 190,
+                height: 200,
+                child: CustomPaint(
+                    painter: _PintorComparar(r.toDouble(), d.toDouble()))),
+            const SizedBox(width: 8),
             Expanded(
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    subio
-                        ? '¡Tu corazón pasó de $r a $d latidos por minuto! Aumentó ${d - r}.'
-                        : 'Tu pulso no subió. ¿Te moviste lo suficiente? Puedes intentarlo otra vez.',
+                    d > r
+                        ? 'Tu frecuencia subió de $r a $d lpm (+${d - r}).'
+                        : 'Tu frecuencia no subió. ¿Te moviste lo suficiente?',
                     style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                    ),
+                        fontSize: 15.5, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Conclusión: al moverte, tus músculos necesitan más oxígeno y energía. Por eso el corazón late más rápido para llevarles más sangre.',
-                    style: TextStyle(fontSize: 14.5, height: 1.3),
-                  ),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      BotonJuego(
-                        texto: 'Repetir',
-                        icono: Icons.replay_rounded,
-                        color: Colors.blueGrey,
-                        onTap: () => setState(() {
-                          _etapa = 0;
-                          _despues = null;
-                        }),
+                  Wrap(spacing: 4, runSpacing: 4, children: [
+                    const Text('Mi edad:',
+                        style: TextStyle(fontWeight: FontWeight.w700)),
+                    for (var e = 8; e <= 14; e++)
+                      ChoiceChip(
+                        label: Text('$e'),
+                        visualDensity: VisualDensity.compact,
+                        selected: e == _edad,
+                        onSelected: (_) => setState(() => _edad = e),
                       ),
-                      BotonJuego(
-                        texto: 'Terminar',
-                        icono: Icons.check_rounded,
-                        color: ColoresJuego.correcto,
-                        onTap: () => Navigator.of(context).pop(true),
-                      ),
-                    ],
+                  ]),
+                  SizedBox(
+                      height: 110,
+                      child: CustomPaint(
+                          painter: _PintorMedidor(min, max, 220 - _edad, r),
+                          size: Size.infinite)),
+                  Text(
+                    'En reposo lo normal para tu edad es de $min a $max lpm. '
+                    '${enRango ? '¡Tu medida está dentro de lo normal!' : 'Tu medida quedó fuera: puede que hayas contado de más o de menos.'}',
+                    style: const TextStyle(fontSize: 13, height: 1.25),
                   ),
+                  const SizedBox(height: 6),
+                  BotonJuego(
+                      texto: 'Sacar conclusión',
+                      icono: Icons.arrow_forward_rounded,
+                      color: const Color(0xFF2DB84C),
+                      onTap: () => setState(() => _etapa = 5)),
                 ],
               ),
             ),
           ],
         );
+      default:
+        final subio = (_despues ?? 0) > (_reposo ?? 0);
+        final acerto = _respuesta == _pregunta.correcta;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              _hipotesis == 0
+                  ? (subio
+                      ? '✅ ¡Tu hipótesis se comprobó! La frecuencia cardiaca aumentó.'
+                      : '🤔 Esperabas que aumentara, pero en tu medición no subió.')
+                  : '🔎 Tu hipótesis era “${_hipotesisOpc[_hipotesis ?? 0].toLowerCase()}”, pero los datos muestran que con el ejercicio la frecuencia aumenta. ¡Así aprenden los científicos!',
+              style:
+                  const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 8),
+            Text(_pregunta.pregunta,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+            const SizedBox(height: 6),
+            for (var i = 0; i < 3; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: BotonOpcion(
+                  letra: 'ABC'[i],
+                  texto: _pregunta.opciones[i],
+                  estado: _respuesta == i
+                      ? (i == _pregunta.correcta
+                          ? EstadoOpcion.correcta
+                          : EstadoOpcion.incorrecta)
+                      : EstadoOpcion.normal,
+                  onTap: acerto
+                      ? null
+                      : () => setState(() {
+                            if (!_intento && i == _pregunta.correcta) {
+                              _primer = true;
+                            }
+                            _intento = true;
+                            _respuesta = i;
+                          }),
+                ),
+              ),
+            if (_respuesta != null)
+              Text(
+                  acerto
+                      ? '✅ ${_pregunta.explicacion}'
+                      : '🤔 ¡Inténtalo otra vez!',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: acerto
+                          ? ColoresJuego.correcto
+                          : ColoresJuego.incorrecto)),
+          ],
+        );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final acerto = _etapa == 5 && _respuesta == _pregunta.correcta;
     return Escenario(
       velo: 0.2,
-      colorVelo: const Color(0xFFF5A700),
+      colorVelo: ColoresJuego.circulatorio,
       children: [
         const BotonVolverEscena(),
         const Positioned(
-          left: 220,
-          top: 4,
-          child: BannerTitulo(
-            'Registra y compara',
-            tam: 24,
-            color: Color(0xFFE08E00),
-          ),
-        ),
+            left: 64, top: 14, child: EtiquetaSeccion('Laboratorio')),
+        const Positioned(
+            left: 250,
+            top: 4,
+            child: BannerTitulo('Tu frecuencia cardiaca',
+                tam: 24, color: Color(0xFFE0284D))),
         Positioned(
-          left: 70,
-          top: 70,
-          width: 720,
+          left: 236,
+          top: 64,
+          width: 618,
           child: Row(
             children: [
-              for (var i = 0; i < 4; i++)
+              for (var i = 0; i < _etapas.length; i++)
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    padding: const EdgeInsets.symmetric(vertical: 5),
                     decoration: BoxDecoration(
                       color: i == _etapa
-                          ? const Color(0xFFF5A700)
+                          ? ColoresJuego.circulatorio
                           : (i < _etapa
-                              ? const Color(0xFFFFE6A8)
+                              ? const Color(0xFFFFC2D1)
                               : Colors.white),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white, width: 2.5),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: Colors.white, width: 2),
                     ),
                     child: Text(
-                      etapas[i],
+                      '${i + 1}. ${_etapas[i]}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: i == _etapa ? Colors.white : ColoresJuego.texto,
-                      ),
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color:
+                              i == _etapa ? Colors.white : ColoresJuego.texto),
                     ),
                   ),
                 ),
@@ -2786,20 +2545,50 @@ class _PantallaRegistraComparaState extends State<PantallaRegistraCompara> {
           ),
         ),
         Positioned(
-          left: 70,
-          top: 122,
-          width: 720,
-          height: 340,
+          left: 0,
+          top: 62,
+          child: ZatiConGlobo(
+            texto: _textosZati[_etapa],
+            tamZati: 170,
+            anchoGlobo: 222,
+            altoGlobo: 200,
+            tamLetra: 14.5,
+            globoArriba: true,
+          ),
+        ),
+        Positioned(
+          left: 236,
+          top: 106,
+          width: 618,
+          height: acerto ? 304 : 364,
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: const Color(0xFFF5A700), width: 4),
+              border: Border.all(color: ColoresJuego.circulatorio, width: 4),
             ),
-            child: Center(child: SingleChildScrollView(child: contenido)),
+            child: Center(child: SingleChildScrollView(child: _contenido())),
           ),
         ),
+        if (acerto)
+          Positioned(
+            left: 650,
+            top: 420,
+            child: BotonSiguiente(
+              texto: 'Terminar',
+              onTap: () => _terminarPaso(
+                context,
+                actividad: Actividades.m1Lab,
+                estrellas: 1 + (_hipotesis == 0 ? 1 : 0) + (_primer ? 1 : 0),
+                titulo: '¡Experimento completado!',
+                mensaje:
+                    'Comprobaste que al hacer ejercicio tu corazón late más rápido para llevar más oxígeno a tus músculos.',
+              ),
+            ),
+          ),
+        if (acerto)
+          Positioned.fill(child: ExplosionConfeti(key: const ValueKey('lab'))),
       ],
     );
   }
@@ -2844,177 +2633,6 @@ class _PintorComparar extends CustomPainter {
 
   @override
   bool shouldRepaint(_PintorComparar old) => true;
-}
-
-/// Descubre tu frecuencia cardiaca ideal según la edad.
-class PantallaFrecuenciaIdeal extends StatefulWidget {
-  const PantallaFrecuenciaIdeal({super.key});
-  @override
-  State<PantallaFrecuenciaIdeal> createState() =>
-      _PantallaFrecuenciaIdealState();
-}
-
-class _PantallaFrecuenciaIdealState extends State<PantallaFrecuenciaIdeal> {
-  int _edad = 11;
-
-  (int, int) get _reposo => _edad >= 13 ? (60, 100) : (70, 110);
-  int get _maximo => 220 - _edad;
-
-  @override
-  Widget build(BuildContext context) {
-    final medido = _DatosPulso.reposo ?? _DatosPulso.pulso;
-    final (min, max) = _reposo;
-    String comentario;
-    if (medido == null) {
-      comentario = 'Mide tu pulso en el reto interactivo para compararlo aquí.';
-    } else if (medido < min) {
-      comentario =
-          'Tu medición ($medido) quedó abajo de lo normal. Puede que no hayas contado todos los latidos: ¡inténtalo de nuevo!';
-    } else if (medido <= max) {
-      comentario =
-          '¡Tu pulso ($medido) está dentro de lo normal para tu edad! Tu corazón está trabajando muy bien.';
-    } else {
-      comentario =
-          'Tu medición ($medido) está alta para estar en reposo. ¿Te habías movido? Descansa y mide otra vez.';
-    }
-    return Escenario(
-      velo: 0.2,
-      colorVelo: const Color(0xFFFF3D68),
-      children: [
-        const BotonVolverEscena(),
-        const Positioned(
-          left: 180,
-          top: 4,
-          child: BannerTitulo(
-            'Tu frecuencia cardiaca ideal',
-            tam: 24,
-            color: Color(0xFFE0284D),
-          ),
-        ),
-        Positioned(
-          left: 20,
-          top: 70,
-          width: 400,
-          height: 390,
-          child: PanelInfo(
-            titulo: '¿Cuántos años tienes?',
-            icono: Icons.cake_rounded,
-            color: const Color(0xFFFF3D68),
-            child: Column(
-              children: [
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    for (var e = 6; e <= 14; e++)
-                      ChoiceChip(
-                        label: Text('$e'),
-                        selected: e == _edad,
-                        selectedColor: const Color(0xFFFFC2D1),
-                        onSelected: (_) => setState(() => _edad = e),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Expanded(
-                  child: CustomPaint(
-                    painter: _PintorMedidor(min, max, _maximo, medido),
-                    size: Size.infinite,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Positioned(
-          left: 436,
-          top: 70,
-          width: 418,
-          height: 390,
-          child: PanelInfo(
-            titulo: 'Lo que descubriste',
-            icono: Icons.lightbulb_rounded,
-            color: const Color(0xFF8B5CF6),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _fila(
-                    Icons.self_improvement_rounded,
-                    const Color(0xFF2DB84C),
-                    'En reposo',
-                    'Para un niño de $_edad años lo normal es de $min a $max latidos por minuto.',
-                  ),
-                  _fila(
-                    Icons.directions_run_rounded,
-                    const Color(0xFFFF8A00),
-                    'Jugando o corriendo',
-                    'Puede subir mucho, hasta unos $_maximo latidos por minuto (se calcula como 220 − tu edad).',
-                  ),
-                  _fila(
-                    Icons.monitor_heart_rounded,
-                    const Color(0xFFFF3D68),
-                    'Tu medición',
-                    comentario,
-                  ),
-                  _fila(
-                    Icons.health_and_safety_rounded,
-                    const Color(0xFF00A6FB),
-                    'Recuerda',
-                    'El ejercicio, dormir bien y comer sano mantienen fuerte a tu corazón. Si te sientes mareado o tu corazón late raro, avisa a un adulto.',
-                  ),
-                  const SizedBox(height: 6),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: BotonJuego(
-                      texto: '¡Lo descubrí!',
-                      icono: Icons.check_rounded,
-                      color: ColoresJuego.correcto,
-                      onTap: () => Navigator.of(context).pop(true),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _fila(IconData icono, Color color, String titulo, String texto) =>
-      Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              radius: 17,
-              backgroundColor: color,
-              child: Icon(icono, color: Colors.white, size: 20),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '$titulo: ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: oscurecer(color, 0.15),
-                      ),
-                    ),
-                    TextSpan(text: texto),
-                  ],
-                ),
-                style: const TextStyle(fontSize: 14, height: 1.25),
-              ),
-            ),
-          ],
-        ),
-      );
 }
 
 class _PintorMedidor extends CustomPainter {
@@ -3187,6 +2805,8 @@ class _PantallaMiniMisionCirculatorioState
   final Set<int> _incorrectas = {};
   int _erroresUnir = 0;
   bool _fase2 = false;
+  bool _fase3 = false;
+  int _erroresAcciones = 0;
   int _pregunta = 0;
   int? _elegida;
   final Set<int> _intentadas = {};
@@ -3256,8 +2876,11 @@ class _PantallaMiniMisionCirculatorioState
   }
 
   Future<void> _terminar() async {
-    final estrellas =
-        1 + (_erroresUnir == 0 ? 1 : 0) + (_primerIntento == 4 ? 1 : 0);
+    final estrellas = math.max(
+        1,
+        (_erroresUnir == 0 ? 1 : 0) +
+            (_primerIntento == 4 ? 1 : 0) +
+            (_erroresAcciones == 0 ? 1 : 0));
     await _terminarPaso(
       context,
       actividad: Actividades.m1Mini,
@@ -3520,7 +3143,7 @@ class _PantallaMiniMisionCirculatorioState
             context,
             titulo: '¿Cómo se juega?',
             texto:
-                'Arrastra cada tarjeta al recuadro que señala esa parte del cuerpo. Cuando termines presiona “Comprobar”. Pista: las venas son azules, las arterias rojas y los capilares son la redecita de las manos.',
+                'Arrastra cada tarjeta al recuadro que señala esa parte del cuerpo y presiona “Comprobar”. Observa con atención hacia dónde apunta cada línea y recuerda el camino que sigue la sangre.',
           ),
         ),
       ),
@@ -3585,7 +3208,20 @@ class _PantallaMiniMisionCirculatorioState
         ),
       ),
     ]);
-    if (_fase2) hijos.add(_capaPreguntas());
+    if (_fase2 && !_fase3) hijos.add(_capaPreguntas());
+    if (_fase3) {
+      hijos.add(CapaAcciones(
+        titulo: 'Cuida tu corazón',
+        instruccion:
+            'Toca todas las acciones que ayudan a cuidar tu corazón y tu sistema circulatorio, y después presiona “Comprobar”.',
+        color: ColoresJuego.circulatorio,
+        acciones: accionesCorazon,
+        onTerminar: (e) {
+          _erroresAcciones = e;
+          _terminar();
+        },
+      ));
+    }
     return Escenario(velo: 0.05, children: hijos);
   }
 
@@ -3693,7 +3329,7 @@ class _PantallaMiniMisionCirculatorioState
                                     _elegida = null;
                                   });
                                 } else {
-                                  _terminar();
+                                  setState(() => _fase3 = true);
                                 }
                               },
                             ),
@@ -3749,3 +3385,25 @@ class _PintorRanura extends CustomPainter {
   bool shouldRepaint(_PintorRanura old) =>
       old.color != color || old.punteada != punteada;
 }
+
+const accionesCorazon = [
+  Accion(
+      Icons.directions_run_rounded,
+      'Hacer ejercicio o jugar activamente',
+      true,
+      'El ejercicio fortalece el músculo del corazón y ayuda a que la sangre circule mejor.'),
+  Accion(Icons.eco_rounded, 'Comer frutas y verduras', true,
+      'Sus vitaminas y fibra ayudan a mantener sanos el corazón y los vasos sanguíneos.'),
+  Accion(Icons.water_drop_rounded, 'Tomar agua simple', true,
+      'El agua forma parte de la sangre y le ayuda a circular.'),
+  Accion(Icons.bedtime_rounded, 'Dormir de 9 a 11 horas', true,
+      'Mientras duermes, tu corazón descansa y late más despacio.'),
+  Accion(Icons.icecream_rounded, 'Comer muchos dulces y frituras', false,
+      'El exceso de azúcar, sal y grasa puede dañar los vasos sanguíneos con el tiempo.'),
+  Accion(Icons.weekend_rounded, 'Pasar horas sentado frente a pantallas', false,
+      'Moverse poco debilita el corazón. ¡Haz pausas activas!'),
+  Accion(Icons.smoking_rooms_rounded, 'Respirar humo de cigarro', false,
+      'El humo daña los vasos sanguíneos y hace trabajar de más al corazón.'),
+  Accion(Icons.local_drink_rounded, 'Tomar refrescos todos los días', false,
+      'Tienen mucha azúcar. Es mejor tomar agua.'),
+];

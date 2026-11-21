@@ -4,7 +4,11 @@ import 'aventura.dart';
 import 'comunes.dart';
 import 'contenido.dart';
 import 'laboratorio.dart';
+import 'integradora.dart';
+import 'juegos.dart';
 import 'mision1.dart';
+import 'mision2.dart';
+import 'mision3.dart';
 import 'pantalla_3d.dart';
 import 'pantalla_recorrido.dart';
 import 'progreso.dart';
@@ -76,6 +80,11 @@ class Mision {
 
 CapituloTour _cap(String id) => capitulosTour.firstWhere((c) => c.id == id);
 
+PasoMision _p(String t, TipoPaso tipo, String a, Widget Function() w) =>
+    PasoMision(t, tipo, a, w, escenario: true);
+PasoMision _v(String t, TipoPaso tipo, String a, Widget Function() w) =>
+    PasoMision(t, tipo, a, w);
+
 final misionesTema1 = <Mision>[
   Mision(
     titulo: 'Misión 1',
@@ -87,61 +96,32 @@ final misionesTema1 = <Mision>[
         'El sistema circulatorio de la Estación dejó de funcionar. ¡Vamos a descubrir cómo trabajan el corazón y la sangre para repararlo!',
     mensajeFinal: '¡El sistema circulatorio de la Estación vuelve a latir!',
     pasos: [
-      PasoMision(
-        '¿Qué es el cuerpo humano?',
-        TipoPaso.explicacion,
-        Actividades.tourIntro,
-        () => PantallaRecorrido(capitulo: _cap(Actividades.tourIntro)),
-      ),
-      PasoMision(
-        'El cuerpo humano y sus sistemas',
-        TipoPaso.explicacion,
-        Actividades.m1Cuerpo,
-        () => const PantallaCuerpoHumano(),
-        escenario: true,
-      ),
-      PasoMision(
-        'Sistema circulatorio',
-        TipoPaso.explicacion,
-        Actividades.m1Circulatorio,
-        () => const PantallaCirculatorioExplicacion(),
-        escenario: true,
-      ),
-      PasoMision(
-        'El corazón y los vasos sanguíneos',
-        TipoPaso.explicacion,
-        Actividades.m1Vasos,
-        () => const PantallaVasosSanguineos(),
-        escenario: true,
-      ),
-      PasoMision(
-        'El viaje de la sangre',
-        TipoPaso.explicacion,
-        Actividades.m1Viaje,
-        () => const PantallaViajeSangre(),
-        escenario: true,
-      ),
-      PasoMision(
-        'Video del tema',
-        TipoPaso.video,
-        Actividades.m1Video,
-        () => const PantallaVideoTema(),
-        escenario: true,
-      ),
-      PasoMision(
-        'Laboratorio del corazón',
-        TipoPaso.laboratorio,
-        Actividades.m1Lab,
-        () => const PantallaLabCorazon(),
-        escenario: true,
-      ),
-      PasoMision(
-        'Mini misión: une las partes',
-        TipoPaso.reto,
-        Actividades.m1Mini,
-        () => const PantallaMiniMisionCirculatorio(),
-        escenario: true,
-      ),
+      _v(
+          '¿Qué es el cuerpo humano?',
+          TipoPaso.explicacion,
+          Actividades.tourIntro,
+          () => PantallaRecorrido(capitulo: _cap(Actividades.tourIntro))),
+      _p('El cuerpo humano y sus sistemas', TipoPaso.explicacion,
+          Actividades.m1Cuerpo, () => const PantallaCuerpoHumano()),
+      _p(
+          'Sistema circulatorio',
+          TipoPaso.explicacion,
+          Actividades.m1Circulatorio,
+          () => const PantallaCirculatorioExplicacion()),
+      _p('El corazón y los vasos sanguíneos', TipoPaso.explicacion,
+          Actividades.m1Vasos, () => const PantallaVasosSanguineos()),
+      _p('El viaje de la sangre', TipoPaso.explicacion, Actividades.m1Viaje,
+          () => const PantallaViajeSangre()),
+      _p('Video del tema', TipoPaso.video, Actividades.m1Video,
+          () => const PantallaVideoTema()),
+      _p('Las partes del corazón', TipoPaso.sim3d, Actividades.m1Sim3d,
+          () => const PantallaSim3DCorazon()),
+      _p('Tu frecuencia cardiaca', TipoPaso.laboratorio, Actividades.m1Lab,
+          () => const PantallaLabFrecuencia()),
+      _p('Repartidor de oxígeno', TipoPaso.reto, Actividades.m1Juego,
+          () => const JuegoRepartidorOxigeno()),
+      _p('Pon a prueba lo que aprendiste', TipoPaso.reto, Actividades.m1Mini,
+          () => const PantallaMiniMisionCirculatorio()),
     ],
   ),
   Mision(
@@ -154,30 +134,45 @@ final misionesTema1 = <Mision>[
         '¡Ahora falla el sistema respiratorio! Sigue el camino del aire y descubre cómo respiramos.',
     mensajeFinal: '¡El sistema respiratorio de la Estación vuelve a respirar!',
     pasos: [
-      PasoMision(
-        'El viaje del aire',
-        TipoPaso.explicacion,
-        Actividades.tourRespiratorio,
-        () => PantallaRecorrido(capitulo: _cap(Actividades.tourRespiratorio)),
-      ),
-      PasoMision(
-        'Los pulmones en 3D',
-        TipoPaso.sim3d,
-        Actividades.simPulmones,
-        () => const PantallaSimulacion3D(inicial: 1, soloModelo: true),
-      ),
-      PasoMision(
-        'Modelo de pulmón',
-        TipoPaso.laboratorio,
-        Actividades.labPulmon,
-        () => const LabPulmon(),
-      ),
-      PasoMision(
-        'La ruta del aire',
-        TipoPaso.reto,
-        Actividades.retoRutaAire,
-        () => const RetoRuta(nivel: 1),
-      ),
+      _p(
+          'El sistema respiratorio',
+          TipoPaso.explicacion,
+          Actividades.m2Explicacion,
+          () => const PantallaRespiratorioExplicacion()),
+      _v(
+          'El viaje del aire',
+          TipoPaso.explicacion,
+          Actividades.tourRespiratorio,
+          () =>
+              PantallaRecorrido(capitulo: _cap(Actividades.tourRespiratorio))),
+      _p('El intercambio de gases', TipoPaso.explicacion,
+          Actividades.m2Intercambio, () => const PantallaIntercambioGases()),
+      _p(
+          '¿Cómo cambia tu respiración?',
+          TipoPaso.explicacion,
+          Actividades.m2Respiracion,
+          () => const PantallaComoCambiaRespiracion()),
+      _p('El ambiente también influye', TipoPaso.explicacion,
+          Actividades.m2Ambiente, () => const PantallaAmbienteRespiracion()),
+      _p(
+          'Video del tema',
+          TipoPaso.video,
+          Actividades.m2Video,
+          () => const PantallaVideoTema(
+                clave: 'respiratorio',
+                titulo: 'Video: el sistema respiratorio',
+                actividad: Actividades.m2Video,
+                tema: 'cómo entra y sale el aire de tus pulmones',
+                siguiente: '¡Ahora vamos a ver los pulmones en 3D!',
+              )),
+      _v('Los pulmones en 3D', TipoPaso.sim3d, Actividades.simPulmones,
+          () => const PantallaSimulacion3D(inicial: 1, soloModelo: true)),
+      _p('Laboratorio de la respiración', TipoPaso.laboratorio,
+          Actividades.m2Lab, () => const PantallaLabRespiracion()),
+      _p('Atrapa el aire limpio', TipoPaso.reto, Actividades.m2Juego,
+          () => const JuegoAtrapaAire()),
+      _p('Pon a prueba lo que aprendiste', TipoPaso.reto, Actividades.m2Mini,
+          () => const PantallaMiniMisionRespiratorio()),
     ],
   ),
   Mision(
@@ -191,36 +186,35 @@ final misionesTema1 = <Mision>[
     mensajeFinal:
         '¡El sistema inmunológico de la Estación está listo para defenderla!',
     pasos: [
-      PasoMision(
-        'Tu ejército de defensa',
-        TipoPaso.explicacion,
-        Actividades.tourInmune,
-        () => PantallaRecorrido(capitulo: _cap(Actividades.tourInmune)),
-      ),
-      PasoMision(
-        'Dentro de la sangre 3D',
-        TipoPaso.sim3d,
-        Actividades.simInmune,
-        () => const PantallaSimulacion3D(inicial: 3, soloModelo: true),
-      ),
-      PasoMision(
-        'El microscopio',
-        TipoPaso.laboratorio,
-        Actividades.labMicroscopio,
-        () => const LabMicroscopio(),
-      ),
-      PasoMision(
-        'Las vacunas',
-        TipoPaso.laboratorio,
-        Actividades.labVacunas,
-        () => const LabVacunas(),
-      ),
-      PasoMision(
-        'Defensa inmune',
-        TipoPaso.reto,
-        Actividades.retoDefensa,
-        () => const RetoDefensa(),
-      ),
+      _p('El sistema inmunológico', TipoPaso.explicacion,
+          Actividades.m3Explicacion, () => const PantallaInmuneExplicacion()),
+      _p('Las partes de tus defensas', TipoPaso.explicacion,
+          Actividades.m3Partes, () => const PantallaInmunePartes()),
+      _v('Así te defiende', TipoPaso.explicacion, Actividades.tourInmune,
+          () => PantallaRecorrido(capitulo: _cap(Actividades.tourInmune))),
+      _p('Hábitos y defensas', TipoPaso.explicacion, Actividades.m3Habitos,
+          () => const PantallaHabitosDefensas()),
+      _p(
+          'Video del tema',
+          TipoPaso.video,
+          Actividades.m3Video,
+          () => const PantallaVideoTema(
+                clave: 'inmune',
+                titulo: 'Video: el sistema inmunológico',
+                actividad: Actividades.m3Video,
+                tema: 'cómo te defiende tu cuerpo de los microbios',
+                siguiente: '¡Ahora viaja dentro de la sangre en 3D!',
+              )),
+      _v('Dentro de la sangre 3D', TipoPaso.sim3d, Actividades.simInmune,
+          () => const PantallaSimulacion3D(inicial: 3, soloModelo: true)),
+      _v('El microscopio', TipoPaso.laboratorio, Actividades.labMicroscopio,
+          () => const LabMicroscopio()),
+      _v('Las vacunas', TipoPaso.laboratorio, Actividades.labVacunas,
+          () => const LabVacunas()),
+      _v('Defensa inmune', TipoPaso.reto, Actividades.retoDefensa,
+          () => const RetoDefensa()),
+      _p('Pon a prueba lo que aprendiste', TipoPaso.reto, Actividades.m3Mini,
+          () => const PantallaMiniMisionInmune()),
     ],
   ),
   Mision(
@@ -230,27 +224,17 @@ final misionesTema1 = <Mision>[
     color: const Color(0xFF8B5CF6),
     colorFondo: const Color(0xFFE2D3FF),
     intro:
-        '¡Último desafío! Demuestra que sabes cómo trabajan juntos todos los sistemas del cuerpo.',
+        '¡Último desafío! Resuelve una situación usando lo que sabes de los tres sistemas.',
     mensajeFinal: '¡Todos los sistemas trabajan en equipo otra vez!',
     pasos: [
-      PasoMision(
-        'El cuerpo completo en 3D',
-        TipoPaso.sim3d,
-        Actividades.simCuerpo,
-        () => const PantallaSimulacion3D(inicial: 2, soloModelo: true),
-      ),
-      PasoMision(
-        'Arma el cuerpo',
-        TipoPaso.reto,
-        Actividades.retoArma,
-        () => const RetoArmaCuerpo(),
-      ),
-      PasoMision(
-        'Supercerebro',
-        TipoPaso.reto,
-        Actividades.retoQuiz,
-        () => const RetoQuiz(),
-      ),
+      _v('El cuerpo completo en 3D', TipoPaso.sim3d, Actividades.simCuerpo,
+          () => const PantallaSimulacion3D(inicial: 2, soloModelo: true)),
+      _p('La excursión al cerro', TipoPaso.reto, Actividades.intSituacion,
+          () => const PantallaSituacionIntegradora()),
+      _v('Arma el cuerpo', TipoPaso.reto, Actividades.retoArma,
+          () => const RetoArmaCuerpo()),
+      _v('Supercerebro', TipoPaso.reto, Actividades.retoQuiz,
+          () => const RetoQuiz()),
     ],
   ),
 ];
@@ -300,8 +284,13 @@ Future<void> abrirMision(BuildContext context, Mision m) async {
         '${siguiente == null ? '\n¡Restauraste toda la Estación del Cuerpo Humano!' : '\n¡Ahora sigue “${siguiente.titulo}: ${siguiente.subtitulo}”!'}',
     estrellas: 3,
   );
-  if (siguiente != null && context.mounted) {
+  if (!context.mounted) return;
+  if (siguiente != null) {
     await abrirMision(context, siguiente);
+  } else {
+    // Tema 1 completo: insignia "Explorador del Cuerpo Humano".
+    await abrirPantalla(context, const PantallaInsigniaFinal(),
+        conFondo: false);
   }
 }
 
@@ -311,8 +300,12 @@ class ConfiguracionJuego extends InheritedWidget {
     super.key,
     required this.desbloquearTodo,
     this.videos = videosPorDefecto,
+    this.nombreAlumno,
     required super.child,
   });
+
+  /// Nombre que se muestra en la insignia final.
+  final String? nombreAlumno;
 
   /// Para docentes o pruebas: permite abrir cualquier misión o paso.
   final bool desbloquearTodo;
@@ -323,6 +316,8 @@ class ConfiguracionJuego extends InheritedWidget {
 
   static const videosPorDefecto = {
     'circulatorio': 'assets/videos/sistema_circulatorio.mp4',
+    'respiratorio': 'assets/videos/sistema_respiratorio.mp4',
+    'inmune': 'assets/videos/sistema_inmunologico.mp4',
   };
 
   static ConfiguracionJuego of(BuildContext context) =>
@@ -331,5 +326,7 @@ class ConfiguracionJuego extends InheritedWidget {
 
   @override
   bool updateShouldNotify(ConfiguracionJuego old) =>
-      old.desbloquearTodo != desbloquearTodo || old.videos != videos;
+      old.desbloquearTodo != desbloquearTodo ||
+      old.videos != videos ||
+      old.nombreAlumno != nombreAlumno;
 }

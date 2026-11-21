@@ -53,7 +53,7 @@ void main() {
     expect(find.text('Misión del tema'), findsOneWidget);
     expect(find.textContaining('Luz'), findsWidgets);
     expect(store.completadas, contains(bodyMissions.first.id));
-    expect(store.recompensas, contains(bodyMissions.first.badgeId));
+    expect(store.recompensas.where((r) => r.startsWith('bio-t1')), isEmpty);
     expect(store.completadas, isNot(contains(bodyMissions[1].id)));
     await tester.pumpWidget(const SizedBox());
   });

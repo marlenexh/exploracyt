@@ -58,40 +58,75 @@ Desde **Biología → El cuerpo humano → Jugar Misión Cuerpo Humano** puedes 
 
 Al elegir el Tema 1 en el Laboratorio de Biología se abre el juego de `lib/presentation/biology/tema1/` a través de `lib/presentation/biology/tema1_screen.dart`.
 
-### Flujo
+### Celular y computadora
 
-1. **Intro del tema**: Zati, la misión de la Estación del Cuerpo Humano y el botón "Comenzar".
-2. **Menú de misiones**: las misiones se desbloquean en orden.
-   - Misión 1: ¡El corazón en acción!
-   - Misión 2: ¡El viaje del aire!
-   - Misión 3: ¡Defensores del cuerpo!
-   - Actividad Integradora
-3. **Misión 1**: se juega paso a paso.
-   1. ¿Qué es el cuerpo humano?
-   2. El cuerpo humano y sus sistemas
-   3. Sistema circulatorio
-   4. El corazón y los vasos sanguíneos
-   5. El viaje de la sangre
-   6. Video del tema
-   7. Laboratorio del corazón: 3D de sus partes, mide tu pulso, registra y compara, y frecuencia ideal
-   8. Mini misión
-4. Al terminar una misión se pasa a la siguiente.
+Todas las pantallas se dibujan sobre un lienzo horizontal que se escala para llenar cualquier pantalla. En una pantalla vertical (por ejemplo, un celular sin girar) el juego se gira automáticamente, así que siempre se ve completo y se puede tocar. Zati aparece quieto en todas las pantallas.
 
-### Progreso
+### Misiones
+
+Las misiones se desbloquean en orden y sus pasos se juegan uno tras otro.
+
+**Misión 1 · ¡El corazón en acción!**
+1. ¿Qué es el cuerpo humano?
+2. El cuerpo humano y sus sistemas
+3. Sistema circulatorio
+4. El corazón y los vasos sanguíneos
+5. El viaje de la sangre
+6. Video del tema
+7. Simulación 3D: las partes del corazón
+8. Laboratorio: tu frecuencia cardiaca (hipótesis, medir en reposo, moverse, medir después, analizar y concluir)
+9. Juego: Repartidor de oxígeno
+10. Mini misión: unir las partes, ¿para qué sirve cada una? y elegir acciones que cuidan el corazón
+
+**Misión 2 · ¡El viaje del aire!**
+1. El sistema respiratorio
+2. El viaje del aire
+3. El intercambio de gases
+4. ¿Cómo cambia tu respiración?
+5. El ambiente también influye
+6. Video del tema
+7. Los pulmones en 3D
+8. Laboratorio: arma el recorrido del aire, simula la respiración (inhalar y exhalar) y compara y analiza
+9. Juego: Atrapa el aire limpio
+10. Mini misión: nombrar las partes del modelo, relacionar cada parte con su función y elegir acciones que cuidan el sistema respiratorio
+
+**Misión 3 · ¡Defensores del cuerpo!**
+1. ¿Qué es, para qué sirve y cómo funciona el sistema inmunológico?
+2. Sus partes: amígdalas, timo, ganglios, vasos linfáticos, bazo, médula ósea y glóbulos blancos
+3. Así te defiende
+4. Hábitos que fortalecen tus defensas y los que ponen en riesgo tu salud
+5. Video del tema
+6. Dentro de la sangre en 3D
+7. Microscopio
+8. Vacunas
+9. Juego: Defensa inmune
+10. Mini misión: rompecabezas para unir cada nombre con su función
+
+**Actividad integradora · ¡Tu cuerpo trabaja en equipo!**
+1. El cuerpo completo en 3D
+2. La excursión al cerro: una situación en 5 escenas que se resuelve con lo aprendido de los 3 sistemas
+3. Arma el cuerpo
+4. Supercerebro
+
+Al terminar todo el Tema 1 se muestra la pantalla de la insignia **Explorador del Cuerpo Humano**.
+
+### Progreso e insignia
 
 - Las estrellas del juego se guardan en `shared_preferences` con la clave `v1.tema1.juego`.
-- Al completar cada misión se marca su id en `ProgressStore` (`bio-t1-m1`, `bio-t1-m2`, `bio-t1-m3`, `bio-t1-integration`) y se entrega su insignia.
-- Los ids son los mismos que antes, así que se conserva el avance que ya tenían los alumnos.
+- Al completar cada misión se marca su id en `ProgressStore` (`bio-t1-m1`, `bio-t1-m2`, `bio-t1-m3`, `bio-t1-integration`), con los mismos ids de antes.
+- **Solo hay una insignia**, "Explorador del Cuerpo Humano", y se entrega al completar la actividad integradora. Las insignias por misión de versiones anteriores se retiran al cargar el progreso.
 
-### Video del tema
+### Videos
 
-- Coloca el video en `assets/videos/sistema_circulatorio.mp4`, o pasa una dirección de internet con `CuerpoHumanoJuego(videos: {'circulatorio': 'https://…'})`.
-- Si no hay video, se muestra un espacio reservado y el alumno puede continuar.
-- Usa el paquete oficial `video_player`.
+Cada misión tiene su paso de video. Coloca los archivos en `assets/videos/`:
+
+- `sistema_circulatorio.mp4`
+- `sistema_respiratorio.mp4`
+- `sistema_inmunologico.mp4`
+
+También puedes usar direcciones de internet con `CuerpoHumanoJuego(videos: {'circulatorio': 'https://…', 'respiratorio': '…', 'inmune': '…'})`. Si no hay video, se muestra un espacio reservado y el alumno puede continuar. Usa el paquete oficial `video_player`.
 
 ### Imágenes
 
 - Zati: `assets/images/biology/zati.png`
 - Fondo: `assets/images/biology/fondo_biologia_tema1.jpg`
-
-La pantalla gira a horizontal mientras se juega el tema y regresa a su orientación al salir.
