@@ -101,25 +101,37 @@ class Actividades {
   static const m1Video = 'm1_video';
   static const m1Lab = 'm1_lab';
   static const m1Mini = 'm1_mini';
+  static const m1Sim3d = 'm1_sim3d';
+  static const m1Juego = 'm1_juego';
+  static const m2Explicacion = 'm2_explicacion';
+  static const m2Intercambio = 'm2_intercambio';
+  static const m2Respiracion = 'm2_respiracion';
+  static const m2Ambiente = 'm2_ambiente';
+  static const m2Video = 'm2_video';
+  static const m2Lab = 'm2_lab';
+  static const m2Juego = 'm2_juego';
+  static const m2Mini = 'm2_mini';
+  static const m3Explicacion = 'm3_explicacion';
+  static const m3Partes = 'm3_partes';
+  static const m3Habitos = 'm3_habitos';
+  static const m3Video = 'm3_video';
+  static const m3Mini = 'm3_mini';
+  static const intSituacion = 'int_situacion';
   static const retoRutaAire = 'reto_ruta_aire';
   static const retoDefensa = 'reto_defensa';
 
   /// Actividades que se juegan en las misiones (cuentan para las estrellas).
   static const todas = [
     // Misión 1
-    tourIntro,
-    m1Cuerpo,
-    m1Circulatorio,
-    m1Vasos,
-    m1Viaje,
-    m1Video,
-    m1Lab,
-    m1Mini, //
+    tourIntro, m1Cuerpo, m1Circulatorio, m1Vasos, m1Viaje, m1Video, m1Sim3d,
+    m1Lab, m1Juego, m1Mini, //
     // Misión 2
-    tourRespiratorio, simPulmones, labPulmon, retoRutaAire, //
+    m2Explicacion, tourRespiratorio, m2Intercambio, m2Respiracion, m2Ambiente,
+    m2Video, simPulmones, m2Lab, m2Juego, m2Mini, //
     // Misión 3
-    tourInmune, simInmune, labMicroscopio, labVacunas, retoDefensa, //
+    m3Explicacion, m3Partes, tourInmune, m3Habitos, m3Video, simInmune,
+    labMicroscopio, labVacunas, retoDefensa, m3Mini, //
     // Actividad integradora
-    simCuerpo, retoArma, retoQuiz,
+    simCuerpo, intSituacion, retoArma, retoQuiz,
   ];
 }

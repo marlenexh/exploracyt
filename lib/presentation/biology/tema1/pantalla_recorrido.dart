@@ -71,6 +71,7 @@ class _PantallaRecorridoState extends State<PantallaRecorrido> {
     EmocionCora emocion = EmocionCora.sorprendida,
   }) {
     return showDialog(
+      useRootNavigator: false,
       context: context,
       builder: (ctx) => Dialog(
         backgroundColor: Colors.transparent,
@@ -149,6 +150,7 @@ class _PantallaRecorridoState extends State<PantallaRecorrido> {
     final indice = _escena;
     final pregunta = escena.pregunta!;
     final ok = await showDialog<bool>(
+      useRootNavigator: false,
       context: context,
       barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(

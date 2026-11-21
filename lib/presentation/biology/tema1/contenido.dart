@@ -761,24 +761,6 @@ const capitulosTour = <CapituloTour>[
               'Las vacunas entrenan al sistema inmunológico sin que tengas que enfermarte.',
         ),
       ),
-      EscenaTour(
-        titulo: 'Cuida tus sistemas',
-        narracion:
-            'Tus sistemas trabajan mejor si los cuidas: haz ejercicio, come frutas y verduras, toma agua, duerme bien, lávate las manos y no te acerques al humo del cigarro.',
-        anim: AnimTour.habitos,
-        instruccion: 'Toca cada tarjeta para descubrir a qué sistema ayuda.',
-        pregunta: PreguntaQuiz(
-          pregunta: '¿Qué hábito protege mejor a tus pulmones?',
-          opciones: [
-            'Respirar humo de cigarro',
-            'Evitar el humo y hacer ejercicio',
-            'No dormir',
-          ],
-          correcta: 1,
-          explicacion:
-              'El humo daña los alvéolos; el ejercicio fortalece pulmones y corazón.',
-        ),
-      ),
     ],
   ),
 ];
@@ -1025,71 +1007,15 @@ const bancoPreguntas = <PreguntaQuiz>[
 // Insignias
 // ---------------------------------------------------------------------------
 
+/// Una sola insignia: se gana al completar TODO el Tema 1.
 const insigniasJuego = <Insignia>[
   Insignia(
-    id: 'guardian_corazon',
-    nombre: 'Guardián del corazón',
-    descripcion: 'Vasos sanguíneos + laboratorio del corazón + mini misión.',
-    icono: Icons.favorite_rounded,
-    color: _cCirc,
-    requisitos: [Actividades.m1Vasos, Actividades.m1Lab, Actividades.m1Mini],
-  ),
-  Insignia(
-    id: 'super_pulmones',
-    nombre: 'Súper pulmones',
-    descripcion: 'Recorrido respiratorio + modelo de pulmón + pulmones 3D.',
-    icono: Icons.air_rounded,
-    color: _cResp,
-    requisitos: [
-      Actividades.tourRespiratorio,
-      Actividades.labPulmon,
-      Actividades.simPulmones,
-    ],
-  ),
-  Insignia(
-    id: 'defensor',
-    nombre: 'Defensor inmune',
-    descripcion: 'Recorrido inmune + laboratorio de vacunas + defensa inmune.',
-    icono: Icons.shield_rounded,
-    color: _cInm,
-    requisitos: [
-      Actividades.tourInmune,
-      Actividades.labVacunas,
-      Actividades.retoDefensa,
-    ],
-  ),
-  Insignia(
-    id: 'cientifico',
-    nombre: 'Científico de laboratorio',
-    descripcion: 'Completa los 4 experimentos.',
-    icono: Icons.science_rounded,
-    color: Color(0xFF00897B),
-    requisitos: [
-      Actividades.labPulso,
-      Actividades.labPulmon,
-      Actividades.labMicroscopio,
-      Actividades.labVacunas,
-    ],
-  ),
-  Insignia(
-    id: 'explorador_3d',
-    nombre: 'Explorador 3D',
-    descripcion: 'Explora las 4 simulaciones 3D.',
-    icono: Icons.view_in_ar_rounded,
-    color: Color(0xFF3D5AFE),
-    requisitos: [
-      Actividades.simCorazon,
-      Actividades.simPulmones,
-      Actividades.simCuerpo,
-      Actividades.simInmune,
-    ],
-  ),
-  Insignia(
-    id: 'maestro',
-    nombre: 'Maestro del cuerpo humano',
-    descripcion: 'Reúne 40 estrellas.',
+    id: 'explorador_cuerpo_humano',
+    nombre: 'Explorador del Cuerpo Humano',
+    descripcion:
+        'Completa las 3 misiones y la actividad integradora del Tema 1.',
     icono: Icons.emoji_events_rounded,
     color: Color(0xFFFFB300),
-    estrellasMinimas: 40,
+    requisitos: Actividades.todas,
   ),
 ];

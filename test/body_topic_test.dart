@@ -38,10 +38,8 @@ void main() {
       final reopened = ProgressStore();
       await reopened.cargar();
       expect(reopened.completadas, {'ele-t1-m1', bodyMissions.first.id});
-      expect(reopened.recompensas, {
-        'robot-brazo-izq',
-        bodyMissions.first.badgeId,
-      });
+      // La misión 1 ya no da insignia: solo se entrega al terminar el Tema 1.
+      expect(reopened.recompensas, {'robot-brazo-izq'});
       expect(bodyMissionUnlocked(1, reopened.completadas), isTrue);
       expect(bodyMissionUnlocked(2, reopened.completadas), isFalse);
       expect(
@@ -52,4 +50,23 @@ void main() {
       );
     },
   );
+
+  test(
+      'La insignia del Tema 1 solo se entrega al terminar todo y se quitan las anteriores',
+      () async {
+    SharedPreferences.setMockInitialValues({
+      'v1.completadas': ['bio-t1-m1'],
+      'v1.recompensas': ['bio-t1-m1-badge', 'robot-brazo-izq'],
+    });
+    final progress = ProgressStore();
+    await progress.cargar();
+    expect(progress.recompensas, {'robot-brazo-izq'});
+    for (var i = 1; i < bodyMissions.length; i++) {
+      await progress.completeBodyInvestigation(i);
+    }
+    expect(
+        progress.recompensas, {'robot-brazo-izq', 'bio-t1-integration-badge'});
+    expect(bodyBadgeName('bio-t1-integration-badge'),
+        'Explorador del Cuerpo Humano');
+  });
 }

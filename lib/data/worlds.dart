@@ -9,7 +9,9 @@ Tema _t(String w, int n, String titulo) {
       for (final mission in bodyMissions)
         Mision(mission.id, mission.title,
             implementada: true,
-            recompensa: Recompensa(mission.badgeId, mission.badge)),
+            recompensa: mission.badge == null
+                ? null
+                : Recompensa(mission.badgeId!, mission.badge!)),
     ]);
   }
   if (id == 'ele-t1') {

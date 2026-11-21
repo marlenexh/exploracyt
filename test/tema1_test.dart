@@ -118,16 +118,29 @@ void main() {
     expect(misionDesbloqueada(p, 2), isFalse);
   });
 
-  test('El progreso guarda la mejor puntuación y desbloquea insignias', () {
+  test('Solo hay una insignia y se gana al completar todo el Tema 1', () {
     final p = ProgresoJuego();
     expect(p.registrar(Actividades.labPulso, 2), isTrue);
     expect(p.registrar(Actividades.labPulso, 1), isFalse);
-    p.registrar(Actividades.labPulmon, 3);
-    p.registrar(Actividades.labMicroscopio, 1);
-    p.registrar(Actividades.labVacunas, 3);
-    expect(p.insignias, contains('cientifico'));
+    expect(insigniasJuego.length, 1);
+    final todas = Actividades.todas;
+    for (final a in todas.take(todas.length - 1)) {
+      p.registrar(a, 2);
+    }
+    expect(p.insignias, isEmpty);
+    p.registrar(todas.last, 3);
+    expect(p.insignias, {'explorador_cuerpo_humano'});
     final copia = ProgresoJuego.fromJson(p.toJson());
     expect(copia.totalEstrellas, p.totalEstrellas);
+  });
+
+  test('Las actividades del tema son exactamente los pasos de las misiones',
+      () {
+    final pasos = [
+      for (final m in misionesTema1)
+        for (final x in m.pasos) x.actividad
+    ];
+    expect(pasos, Actividades.todas);
   });
 
   for (final tam in [const Size(844, 390), const Size(1180, 820)]) {
@@ -312,53 +325,48 @@ void main() {
       await cerrarCelebracion(tester);
     });
 
-    testWidgets('Laboratorio del corazón completo ($n)', (tester) async {
+    testWidgets('Simulación 3D: partes del corazón ($n)', (tester) async {
       _telefono(tester, tam: tam);
-      await tester.pumpWidget(_envolver(const PantallaLabCorazon()));
+      await tester.pumpWidget(_envolver(const PantallaSim3DCorazon()));
       await _cuadros(tester, 10);
-      await tester.tapAt(tester.getCenter(find.byType(CustomPaint).first));
+      await tester.tap(find.byTooltip('Nombres'));
       await _cuadros(tester, 3);
-      // 1. Mide tu pulso + pregunta
-      await tester.tap(find.text('Reto interactivo: Mide tu pulso'));
-      await _cuadros(tester, 10);
-      await tester.tap(find.text('Comenzar a contar (15 s)'));
-      await tester.pump();
-      for (var k = 0; k < 20; k++) {
-        await tester.tap(find.byIcon(Icons.favorite_rounded).last);
-        await tester.pump(const Duration(milliseconds: 750));
-      }
-      await _cuadros(tester, 10);
-      await tester.tap(
-        find.text('La sangre que el corazón empuja por las arterias'),
-      );
+      await tester.drag(find.byType(Slider), const Offset(120, 0));
       await _cuadros(tester, 5);
-      await tester.tap(find.text('Terminar reto'));
+      expect(find.textContaining('Partes descubiertas'), findsOneWidget);
+    });
+
+    testWidgets('Laboratorio de frecuencia cardiaca completo ($n)',
+        (tester) async {
+      _telefono(tester, tam: tam);
+      final progreso = ProgresoJuego();
+      await tester.pumpWidget(
+          _envolver(const PantallaLabFrecuencia(), progreso: progreso));
       await _cuadros(tester, 10);
-      // 2. Registra y compara
-      await tester.tap(find.text('Registra y compara'));
-      await _cuadros(tester, 10);
-      await tester.tap(find.text('Comenzar a contar (15 s)'));
-      await _cuadros(tester, 16, 1000);
+      await tester.tap(find.text('Va a aumentar'));
+      await _cuadros(tester, 3);
+      await tester.tap(find.text('¡A experimentar!'));
+      await _cuadros(tester, 5);
+      await tester.tap(find.textContaining('usar un ejemplo'));
+      await _cuadros(tester, 3);
       await tester.tap(find.text('Guardar y seguir'));
       await _cuadros(tester, 3);
       await tester.tap(find.text('Ya me moví, continuar'));
       await _cuadros(tester, 3);
-      await tester.tap(find.text('Comenzar a contar (15 s)'));
-      await _cuadros(tester, 16, 1000);
-      await tester.tap(find.text('Comparar'));
+      await tester.tap(find.textContaining('usar un ejemplo'));
       await _cuadros(tester, 3);
-      await tester.tap(find.text('Terminar'));
-      await _cuadros(tester, 10);
-      // 3. Frecuencia ideal
-      await tester.tap(find.text('Descubre tu frecuencia cardiaca ideal'));
-      await _cuadros(tester, 10);
-      await tester.tap(find.text('13'));
-      await _cuadros(tester, 3);
-      await tester.tap(find.text('¡Lo descubrí!'));
-      await _cuadros(tester, 10);
-      expect(find.text('¡Completaste las 3 actividades!'), findsOneWidget);
-      await tester.tap(find.byTooltip('Siguiente'));
+      await tester.tap(find.text('Guardar y seguir'));
+      await _cuadros(tester, 5);
+      expect(find.textContaining('Tu frecuencia subió de 84 a 128'),
+          findsOneWidget);
+      await tester.tap(find.text('Sacar conclusión'));
+      await _cuadros(tester, 5);
+      await tester.tap(
+          find.textContaining('Porque los músculos necesitan más oxígeno'));
+      await _cuadros(tester, 5);
+      await tester.tap(find.byTooltip('Terminar'));
       await cerrarCelebracion(tester);
+      expect(progreso.estrellasDe(Actividades.m1Lab), 3);
     });
 
     testWidgets('Mini misión: unir y responder ($n)', (tester) async {
@@ -406,20 +414,23 @@ void main() {
         );
         await _cuadros(tester, 8);
       }
+      // Fase final: acciones saludables para el corazón
+      for (final a in [
+        'Hacer ejercicio o jugar activamente',
+        'Comer frutas y verduras',
+        'Tomar agua simple',
+        'Dormir de 9 a 11 horas'
+      ]) {
+        await tester.tap(find.text(a));
+        await _cuadros(tester, 2);
+      }
+      await tester.tap(find.byTooltip('Comprobar acciones'));
+      await _cuadros(tester, 4);
+      await tester.tap(find.byTooltip('Terminar'));
       await cerrarCelebracion(tester);
       expect(progreso.estrellasDe(Actividades.m1Mini), greaterThan(0));
     });
   }
-
-  testWidgets('Partes del corazón en 3D muestran nombres', (tester) async {
-    _telefono(tester);
-    await tester.pumpWidget(_envolver(const PantallaLabCorazon()));
-    await _cuadros(tester, 10);
-    await tester.tap(find.byTooltip('Nombres'));
-    await _cuadros(tester, 3);
-    await tester.drag(find.byType(Slider), const Offset(200, 0));
-    await _cuadros(tester, 5);
-  });
 
   test('La misión 1 sigue el orden de los bocetos', () {
     expect(misionesTema1.first.pasos.map((x) => x.actividad).toList(), [
@@ -429,7 +440,9 @@ void main() {
       Actividades.m1Vasos,
       Actividades.m1Viaje,
       Actividades.m1Video,
+      Actividades.m1Sim3d,
       Actividades.m1Lab,
+      Actividades.m1Juego,
       Actividades.m1Mini,
     ]);
   });

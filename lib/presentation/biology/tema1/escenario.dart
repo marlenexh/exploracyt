@@ -36,7 +36,7 @@ class Escenario extends StatelessWidget {
                 child: ColoredBox(color: colorVelo.withValues(alpha: velo)),
               ),
             SafeArea(
-              child: Center(
+              child: SizedBox.expand(
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: SizedBox(
@@ -217,16 +217,20 @@ class EtiquetaParte extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  titulo,
-                  maxLines: 1,
-                  softWrap: false,
-                  overflow: TextOverflow.visible,
-                  style: TextStyle(
-                    fontSize: 15.5,
-                    fontWeight: FontWeight.w700,
-                    color: oscurecer(color, 0.1),
-                    height: 1.1,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    titulo,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.visible,
+                    style: TextStyle(
+                      fontSize: 15.5,
+                      fontWeight: FontWeight.w700,
+                      color: oscurecer(color, 0.1),
+                      height: 1.1,
+                    ),
                   ),
                 ),
                 if (subtitulo != null)
@@ -578,6 +582,7 @@ Future<void> ventanaZati(
   EmocionCora emocion = EmocionCora.sorprendida,
 }) {
   return showDialog(
+    useRootNavigator: false,
     context: context,
     builder: (ctx) => Dialog(
       backgroundColor: Colors.transparent,
