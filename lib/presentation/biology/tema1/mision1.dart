@@ -1647,7 +1647,7 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
             const SizedBox(height: 6),
             Text(
               'Docente: agrega un video en assets/videos/ o una dirección de internet con el parámetro '
-              '“videos: {\'${widget.clave}\': …}” de CuerpoHumanoJuego.',
+              '“videos: {\'${widget.clave}\': …}” del juego.',
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white70, fontSize: 13.5),
             ),

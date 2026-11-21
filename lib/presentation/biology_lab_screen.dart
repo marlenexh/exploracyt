@@ -7,6 +7,7 @@ import '../data/models.dart';
 import '../data/science_compass.dart';
 import '../main.dart' show store;
 import 'biology/tema1_screen.dart';
+import 'biology/tema_bio_screen.dart';
 
 // =====================================================
 // BIOLOGY ASSETS
@@ -225,7 +226,9 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
       MaterialPageRoute(
         builder: (_) => index == 0
             ? const Tema1Screen()
-            : BiologyTopicScreen(tema: widget.mundo.temas[index], index: index),
+            : temasBio.containsKey(index + 1)
+                ? TemaBioScreen(numero: index + 1)
+                : BiologyTopicScreen(tema: widget.mundo.temas[index], index: index),
       ),
     );
   }

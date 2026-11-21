@@ -130,3 +130,26 @@ También puedes usar direcciones de internet con `CuerpoHumanoJuego(videos: {'ci
 
 - Zati: `assets/images/biology/zati.png`
 - Fondo: `assets/images/biology/fondo_biologia_tema1.jpg`
+
+## Biología · Temas 2 a 5
+
+Los temas 2 a 5 usan un motor común (`lib/presentation/biology/temas/`) que reutiliza las piezas del Tema 1: Zati, el fondo, el lienzo que se adapta a celular y computadora (y se gira en vertical), los videos y las mini misiones. Cada tema solo define su contenido en `temaN.dart`.
+
+| Tema | Misiones | Insignia (al terminar la integradora) |
+| --- | --- | --- |
+| 2. El mundo de las células | ¿Qué es una célula? · Células animales y vegetales · Seres de una y muchas células · Integradora: La feria de ciencias | Explorador de las Células |
+| 3. Alimentación saludable | Los nutrientes · La alimentación equilibrada · Hábitos saludables · Integradora: El menú de la cafetería | Experto en Alimentación Saludable |
+| 4. La vida a nuestro alrededor | ¿Qué es un ser vivo? · Las plantas · Los animales · Integradora: El huerto escolar | Guardián de los Seres Vivos |
+| 5. Biodiversidad y ecosistemas | ¿Qué es un ecosistema? · Cadenas alimenticias · Biodiversidad y cuidado · Integradora: Salvemos el río | Protector de la Biodiversidad |
+
+Cada misión tiene explicación con pestañas (¿Qué es? / ¿Para qué sirve? / ¿Cómo funciona? / En la vida diaria), video, simulación o laboratorio, un juego y termina con **"Pon a prueba lo que aprendiste"** (nombrar partes, relacionar, elegir acciones y preguntas). Las misiones se desbloquean en orden.
+
+Simulaciones y laboratorios (`temas/simulaciones.dart`): microscopio con enfoque y aumento (T2), arma tu Plato del Bien Comer y laboratorio del azúcar en bebidas (T3), fotosíntesis con controles y experimento de las 4 macetas (T4), equilibrio del ecosistema pasto–conejos–zorros (T5).
+
+Actividades reutilizables (`temas/pasos.dart`): clasificar, ordenar (con ciclos de vida), atrapar lo correcto, memorama, situación por escenas y mini misión por fases.
+
+- Puente con la app: `lib/presentation/biology/tema_bio_screen.dart`. Las estrellas se guardan con la clave `v1.temaN.juego`.
+- Ids de misiones: `bio-tN-m1`, `bio-tN-m2`, `bio-tN-m3`, `bio-tN-integration`; la insignia `bio-tN-integration-badge` (ver `lib/data/bio_topics.dart`).
+- Videos en `assets/videos/` (ver `assets/videos/LEEME.txt`). Si falta un archivo se muestra un espacio reservado y el alumno puede continuar.
+- Las ilustraciones usan emojis. En la web sin conexión puede faltar la fuente de emojis del navegador; en Android e iOS se usan los del sistema.
+- Pruebas: `test/temas_bio_test.dart`.

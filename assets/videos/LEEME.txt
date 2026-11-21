@@ -4,3 +4,22 @@ Coloca aquí los videos de cada misión del Tema 1:
   sistema_inmunologico.mp4   (Misión 3)
 También puedes usar direcciones de internet:
   CuerpoHumanoJuego(videos: {'circulatorio': 'https://...', 'respiratorio': 'https://...', 'inmune': 'https://...'})
+
+Temas 2 a 5 (los nombres se cambian en el mapa "videos" de cada temaN.dart,
+en lib/presentation/biology/temas/; también aceptan direcciones https://...):
+  Tema 2 · El mundo de las células
+    celulas_que_son.mp4            (Misión 1)
+    celulas_animal_vegetal.mp4     (Misión 2)
+    celulas_importancia.mp4        (Misión 3)
+  Tema 3 · Alimentación saludable
+    alimentacion_nutrientes.mp4    (Misión 1)
+    alimentacion_plato.mp4         (Misión 2)
+    alimentacion_habitos.mp4       (Misión 3)
+  Tema 4 · La vida a nuestro alrededor
+    seres_vivos_funciones.mp4      (Misión 1)
+    seres_vivos_plantas.mp4        (Misión 2)
+    seres_vivos_animales.mp4       (Misión 3)
+  Tema 5 · Biodiversidad y ecosistemas
+    ecosistemas_que_son.mp4        (Misión 1)
+    ecosistemas_cadenas.mp4        (Misión 2)
+    ecosistemas_biodiversidad.mp4  (Misión 3)

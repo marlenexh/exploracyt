@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'models.dart';
 import 'body_topic.dart';
+import 'bio_topics.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
@@ -14,6 +15,16 @@ Tema _t(String w, int n, String titulo) {
                 : Recompensa(mission.badgeId!, mission.badge!)),
     ]);
   }
+  final bio = w == 'bio' ? bioTopics[n] : null;
+  if (bio != null) {
+    final ids = bio.missionIds;
+    return Tema(id, titulo, [
+      for (var i = 0; i < ids.length; i++)
+        Mision(ids[i], bio.missions[i],
+            implementada: true,
+            recompensa: i == ids.length - 1 ? Recompensa(bio.badgeId, bio.badge) : null),
+    ]);
+  }
   if (id == 'ele-t1') {
     // Única misión jugable por ahora (Fase 2 la generaliza con datos).
     return Tema(id, titulo, [
@@ -22,6 +33,18 @@ Tema _t(String w, int n, String titulo) {
     ]);
   }
   return Tema(id, titulo, [Mision('$id-m1', 'Misión 1: $titulo')]);
+}
+
+/// Nombre visible de una recompensa (insignia o pieza) a partir de su id.
+String nombreRecompensa(String id) {
+  for (final m in mundos) {
+    for (final t in m.temas) {
+      for (final x in t.misiones) {
+        if (x.recompensa?.id == id) return x.recompensa!.nombre;
+      }
+    }
+  }
+  return bodyBadgeName(id);
 }
 
 (Mundo, Mision)? buscarMision(String id) {
@@ -40,8 +63,8 @@ List<Tema> _temas(String w, List<String> ts) =>
 
 final mundos = <Mundo>[
   Mundo('bio', 'Biología', 'Laboratorio de la Vida', Icons.eco, const Color.fromARGB(255, 0, 187, 45), _temas('bio', [
-    'El cuerpo humano y sus sistemas', 'El mundo de las células', 'Alimentación y nutrición',
-    'El mundo de los seres vivos', 'Biodiversidad y ecosistemas'])),
+    'El cuerpo humano y sus sistemas', 'El mundo de las células', 'Alimentación saludable',
+    'La vida a nuestro alrededor', 'Biodiversidad y ecosistemas'])),
   Mundo('qui', 'Química', 'El laboratorio de los materiales misteriosos', Icons.science, const Color.fromARGB(255, 141, 19, 255), _temas('qui', [
     'Los tres estados', 'La mezcla perfecta', 'Materiales con poderes',
     'La transformación misteriosa', 'Detectives del agua'])),
