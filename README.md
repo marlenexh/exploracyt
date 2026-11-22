@@ -174,3 +174,21 @@ Basado en los conceptos de Tinkercad Circuits:
 - Progreso: clave `v1.ele.temaN.juego`; misiones `ele-tN-m1..m3` y `ele-tN-integration`; insignia `ele-tN-integration-badge` (`lib/data/ele_topics.dart`).
 - Videos en `assets/videos/` (ver `assets/videos/LEEME.txt`).
 - Pruebas: `test/electronica_test.dart` resuelve todos los retos de circuitos, los programas y los laboratorios.
+
+## Programación · El reino de los algoritmos
+
+Al entrar al mundo de Programación se abre `lib/presentation/programacion/programacion_screen.dart`: el mapa con los 5 temas y el **Laboratorio del programador**. Usa el mismo motor de temas, con fondos propios pintados en código (`programacion/fondos_pro.dart`): reino pixelado, tablero de instrucciones, bloques flotantes, ciclos y decisiones, y pantalla de código con bichos. El contenido se basa en *Fundamentos de programación* (Jiménez, Jiménez y Alvarado): algoritmo como pasos finitos, precisos y ordenados; entrada, proceso y salida; diagramas de flujo y pseudocódigo; estructuras selectivas y repetitivas; errores y depuración.
+
+| Tema | Misiones | Actividades principales | Insignia |
+| --- | --- | --- | --- |
+| 1. Piensa como programador | ¿Qué es programar? · Pensamiento computacional · Resuelve paso a paso · Integradora: El robot cocinero | Pilares del pensamiento computacional, pasos del programador, primer robot | Pensador Computacional |
+| 2. Sigue las instrucciones | ¿Qué es un algoritmo? · Secuencias · Diagramas y pseudocódigo · Integradora: El mapa del tesoro | Algoritmo para ir a la escuela, secuencias con el robot, símbolos del diagrama de flujo | Maestro de los Algoritmos |
+| 3. Programa con bloques | ¿Qué son los bloques? · Mueve al robot · Dibuja con código · Integradora: La gran fábrica | Categorías de bloques, programa al robot, dibujar figuras | Programador de Bloques |
+| 4. Repite y decide | Decisiones: si… si no · Ciclos: repetir · Combina ciclos y decisiones · Integradora: El laberinto giratorio | si / si-no / repetir / mientras con límite de bloques, laberinto autónomo | Experto en Ciclos y Decisiones |
+| 5. Encuentra el error | ¿Qué es un bug? · Depura algoritmos · Depura programas · Integradora: El videojuego con bichos | Tipos de error, caza de bichos en pseudocódigo, programas del robot con errores | Cazador de Errores |
+
+- **Robot programable** (`robot.dart`, `robot_ui.dart`): editor de bloques tipo Scratch (eventos amarillos, movimiento azul, acción verde, control naranja), ejecución paso a paso con el bloque resaltado, choques, ciclos infinitos y límite de bloques. También dibuja figuras y trae niveles con errores para depurar.
+- **Caza de bichos** (`cazaerrores.dart`): tocar la línea con error y elegir la corrección.
+- **Laboratorio del programador** (`estudio.dart`): el alumno programa los eventos de su videojuego, lo prueba, ve la revisión de bugs y lo publica. Da la insignia “Desarrollador de Videojuegos” (`pro-lab-badge`).
+- Progreso: clave `v1.pro.temaN.juego`; misiones `pro-tN-m1..m3` y `pro-tN-integration` (`lib/data/pro_topics.dart`).
+- Pruebas: `test/programacion_robot_test.dart` y `test/programacion_test.dart` (resuelven todos los niveles, los bichos y el laboratorio).

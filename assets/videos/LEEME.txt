@@ -36,3 +36,11 @@ en lib/presentation/electronica/):
     maquinas_motor.mp4, maquinas_mecanismos.mp4, maquinas_aparatos.mp4
   Tema 5 · Crea tu invento
     inventos_sistemas.mp4, inventos_bloques.mp4, inventos_disena.mp4
+
+Programación (los nombres se cambian en el mapa "videos" de cada pro_temaN.dart,
+en lib/presentation/programacion/):
+  Tema 1 · programacion_que_es.mp4, programacion_pensamiento.mp4, programacion_problemas.mp4
+  Tema 2 · algoritmos_que_son.mp4, algoritmos_secuencias.mp4, algoritmos_diagramas.mp4
+  Tema 3 · bloques_que_son.mp4, bloques_robot.mp4, bloques_dibujo.mp4
+  Tema 4 · repite_decisiones.mp4, repite_ciclos.mp4, repite_combina.mp4
+  Tema 5 · errores_que_son.mp4, errores_algoritmos.mp4, errores_programas.mp4

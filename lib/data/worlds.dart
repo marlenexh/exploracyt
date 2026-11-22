@@ -3,6 +3,7 @@ import 'models.dart';
 import 'body_topic.dart';
 import 'bio_topics.dart';
 import 'ele_topics.dart';
+import 'pro_topics.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
@@ -19,6 +20,7 @@ Tema _t(String w, int n, String titulo) {
   final info = switch (w) {
     'bio' => bioTopics[n],
     'ele' => eleTopics[n],
+    'pro' => proTopics[n],
     _ => null,
   };
   if (info != null) {
@@ -42,6 +44,7 @@ String nombreRecompensa(String id) {
       }
     }
   }
+  if (id == proLabBadgeId) return proLabBadge;
   return bodyBadgeName(id);
 }
 
@@ -76,6 +79,6 @@ final mundos = <Mundo>[
     '¿Cómo aprende un robot?', 'La máquina detective', 'Cazadores de errores',
     '¿Podemos confiar en la IA?', 'IA para ayudar a la comunidad'])),
   Mundo('pro', 'Programación', 'El reino de los algoritmos', Icons.code, const Color.fromARGB(255, 26, 145, 172), _temas('pro', [
-    'Las instrucciones mágicas', 'El laberinto de Zati', 'El poder de repetir',
-    'El robot que decide', 'Crea tu propio minijuego'])),
+    'Piensa como programador', 'Sigue las instrucciones', 'Programa con bloques',
+    'Repite y decide', 'Encuentra el error'])),
 ];
