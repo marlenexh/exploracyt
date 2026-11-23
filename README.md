@@ -174,3 +174,49 @@ Basado en los conceptos de Tinkercad Circuits:
 - Progreso: clave `v1.ele.temaN.juego`; misiones `ele-tN-m1..m3` y `ele-tN-integration`; insignia `ele-tN-integration-badge` (`lib/data/ele_topics.dart`).
 - Videos en `assets/videos/` (ver `assets/videos/LEEME.txt`).
 - Pruebas: `test/electronica_test.dart` resuelve todos los retos de circuitos, los programas y los laboratorios.
+
+## Programación · El reino de los algoritmos
+
+Al entrar al mundo de Programación se abre `lib/presentation/programacion/programacion_screen.dart`: el mapa con los 5 temas y el **Laboratorio del programador**. Usa el mismo motor de temas, con fondos propios pintados en código (`programacion/fondos_pro.dart`): reino pixelado, tablero de instrucciones, bloques flotantes, ciclos y decisiones, y pantalla de código con bichos. El contenido se basa en *Fundamentos de programación* (Jiménez, Jiménez y Alvarado): algoritmo como pasos finitos, precisos y ordenados; entrada, proceso y salida; diagramas de flujo y pseudocódigo; estructuras selectivas y repetitivas; errores y depuración.
+
+| Tema | Misiones | Actividades principales | Insignia |
+| --- | --- | --- | --- |
+| 1. Piensa como programador | ¿Qué es programar? · Pensamiento computacional · Resuelve paso a paso · Integradora: El robot cocinero | Pilares del pensamiento computacional, pasos del programador, primer robot | Pensador Computacional |
+| 2. Sigue las instrucciones | ¿Qué es un algoritmo? · Secuencias · Diagramas y pseudocódigo · Integradora: El mapa del tesoro | Algoritmo para ir a la escuela, secuencias con el robot, símbolos del diagrama de flujo | Maestro de los Algoritmos |
+| 3. Programa con bloques | ¿Qué son los bloques? · Mueve al robot · Dibuja con código · Integradora: La gran fábrica | Categorías de bloques, programa al robot, dibujar figuras | Programador de Bloques |
+| 4. Repite y decide | Decisiones: si… si no · Ciclos: repetir · Combina ciclos y decisiones · Integradora: El laberinto giratorio | si / si-no / repetir / mientras con límite de bloques, laberinto autónomo | Experto en Ciclos y Decisiones |
+| 5. Encuentra el error | ¿Qué es un bug? · Depura algoritmos · Depura programas · Integradora: El videojuego con bichos | Tipos de error, caza de bichos en pseudocódigo, programas del robot con errores | Cazador de Errores |
+
+- **Robot programable** (`robot.dart`, `robot_ui.dart`): editor de bloques tipo Scratch (eventos amarillos, movimiento azul, acción verde, control naranja), ejecución paso a paso con el bloque resaltado, choques, ciclos infinitos y límite de bloques. También dibuja figuras y trae niveles con errores para depurar.
+- **Caza de bichos** (`cazaerrores.dart`): tocar la línea con error y elegir la corrección.
+- **Laboratorio del programador** (`estudio.dart`): el alumno programa los eventos de su videojuego, lo prueba, ve la revisión de bugs y lo publica. Da la insignia “Desarrollador de Videojuegos” (`pro-lab-badge`).
+- Progreso: clave `v1.pro.temaN.juego`; misiones `pro-tN-m1..m3` y `pro-tN-integration` (`lib/data/pro_topics.dart`).
+- Pruebas: `test/programacion_robot_test.dart` y `test/programacion_test.dart` (resuelven todos los niveles, los bichos y el laboratorio).
+
+## Química · El laboratorio de los materiales misteriosos
+
+Mapa en `lib/presentation/quimica/quimica_screen.dart`. Cada tema tiene su propio fondo animado (`ciencia/fondos_ciencia.dart`): muro de materiales, cielo con globos, cristales que cambian, cocina y fogata nocturna. El contenido sigue los temas de Ciencias Naturales de la SEP (Nuestros saberes / Proyectos de aula) e incluye tarjetas de **“¿Sabías que…?”** con datos interesantes.
+
+| Tema | Misiones | Actividades principales | Insignia |
+| --- | --- | --- | --- |
+| 1. El mundo de los materiales | ¿De qué están hechas las cosas? · Dureza, flexibilidad y permeabilidad · El material correcto · Integradora: La mochila para la lluvia | Naturales y artificiales, tabla de pruebas (rayar, doblar, echar agua) | Detective de Materiales |
+| 2. Los gases y sus propiedades | Sólidos, líquidos y gases · Las propiedades de los gases · Gases en la vida diaria · Integradora: El globo de la feria | Jeringa de gas: compresibilidad, expansión, volumen y masa | Explorador de los Gases |
+| 3. Todo se transforma | Cambios temporales · Cambios permanentes · Los cambios de estado · Integradora: La fiesta de cumpleaños | Tabla calentar/enfriar, ciclo del agua | Maestro de las Transformaciones |
+| 4. Cocción y descomposición de los alimentos | La cocción · La descomposición · La conservación · Integradora: El refrigerador descompuesto | Simulador de conservación (aire, refri, congelador, deshidratar) | Chef Científico |
+| 5. Combustión y oxidación | La combustión · La oxidación · Fuego y ambiente · Integradora: Campamento seguro | Vela con frascos y triángulo del fuego, clavos que se oxidan | Guardián del Fuego |
+
+## Física · El valle de las fuerzas y la energía
+
+Mapa en `lib/presentation/fisica/fisica_screen.dart`, con fondos propios por tema: campo magnético, colinas con manzanas, atardecer caluroso, ciudad con energía y espacio con planetas.
+
+| Tema | Misiones | Actividades principales | Insignia |
+| --- | --- | --- | --- |
+| 1. El magnetismo y sus misterios | Imanes y polos · ¿Qué atrae un imán? · La Tierra es un imán · Integradora: El explorador perdido | Imanes que se atraen/repelen y brújula, tabla de objetos, imán atrapa-todo | Maestro de los Imanes |
+| 2. La gravedad en acción | ¿Qué es la gravedad? · La caída de los objetos · Efectos de la gravedad · Integradora: Misión a la Luna | Caída en la Tierra y en la Luna (experimento de Galileo) | Explorador de la Gravedad |
+| 3. Calor y energía térmica | Temperatura y calor · ¿Cómo viaja el calor? · Conductores y aislantes · Integradora: El pozole de la abuela | Bloques de metal/vidrio/madera, cucharas en el té, seguridad en la cocina | Experto en Calor |
+| 4. La energía que nos rodea | La electricidad · Conductores y aislantes · Uso responsable de la energía · Integradora: El recibo de luz | Circuito con el simulador de Electrónica, probador de materiales, casa que ahorra | Guardián de la Energía |
+| 5. Explorando el Sistema Solar | El Sol y los planetas · Características de los planetas · Los movimientos de la Tierra · Integradora: Viaje espacial | Viaje por los 8 planetas, rocosos/gaseosos, fases de la Luna | Astronauta Explorador |
+
+- Piezas comunes (`lib/presentation/ciencia/`): ilustraciones con emojis animados (`escena.dart`), tabla de experimentos (`lab_matriz.dart`) y fondos.
+- Progreso: claves `v1.qui.temaN.juego` y `v1.fis.temaN.juego`; misiones `qui-tN-…` / `fis-tN-…` (`lib/data/qui_topics.dart`, `lib/data/fis_topics.dart`).
+- Pruebas: `test/ciencias_test.dart` (datos, mapas en 3 tamaños, todas las pantallas, tablas y simulaciones resueltas).

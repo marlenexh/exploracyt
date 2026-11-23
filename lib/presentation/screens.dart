@@ -6,6 +6,9 @@ import 'game_widgets.dart';
 import 'mission_screen.dart';
 import 'biology_lab_screen.dart';
 import 'electronica/electronica_screen.dart';
+import 'programacion/programacion_screen.dart';
+import 'quimica/quimica_screen.dart';
+import 'fisica/fisica_screen.dart';
 
 
 class RutaMundo extends StatelessWidget {
@@ -15,6 +18,9 @@ class RutaMundo extends StatelessWidget {
   Widget build(BuildContext context) {
     if (m.id == 'bio') return BiologyLabScreen(mundo: m);
     if (m.id == 'ele') return ElectronicaScreen(mundo: m);
+    if (m.id == 'pro') return ProgramacionScreen(mundo: m);
+    if (m.id == 'qui') return QuimicaScreen(mundo: m);
+    if (m.id == 'fis') return FisicaScreen(mundo: m);
     final fondo = Color.lerp(m.color, C.noche, .6)!;
     return Scaffold(
       body: Container(
