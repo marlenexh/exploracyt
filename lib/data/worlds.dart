@@ -4,6 +4,8 @@ import 'body_topic.dart';
 import 'bio_topics.dart';
 import 'ele_topics.dart';
 import 'pro_topics.dart';
+import 'qui_topics.dart';
+import 'fis_topics.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
@@ -21,6 +23,8 @@ Tema _t(String w, int n, String titulo) {
     'bio' => bioTopics[n],
     'ele' => eleTopics[n],
     'pro' => proTopics[n],
+    'qui' => quiTopics[n],
+    'fis' => fisTopics[n],
     _ => null,
   };
   if (info != null) {
@@ -67,11 +71,11 @@ final mundos = <Mundo>[
     'El cuerpo humano y sus sistemas', 'El mundo de las células', 'Alimentación saludable',
     'La vida a nuestro alrededor', 'Biodiversidad y ecosistemas'])),
   Mundo('qui', 'Química', 'El laboratorio de los materiales misteriosos', Icons.science, const Color.fromARGB(255, 141, 19, 255), _temas('qui', [
-    'Los tres estados', 'La mezcla perfecta', 'Materiales con poderes',
-    'La transformación misteriosa', 'Detectives del agua'])),
+    'El mundo de los materiales', 'Los gases y sus propiedades', 'Todo se transforma',
+    'Cocción y descomposición de los alimentos', 'Combustión y oxidación'])),
   Mundo('fis', 'Física', 'El valle de las fuerzas y la energía', Icons.bubble_chart, const Color.fromARGB(255, 2, 108, 255), _temas('fis', [
-    'Fuerzas en acción', 'La montaña rusa', 'El poder de la energía',
-    'Luz, sombras y sonido', 'El desafío de las máquinas'])),
+    'El magnetismo y sus misterios', 'La gravedad en acción', 'Calor y energía térmica',
+    'La energía que nos rodea', 'Explorando el Sistema Solar'])),
   Mundo('ele', 'Electrónica', 'La ciudad de los circuitos', Icons.memory, const Color.fromARGB(255, 255, 174, 0), _temas('ele', [
     'Conoce los componentes', 'Conecta y enciende', 'Detectives electrónicos',
     'Máquinas en movimiento', 'Crea tu invento'])),

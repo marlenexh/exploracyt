@@ -44,3 +44,29 @@ en lib/presentation/programacion/):
   Tema 3 · bloques_que_son.mp4, bloques_robot.mp4, bloques_dibujo.mp4
   Tema 4 · repite_decisiones.mp4, repite_ciclos.mp4, repite_combina.mp4
   Tema 5 · errores_que_son.mp4, errores_algoritmos.mp4, errores_programas.mp4
+
+Química (los nombres se cambian en el mapa "videos" de cada qui_temaN.dart,
+en lib/presentation/quimica/):
+  Tema 1 · El mundo de los materiales
+    materiales_que_son.mp4, materiales_propiedades.mp4, materiales_usos.mp4
+  Tema 2 · Los gases y sus propiedades
+    gases_que_son.mp4, gases_propiedades.mp4, gases_vida_diaria.mp4
+  Tema 3 · Todo se transforma
+    cambios_temporales.mp4, cambios_permanentes.mp4, cambios_estado.mp4
+  Tema 4 · Cocción y descomposición de los alimentos
+    coccion_alimentos.mp4, coccion_descomposicion.mp4, coccion_conservacion.mp4
+  Tema 5 · Combustión y oxidación
+    combustion_fuego.mp4, combustion_oxidacion.mp4, combustion_ambiente.mp4
+
+Física (los nombres se cambian en el mapa "videos" de cada fis_temaN.dart,
+en lib/presentation/fisica/):
+  Tema 1 · El magnetismo y sus misterios
+    magnetismo_polos.mp4, magnetismo_materiales.mp4, magnetismo_usos.mp4
+  Tema 2 · La gravedad en acción
+    gravedad_que_es.mp4, gravedad_caida.mp4, gravedad_efectos.mp4
+  Tema 3 · Calor y energía térmica
+    calor_temperatura.mp4, calor_transferencia.mp4, calor_conductores.mp4
+  Tema 4 · La energía que nos rodea
+    energia_electricidad.mp4, energia_conductores.mp4, energia_ahorro.mp4
+  Tema 5 · Explorando el Sistema Solar
+    espacio_sistema_solar.mp4, espacio_planetas.mp4, espacio_movimientos.mp4
