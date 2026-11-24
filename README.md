@@ -192,3 +192,19 @@ Al entrar al mundo de Programación se abre `lib/presentation/programacion/progr
 - **Laboratorio del programador** (`estudio.dart`): el alumno programa los eventos de su videojuego, lo prueba, ve la revisión de bugs y lo publica. Da la insignia “Desarrollador de Videojuegos” (`pro-lab-badge`).
 - Progreso: clave `v1.pro.temaN.juego`; misiones `pro-tN-m1..m3` y `pro-tN-integration` (`lib/data/pro_topics.dart`).
 - Pruebas: `test/programacion_robot_test.dart` y `test/programacion_test.dart` (resuelven todos los niveles, los bichos y el laboratorio).
+
+## Química · El laboratorio de los materiales misteriosos
+
+Mapa en `lib/presentation/quimica/quimica_screen.dart`. El mapa y cada tema tienen su propio fondo animado (`quimica/fondos_qui.dart`): muro de materiales, cielo con globos, cristales que cambian, cocina y fogata nocturna. El contenido sigue los temas de Ciencias Naturales de la SEP (Nuestros saberes / Proyectos de aula) e incluye tarjetas de **“¿Sabías que…?”** con datos interesantes.
+
+| Tema | Misiones | Actividades principales | Insignia |
+| --- | --- | --- | --- |
+| 1. El mundo de los materiales | ¿De qué están hechas las cosas? · Dureza, flexibilidad y permeabilidad · El material correcto · Integradora: La mochila para la lluvia | Naturales y artificiales, tabla de pruebas (rayar, doblar, echar agua) | Detective de Materiales |
+| 2. Los gases y sus propiedades | Sólidos, líquidos y gases · Las propiedades de los gases · Gases en la vida diaria · Integradora: El globo de la feria | Jeringa de gas: compresibilidad, expansión, volumen y masa | Explorador de los Gases |
+| 3. Todo se transforma | Cambios temporales · Cambios permanentes · Los cambios de estado · Integradora: La fiesta de cumpleaños | Tabla calentar/enfriar, ciclo del agua | Maestro de las Transformaciones |
+| 4. Cocción y descomposición de los alimentos | La cocción · La descomposición · La conservación · Integradora: El refrigerador descompuesto | Simulador de conservación (aire, refri, congelador, deshidratar) | Chef Científico |
+| 5. Combustión y oxidación | La combustión · La oxidación · Fuego y ambiente · Integradora: Campamento seguro | Vela con frascos y triángulo del fuego, clavos que se oxidan | Guardián del Fuego |
+
+- Fondos en `quimica/fondos_qui.dart`. Piezas reutilizables en `lib/presentation/ciencia/`: ilustraciones con emojis animados (`escena.dart`), tabla de experimentos (`lab_matriz.dart`), pinceles para fondos y paneles de simulación.
+- Progreso: clave `v1.qui.temaN.juego`; misiones `qui-tN-m1..m3` y `qui-tN-integration` (`lib/data/qui_topics.dart`).
+- Pruebas: `test/quimica_test.dart` (datos, mapa en 3 tamaños, todas las pantallas, tablas y simulaciones resueltas).
