@@ -6,6 +6,7 @@ import 'ele_topics.dart';
 import 'pro_topics.dart';
 import 'qui_topics.dart';
 import 'fis_topics.dart';
+import 'ia_topics.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
@@ -25,6 +26,7 @@ Tema _t(String w, int n, String titulo) {
     'pro' => proTopics[n],
     'qui' => quiTopics[n],
     'fis' => fisTopics[n],
+    'ia' => iaTopics[n],
     _ => null,
   };
   if (info != null) {
@@ -49,6 +51,7 @@ String nombreRecompensa(String id) {
     }
   }
   if (id == proLabBadgeId) return proLabBadge;
+  if (id == iaLabBadgeId) return iaLabBadge;
   return bodyBadgeName(id);
 }
 
@@ -80,8 +83,8 @@ final mundos = <Mundo>[
     'Conoce los componentes', 'Conecta y enciende', 'Detectives electrónicos',
     'Máquinas en movimiento', 'Crea tu invento'])),
   Mundo('ia', 'Inteligencia Artificial', 'La estación de las máquinas inteligentes', Icons.psychology, const Color.fromARGB(255, 255, 18, 188), _temas('ia', [
-    '¿Cómo aprende un robot?', 'La máquina detective', 'Cazadores de errores',
-    '¿Podemos confiar en la IA?', 'IA para ayudar a la comunidad'])),
+    'Máquinas inteligentes', 'Encuentra el patrón', 'Enseña a una máquina',
+    'Inteligencia en acción', 'Usa la IA con cuidado'])),
   Mundo('pro', 'Programación', 'El reino de los algoritmos', Icons.code, const Color.fromARGB(255, 26, 145, 172), _temas('pro', [
     'Piensa como programador', 'Sigue las instrucciones', 'Programa con bloques',
     'Repite y decide', 'Encuentra el error'])),

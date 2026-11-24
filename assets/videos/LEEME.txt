@@ -70,3 +70,16 @@ en lib/presentation/fisica/):
     energia_electricidad.mp4, energia_conductores.mp4, energia_ahorro.mp4
   Tema 5 · Explorando el Sistema Solar
     espacio_sistema_solar.mp4, espacio_planetas.mp4, espacio_movimientos.mp4
+
+Inteligencia Artificial (los nombres se cambian en el mapa "videos" de cada ia_temaN.dart,
+en lib/presentation/ia/):
+  Tema 1 · Máquinas inteligentes
+    ia_que_es.mp4, ia_turing.mp4, ia_agentes.mp4
+  Tema 2 · Encuentra el patrón
+    patrones_caracteristicas.mp4, patrones_secuencias.mp4, patrones_maquinas.mp4
+  Tema 3 · Enseña a una máquina
+    aprendizaje_como.mp4, aprendizaje_entrenar.mp4, aprendizaje_neuronas.mp4
+  Tema 4 · Inteligencia en acción
+    ia_asistentes.mp4, ia_recomendaciones.mp4, ia_que_ayuda.mp4
+  Tema 5 · Usa la IA con cuidado
+    ia_limites.mp4, ia_privacidad.mp4, ia_responsable.mp4

@@ -223,3 +223,20 @@ Mapa en `lib/presentation/fisica/fisica_screen.dart`, con su propio fondo: el ta
 
 - Progreso: clave `v1.fis.temaN.juego`; misiones `fis-tN-m1..m3` y `fis-tN-integration` (`lib/data/fis_topics.dart`).
 - Pruebas: `test/fisica_test.dart` (datos, mapa en 3 tamaños, todas las pantallas, tablas y simulaciones resueltas).
+
+## Inteligencia Artificial · La estación de las máquinas inteligentes
+
+Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una estación nocturna con una gran red neuronal que se enciende) y un fondo distinto por tema (`ia/fondos_ia.dart`): fábrica de robots, mosaico de patrones, pizarrón de la escuela de robots, ciudad conectada y escudo digital. El contenido se basa en *Inteligencia Artificial. Fundamentos, práctica y aplicaciones* (Alberto García Serrano, RC Libros) e *Inteligencia artificial: teoría y aplicaciones* (Ramos Corchado y Muñoz Jiménez, coords., UAEMEX, 2025): prueba de Turing y capacidades de una máquina inteligente, historia (McCulloch y Pitts, Turing, McCarthy), agentes inteligentes, IA particular/general/social, aprendizaje supervisado, no supervisado y por refuerzo, perceptrón, aplicaciones y desafíos éticos (sesgo, privacidad, contenido falso, verificar las respuestas).
+
+| Tema | Misiones | Actividades principales | Insignia |
+| --- | --- | --- | --- |
+| 1. Máquinas inteligentes | ¿Qué es la inteligencia artificial? · La prueba de Turing · Agentes y tipos de IA · Integradora: La Feria de los Robots | Capacidades de la IA, sé el juez de Turing, ¿usa IA o no? | Explorador de Máquinas Inteligentes |
+| 2. Encuentra el patrón | Características y semejanzas · Secuencias y patrones · Las máquinas reconocen patrones · Integradora: El museo de los patrones | Agrupar por forma, detective de patrones, figuras con pixeles | Detective de Patrones |
+| 3. Enseña a una máquina | ¿Cómo aprende una máquina? · Entrena tu clasificador · La neurona artificial · Integradora: El robot que separa la basura | Pasos del aprendizaje, etiquetar y entrenar (¿mamífero o ave?), ajustar pesos de un perceptrón | Entrenador de Máquinas |
+| 4. Inteligencia en acción | La IA en tu casa y tu bolsillo · Recomendaciones y búsquedas · La IA que ayuda · Integradora: Un día con la IA | Asistente de voz paso a paso, recomendador de videos y la burbuja | Detective de la IA Cotidiana |
+| 5. Usa la IA con cuidado | Límites y errores de la IA · Privacidad y datos personales · Contenido falso y uso responsable · Integradora: El reglamento de IA del salón | La IA con sesgo (manzanas verdes), datos privados, uso responsable | Guardián Digital Responsable |
+
+- **Laboratorio de IA** (`ia/laboratorio_ia.dart`): el alumno construye su propia IA en 6 pasos, como un equipo de ingenieros: elige el problema (separador de basura, reconocedor de animales o pronóstico del paraguas), reúne datos, los etiqueta, elige los rasgos, entrena (red neuronal animada) y prueba con datos nuevos. Si no llega al 80 % recibe pistas (etiquetas equivocadas, rasgos que confunden, pocos datos). Al publicarla gana la insignia “Ingeniero de IA” (`ia-lab-badge`).
+- Motor de aprendizaje (`ia/modelo_ia.dart`): vecinos más cercanos sobre rasgos; los datos de los proyectos están en `ia/proyectos_ia.dart`.
+- Progreso: clave `v1.ia.temaN.juego`; misiones `ia-tN-m1..m3` y `ia-tN-integration` (`lib/data/ia_topics.dart`).
+- Pruebas: `test/ia_modelo_test.dart` (el motor aprende, falla con rasgos inútiles o etiquetas equivocadas y corrige el sesgo) y `test/ia_test.dart` (datos, mapa, todas las pantallas, cada simulación y el laboratorio completo).

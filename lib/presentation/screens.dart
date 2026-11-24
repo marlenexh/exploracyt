@@ -9,6 +9,7 @@ import 'electronica/electronica_screen.dart';
 import 'programacion/programacion_screen.dart';
 import 'quimica/quimica_screen.dart';
 import 'fisica/fisica_screen.dart';
+import 'ia/ia_screen.dart';
 
 
 class RutaMundo extends StatelessWidget {
@@ -21,6 +22,7 @@ class RutaMundo extends StatelessWidget {
     if (m.id == 'pro') return ProgramacionScreen(mundo: m);
     if (m.id == 'qui') return QuimicaScreen(mundo: m);
     if (m.id == 'fis') return FisicaScreen(mundo: m);
+    if (m.id == 'ia') return InteligenciaArtificialScreen(mundo: m);
     final fondo = Color.lerp(m.color, C.noche, .6)!;
     return Scaffold(
       body: Container(
