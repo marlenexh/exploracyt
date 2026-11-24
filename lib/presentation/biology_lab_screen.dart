@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../data/models.dart';
 import '../data/science_compass.dart';
 import '../main.dart' show store;
+import 'biology/fondo_mapa_bio.dart';
 import 'biology/tema1_screen.dart';
 import 'biology/tema_bio_screen.dart';
 
@@ -14,9 +15,6 @@ import 'biology/tema_bio_screen.dart';
 // =====================================================
 
 class BiologyAssets {
-  static const String background =
-      'assets/images/biology/biology_background.png';
-
   static const String zati =
       'assets/images/biology/zati.png';
 
@@ -279,29 +277,7 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
                   // ==================================
                   // FULL SCREEN BACKGROUND
                   // ==================================
-                  Image.asset(
-                    BiologyAssets.background,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                    errorBuilder: (
-                      context,
-                      error,
-                      stackTrace,
-                    ) {
-                      return const ColoredBox(
-                        color: Color(0xFF315B9A),
-                        child: Center(
-                          child: Text(
-                            'No se encontró el fondo '
-                            'del laboratorio.',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  const FondoMapaBiologia(),
 
                   // ==================================
                   // FLOOR SHADOW
