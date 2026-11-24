@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_qui.dart';
 import 'ilustraciones_qui.dart';
 
 /// Química · Tema 3: Todo se transforma (cambios temporales y permanentes).
@@ -16,7 +16,7 @@ const _ci = Color(0xFF00838F);
 final quiTema3 = TemaBio(
   numero: 3,
   mundo: 'qui',
-  estilo: estiloCiencia(FondoCiencia.transforma),
+  estilo: estiloQui(FondoQui.transforma),
   titulo: 'Todo se transforma',
   saludo:
       'El hielo se derrite, el pan se hornea, el papel se quema… Los materiales cambian todo el tiempo. Algunos cambios se pueden revertir y otros no. ¡Vamos a descubrirlo!',

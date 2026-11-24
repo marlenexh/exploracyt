@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/models.dart';
 import '../../data/qui_topics.dart';
 import '../biology/temas/motor.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_qui.dart';
 import '../mundo_temas_screen.dart';
 import 'qui_tema1.dart';
 import 'qui_tema2.dart';
@@ -29,7 +29,7 @@ class QuimicaScreen extends StatelessWidget {
         contenidos: quiContenidos,
         emojis: _emojisTema,
         colorFondo: const Color(0xFF8D13FF),
-        fondo: const FondoCienciaWidget(FondoCiencia.laboratorio),
+        fondo: const FondoQuimica(FondoQui.laboratorio),
         descripcion: 'Investiga los materiales, los gases y cómo se transforma todo a tu alrededor.',
       );
 }

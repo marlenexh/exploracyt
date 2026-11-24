@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_qui.dart';
 import 'ilustraciones_qui.dart';
 import 'sims_qui.dart';
 
@@ -16,7 +16,7 @@ const _ci = Color(0xFF0277BD);
 final quiTema2 = TemaBio(
   numero: 2,
   mundo: 'qui',
-  estilo: estiloCiencia(FondoCiencia.gases),
+  estilo: estiloQui(FondoQui.gases),
   titulo: 'Los gases y sus propiedades',
   saludo:
       'No los vemos, pero los gases están en todas partes: el aire que respiras, el gas de la estufa, las burbujas del refresco. ¡Vamos a descubrir cómo se comportan!',

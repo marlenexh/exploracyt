@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_fis.dart';
 import 'ilustraciones_fis.dart';
 import 'sims_fis.dart';
 
@@ -16,7 +16,7 @@ const _ci = Color(0xFF283593);
 final fisTema5 = TemaBio(
   numero: 5,
   mundo: 'fis',
-  estilo: estiloCiencia(FondoCiencia.espacio),
+  estilo: estiloFis(FondoFis.espacio),
   titulo: 'Explorando el Sistema Solar',
   saludo: '¡Prepara tu nave! Vamos a viajar por el Sistema Solar para conocer al Sol, los ocho planetas y cómo se mueven en el espacio.',
   misionDelTema:

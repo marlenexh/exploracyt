@@ -195,7 +195,7 @@ Al entrar al mundo de Programación se abre `lib/presentation/programacion/progr
 
 ## Química · El laboratorio de los materiales misteriosos
 
-Mapa en `lib/presentation/quimica/quimica_screen.dart`. Cada tema tiene su propio fondo animado (`ciencia/fondos_ciencia.dart`): muro de materiales, cielo con globos, cristales que cambian, cocina y fogata nocturna. El contenido sigue los temas de Ciencias Naturales de la SEP (Nuestros saberes / Proyectos de aula) e incluye tarjetas de **“¿Sabías que…?”** con datos interesantes.
+Mapa en `lib/presentation/quimica/quimica_screen.dart`. El mapa y cada tema tienen su propio fondo animado (`quimica/fondos_qui.dart`): muro de materiales, cielo con globos, cristales que cambian, cocina y fogata nocturna. El contenido sigue los temas de Ciencias Naturales de la SEP (Nuestros saberes / Proyectos de aula) e incluye tarjetas de **“¿Sabías que…?”** con datos interesantes.
 
 | Tema | Misiones | Actividades principales | Insignia |
 | --- | --- | --- | --- |
@@ -205,9 +205,13 @@ Mapa en `lib/presentation/quimica/quimica_screen.dart`. Cada tema tiene su propi
 | 4. Cocción y descomposición de los alimentos | La cocción · La descomposición · La conservación · Integradora: El refrigerador descompuesto | Simulador de conservación (aire, refri, congelador, deshidratar) | Chef Científico |
 | 5. Combustión y oxidación | La combustión · La oxidación · Fuego y ambiente · Integradora: Campamento seguro | Vela con frascos y triángulo del fuego, clavos que se oxidan | Guardián del Fuego |
 
+- Fondos en `quimica/fondos_qui.dart`. Piezas reutilizables en `lib/presentation/ciencia/`: ilustraciones con emojis animados (`escena.dart`), tabla de experimentos (`lab_matriz.dart`), pinceles para fondos y paneles de simulación.
+- Progreso: clave `v1.qui.temaN.juego`; misiones `qui-tN-m1..m3` y `qui-tN-integration` (`lib/data/qui_topics.dart`).
+- Pruebas: `test/quimica_test.dart` (datos, mapa en 3 tamaños, todas las pantallas, tablas y simulaciones resueltas).
+
 ## Física · El valle de las fuerzas y la energía
 
-Mapa en `lib/presentation/fisica/fisica_screen.dart`, con fondos propios por tema: campo magnético, colinas con manzanas, atardecer caluroso, ciudad con energía y espacio con planetas.
+Mapa en `lib/presentation/fisica/fisica_screen.dart`, con su propio fondo: el taller de las fuerzas (engranes, péndulo de Newton, rampa y balancín). Cada tema tiene además su fondo (`fisica/fondos_fis.dart`): campo magnético, colinas con manzanas, atardecer caluroso, campo de energía limpia y espacio con planetas. Es un mundo independiente de Química; solo reutiliza las piezas genéricas de `lib/presentation/ciencia/`.
 
 | Tema | Misiones | Actividades principales | Insignia |
 | --- | --- | --- | --- |
@@ -217,6 +221,5 @@ Mapa en `lib/presentation/fisica/fisica_screen.dart`, con fondos propios por tem
 | 4. La energía que nos rodea | La electricidad · Conductores y aislantes · Uso responsable de la energía · Integradora: El recibo de luz | Circuito con el simulador de Electrónica, probador de materiales, casa que ahorra | Guardián de la Energía |
 | 5. Explorando el Sistema Solar | El Sol y los planetas · Características de los planetas · Los movimientos de la Tierra · Integradora: Viaje espacial | Viaje por los 8 planetas, rocosos/gaseosos, fases de la Luna | Astronauta Explorador |
 
-- Piezas comunes (`lib/presentation/ciencia/`): ilustraciones con emojis animados (`escena.dart`), tabla de experimentos (`lab_matriz.dart`) y fondos.
-- Progreso: claves `v1.qui.temaN.juego` y `v1.fis.temaN.juego`; misiones `qui-tN-…` / `fis-tN-…` (`lib/data/qui_topics.dart`, `lib/data/fis_topics.dart`).
-- Pruebas: `test/ciencias_test.dart` (datos, mapas en 3 tamaños, todas las pantallas, tablas y simulaciones resueltas).
+- Progreso: clave `v1.fis.temaN.juego`; misiones `fis-tN-m1..m3` y `fis-tN-integration` (`lib/data/fis_topics.dart`).
+- Pruebas: `test/fisica_test.dart` (datos, mapa en 3 tamaños, todas las pantallas, tablas y simulaciones resueltas).

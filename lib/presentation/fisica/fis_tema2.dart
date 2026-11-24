@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_fis.dart';
 import 'ilustraciones_fis.dart';
 import 'sims_fis.dart';
 
@@ -16,7 +16,7 @@ const _ci = Color(0xFF2E7D32);
 final fisTema2 = TemaBio(
   numero: 2,
   mundo: 'fis',
-  estilo: estiloCiencia(FondoCiencia.gravedad),
+  estilo: estiloFis(FondoFis.gravedad),
   titulo: 'La gravedad en acción',
   saludo: '¿Por qué las cosas caen hacia abajo? ¿Por qué no salimos volando? ¡Gracias a la gravedad! Vamos a descubrir cómo funciona esta fuerza invisible.',
   misionDelTema: 'La agencia espacial prepara una misión a la Luna. Investiga la gravedad y la caída de los objetos para entrenar a los astronautas.',

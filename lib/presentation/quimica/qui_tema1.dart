@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_qui.dart';
 import 'ilustraciones_qui.dart';
 
 /// Química · Tema 1: El mundo de los materiales.
@@ -16,7 +16,7 @@ const _ci = Color(0xFF6D4C41);
 final quiTema1 = TemaBio(
   numero: 1,
   mundo: 'qui',
-  estilo: estiloCiencia(FondoCiencia.materiales),
+  estilo: estiloQui(FondoQui.materiales),
   titulo: 'El mundo de los materiales',
   saludo:
       'Todo lo que te rodea está hecho de materiales: tu mesa, tu ropa, tu lápiz. Cada material tiene propiedades, como ser duro, flexible o dejar pasar el agua. ¡Vamos a investigarlas!',
