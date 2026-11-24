@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Necesario para los videos de YouTube -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="explora_ciencia"
         android:name="${applicationName}"
