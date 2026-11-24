@@ -4,6 +4,8 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import '../../../data/enlaces_videos.dart';
+import '../../videos/video_youtube.dart';
 
 import 'aventura.dart';
 import 'componentes.dart';
@@ -1532,6 +1534,9 @@ class PantallaVideoTema extends StatefulWidget {
 
 class _PantallaVideoTemaState extends State<PantallaVideoTema> {
   VideoPlayerController? _video;
+
+  /// Identificador del video si el enlace es de YouTube.
+  String? _youtube;
   bool _cargando = true;
   bool _sinVideo = false;
   bool _visto = false;
@@ -1542,7 +1547,8 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
     super.didChangeDependencies();
     if (!_iniciado) {
       _iniciado = true;
-      _cargar(ConfiguracionJuego.of(context).videos[widget.clave]);
+      final enlace = enlacesVideos[widget.clave] ?? '';
+      _cargar(enlace.trim().isNotEmpty ? enlace.trim() : ConfiguracionJuego.of(context).videos[widget.clave]);
     }
   }
 
@@ -1551,6 +1557,14 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
       setState(() {
         _cargando = false;
         _sinVideo = true;
+      });
+      return;
+    }
+    final yt = idYoutube(fuente);
+    if (yt != null) {
+      setState(() {
+        _youtube = yt;
+        _cargando = false;
       });
       return;
     }
@@ -1621,6 +1635,19 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
       pantalla = const Center(
         child: CircularProgressIndicator(color: Colors.white),
       );
+    } else if (_youtube != null && !_sinVideo) {
+      pantalla = ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: ReproductorYoutube(
+          id: _youtube!,
+          onVisto: () {
+            if (mounted && !_visto) setState(() => _visto = true);
+          },
+          onError: () {
+            if (mounted && !_sinVideo) setState(() => _sinVideo = true);
+          },
+        ),
+      );
     } else if (_sinVideo || v == null) {
       pantalla = Padding(
         padding: const EdgeInsets.all(18),
@@ -1646,8 +1673,9 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
             ),
             const SizedBox(height: 6),
             Text(
-              'Docente: agrega un video en assets/videos/ o una dirección de internet con el parámetro '
-              '“videos: {\'${widget.clave}\': …}” del juego.',
+              _youtube != null
+                  ? 'Este video de YouTube no se puede reproducir aquí (puede que no permita insertarse). ¡Puedes continuar!'
+                  : 'Docente: pega el enlace de YouTube de “${widget.clave}” en lib/data/enlaces_videos.dart.',
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.white70, fontSize: 13.5),
             ),

@@ -240,3 +240,7 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 - Motor de aprendizaje (`ia/modelo_ia.dart`): vecinos más cercanos sobre rasgos; los datos de los proyectos están en `ia/proyectos_ia.dart`.
 - Progreso: clave `v1.ia.temaN.juego`; misiones `ia-tN-m1..m3` y `ia-tN-integration` (`lib/data/ia_topics.dart`).
 - Pruebas: `test/ia_modelo_test.dart` (el motor aprende, falla con rasgos inútiles o etiquetas equivocadas y corrige el sesgo) y `test/ia_test.dart` (datos, mapa, todas las pantallas, cada simulación y el laboratorio completo).
+
+## Videos de YouTube
+
+Los videos de todos los mundos se configuran en un solo archivo: `lib/data/enlaces_videos.dart` (90 videos, uno por misión, con su mundo, tema y misión). Se pega el enlace de YouTube de cada uno; el reproductor (`lib/presentation/videos/video_youtube.dart`, con el paquete `youtube_player_iframe`) funciona en web, Android e iOS. El alumno puede continuar al ver el 80 % del video, si YouTube no permite insertarlo, o tras 90 segundos si no carga. Si un enlace queda vacío, se usa el archivo de `assets/videos/` (si existe) o se muestra un aviso para el docente. Prueba: `test/videos_youtube_test.dart` (formatos de enlace y que el archivo tenga exactamente los videos de todos los temas).

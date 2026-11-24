@@ -1,3 +1,20 @@
+VIDEOS DE YOUTUBE (recomendado)
+================================
+La forma más fácil: pega el enlace de YouTube de cada video en
+lib/data/enlaces_videos.dart. Ahí están los 90 videos del juego, con el
+mundo, el tema y la misión de cada uno. Por ejemplo:
+  'ia_1': 'https://www.youtube.com/watch?v=XXXXXXXXXXX',
+Sirven enlaces de youtube.com/watch, youtu.be, shorts y embed.
+El video debe permitir insertarse en otros sitios (en YouTube Studio:
+"Permitir insertar"). Si no, el juego avisa y deja continuar.
+El alumno puede continuar al ver el 80 % del video (o tras 90 segundos si
+YouTube no carga).
+
+VIDEOS DESCARGADOS (opcional, funcionan sin internet)
+=====================================================
+Si un enlace queda vacío, el juego busca el archivo en esta carpeta con el
+nombre que aparece abajo.
+
 Coloca aquí los videos de cada misión del Tema 1:
   sistema_circulatorio.mp4   (Misión 1)
   sistema_respiratorio.mp4   (Misión 2)
