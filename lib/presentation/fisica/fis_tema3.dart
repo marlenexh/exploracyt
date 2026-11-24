@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_fis.dart';
 import 'ilustraciones_fis.dart';
 import 'sims_fis.dart';
 
@@ -17,7 +17,7 @@ const _ci = Color(0xFFEF6C00);
 final fisTema3 = TemaBio(
   numero: 3,
   mundo: 'fis',
-  estilo: estiloCiencia(FondoCiencia.calor),
+  estilo: estiloFis(FondoFis.calor),
   titulo: 'Calor y energía térmica',
   saludo:
       'El chocolate caliente, el hielo que se derrite, el Sol que calienta la tierra… ¡el calor está en todas partes! Vamos a descubrir cómo viaja y cómo lo medimos.',

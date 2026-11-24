@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/fis_topics.dart';
 import '../../data/models.dart';
 import '../biology/temas/motor.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_fis.dart';
 import '../mundo_temas_screen.dart';
 import 'fis_tema1.dart';
 import 'fis_tema2.dart';
@@ -29,7 +29,7 @@ class FisicaScreen extends StatelessWidget {
         contenidos: fisContenidos,
         emojis: _emojisTema,
         colorFondo: const Color(0xFF026CFF),
-        fondo: const FondoCienciaWidget(FondoCiencia.valle),
+        fondo: const FondoFisica(FondoFis.fuerzas),
         descripcion: 'Descubre los imanes, la gravedad, el calor, la energía y el Sistema Solar.',
       );
 }

@@ -8,7 +8,7 @@ import '../biology/tema1/comunes.dart';
 import '../biology/tema1/escenario.dart';
 import '../biology/temas/motor.dart' show dibujarEmoji;
 import '../electronica/comun.dart';
-import '../quimica/sims_qui.dart' show objetivosPanel, deslizador, ObjetivosSim;
+import '../ciencia/sim_comun.dart';
 
 Widget _siguiente(BuildContext context, String actividad, String titulo, String mensaje) => Positioned(
       left: 690,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_fis.dart';
 import '../electronica/circuito.dart';
 import '../electronica/ele_tema1.dart' show abiertoYListo, pz, taller;
 import '../electronica/taller.dart';
@@ -20,7 +20,7 @@ const _ci = Color(0xFFF57F17);
 final fisTema4 = TemaBio(
   numero: 4,
   mundo: 'fis',
-  estilo: estiloCiencia(FondoCiencia.energia),
+  estilo: estiloFis(FondoFis.energia),
   titulo: 'La energía que nos rodea',
   saludo:
       'La luz de tu casa, la tele y el refrigerador funcionan con electricidad. ¡Vamos a descubrir de dónde viene, qué materiales la dejan pasar y cómo ahorrarla!',

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_qui.dart';
 import 'ilustraciones_qui.dart';
 import 'sims_qui.dart';
 
@@ -17,7 +17,7 @@ const _ci = Color(0xFFBF360C);
 final quiTema5 = TemaBio(
   numero: 5,
   mundo: 'qui',
-  estilo: estiloCiencia(FondoCiencia.fuego),
+  estilo: estiloQui(FondoQui.fuego),
   titulo: 'Combustión y oxidación',
   saludo:
       'El fuego de la estufa, el óxido de un clavo y la manzana que se pone café tienen algo en común: ¡el oxígeno! Vamos a investigar estas transformaciones y cómo afectan al ambiente.',

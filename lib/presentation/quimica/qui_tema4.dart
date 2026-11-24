@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_qui.dart';
 import 'ilustraciones_qui.dart';
 import 'sims_qui.dart';
 
@@ -16,7 +16,7 @@ const _ci = Color(0xFFE65100);
 final quiTema4 = TemaBio(
   numero: 4,
   mundo: 'qui',
-  estilo: estiloCiencia(FondoCiencia.cocina),
+  estilo: estiloQui(FondoQui.cocina),
   titulo: 'Cocción y descomposición de los alimentos',
   saludo:
       'En la cocina ocurren muchas transformaciones: cocinamos los alimentos para que sean seguros y sabrosos, y los conservamos para que no se echen a perder. ¡Ponte el mandil de científico!',

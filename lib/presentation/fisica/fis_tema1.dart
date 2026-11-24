@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
-import '../ciencia/fondos_ciencia.dart';
+import 'fondos_fis.dart';
 import 'ilustraciones_fis.dart';
 import 'sims_fis.dart';
 
@@ -17,7 +17,7 @@ const _ci = Color(0xFFC62828);
 final fisTema1 = TemaBio(
   numero: 1,
   mundo: 'fis',
-  estilo: estiloCiencia(FondoCiencia.magnetismo),
+  estilo: estiloFis(FondoFis.magnetismo),
   titulo: 'El magnetismo y sus misterios',
   saludo: 'Los imanes parecen mágicos: atraen objetos sin tocarlos y se jalan o se empujan entre sí. ¡Vamos a resolver los misterios del magnetismo!',
   misionDelTema: 'Un explorador perdió su brújula y un anillo en el fondo de un pozo. Investiga los imanes, sus polos y sus usos para ayudarlo.',
