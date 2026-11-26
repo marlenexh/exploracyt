@@ -4,6 +4,7 @@ import '../biology/temas/fabrica.dart';
 import '../biology/temas/motor.dart';
 import '../ciencia/fabrica_ciencia.dart';
 import 'fondos_qui.dart';
+import '../ciencia/juego_rapido.dart';
 import 'ilustraciones_qui.dart';
 
 /// Química · Tema 3: Todo se transforma (cambios temporales y permanentes).
@@ -189,25 +190,33 @@ final quiTema3 = TemaBio(
             TipoPasoBio.video,
             'q3_m2_video',
             (a) => video(a,
-                clave: 'cambios_2', titulo: 'Video: cambios permanentes', tema: 'cambios químicos en la vida diaria', siguiente: '¡A jugar memorama!')),
+                clave: 'cambios_2', titulo: 'Video: cambios permanentes', tema: 'cambios químicos en la vida diaria', siguiente: '¡A la máquina de los cambios!')),
         PasoBio(
-            'Memorama de cambios',
+            'La máquina de los cambios',
             TipoPasoBio.juego,
             'q3_m2_mem',
-            (a) => memorama(
-                  a,
-                  titulo: 'Memorama de cambios',
+            (a) => JuegoRapido(
+                  actividad: a,
+                  seccion: 'Juego',
+                  titulo: 'La máquina de los cambios',
                   color: _c2,
-                  instruccion: 'Encuentra cada cambio con su tipo.',
-                  pares: const [
-                    ('🧊', 'Hielo derretido', 'Temporal'),
-                    ('🍳', 'Huevo frito', 'Permanente'),
-                    ('🍫', 'Chocolate fundido', 'Temporal'),
-                    ('🔥', 'Papel quemado', 'Permanente'),
-                    ('🍞', 'Pan tostado', 'Permanente'),
-                    ('✂️', 'Papel recortado', 'Temporal'),
+                  instruccion:
+                      'Los objetos entran a la máquina y cambian. Antes de que se acabe el tiempo, decide: ¿el cambio se puede regresar (temporal) o ya no (permanente)? Presiona “¡Empezar!”.',
+                  opciones: const [
+                    OpcionRapida('↩️', 'Temporal', Color(0xFF29B6F6)),
+                    OpcionRapida('🚫', 'Permanente', Color(0xFFE64A19)),
                   ],
-                  mensajeFinal: '¡Memoria de químico!',
+                  objetos: const [
+                    ObjetoRapido('🧊', '💧', 'Hielo que se derrite', 0, 'Si lo congelas otra vez, vuelve a ser hielo.'),
+                    ObjetoRapido('🥚', '🍳', 'Huevo que se fríe', 1, 'El huevo cocido ya no vuelve a ser crudo.'),
+                    ObjetoRapido('🍫', '🫕', 'Chocolate que se funde', 0, 'Al enfriarse vuelve a ser sólido.'),
+                    ObjetoRapido('📄', '🔥', 'Papel que se quema', 1, 'Se convierte en ceniza y humo: ya no es papel.'),
+                    ObjetoRapido('🔩', '🟤', 'Clavo que se oxida', 1, 'El óxido es una sustancia nueva.'),
+                    ObjetoRapido('👕', '🧺', 'Camisa que se dobla', 0, 'Puedes desdoblarla: sigue siendo la misma.'),
+                    ObjetoRapido('🍞', '🥪', 'Pan que se tuesta', 1, 'El pan tostado cambió de color, sabor y textura para siempre.'),
+                    ObjetoRapido('🎈', '💨', 'Globo que se desinfla', 0, 'Si lo vuelves a inflar, regresa a como estaba.'),
+                  ],
+                  mensajeFinal: 'Los cambios temporales se pueden regresar; los permanentes forman sustancias nuevas.',
                 )),
         PasoBio(
             'Pon a prueba lo que aprendiste',
