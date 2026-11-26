@@ -1,11 +1,10 @@
-
 import 'package:flutter/material.dart';
 
 import '../../core/theme.dart';
 import '../game_widgets.dart';
+import 'fondo_vocacion.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 class _Respuesta {
   final String texto;
@@ -355,18 +354,17 @@ class TestInteresesScreen extends StatefulWidget {
 
 class _TestInteresesScreenState extends State<TestInteresesScreen> {
   int preguntaActual = 0;
-  final List<int?> respuestasSeleccionadas =
-      List<int?>.filled(preguntasIntereses.length, null);
+  final List<int?> respuestasSeleccionadas = List<int?>.filled(preguntasIntereses.length, null);
 
   Future<void> siguiente() async {
-  if (respuestasSeleccionadas[preguntaActual] == null) return;
+    if (respuestasSeleccionadas[preguntaActual] == null) return;
 
-  if (preguntaActual < preguntasIntereses.length - 1) {
-    setState(() => preguntaActual++);
-  } else {
-    await mostrarResultado();
+    if (preguntaActual < preguntasIntereses.length - 1) {
+      setState(() => preguntaActual++);
+    } else {
+      await mostrarResultado();
+    }
   }
-}
 
   void anterior() {
     if (preguntaActual > 0) {
@@ -375,59 +373,58 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
   }
 
   Future<void> mostrarResultado() async {
-  final Map<String, int> puntuaciones = {
-    'Biología': 0,
-    'Química': 0,
-    'Física': 0,
-    'Electrónica': 0,
-    'Inteligencia Artificial': 0,
-    'Programación': 0,
-  };
+    final Map<String, int> puntuaciones = {
+      'Biología': 0,
+      'Química': 0,
+      'Física': 0,
+      'Electrónica': 0,
+      'Inteligencia Artificial': 0,
+      'Programación': 0,
+    };
 
-  for (int i = 0; i < preguntasIntereses.length; i++) {
-    final seleccion = respuestasSeleccionadas[i];
+    for (int i = 0; i < preguntasIntereses.length; i++) {
+      final seleccion = respuestasSeleccionadas[i];
 
-    if (seleccion == null) continue;
+      if (seleccion == null) continue;
 
-    final respuesta = preguntasIntereses[i].respuestas[seleccion];
+      final respuesta = preguntasIntereses[i].respuestas[seleccion];
 
-    for (final area in respuesta.areas) {
-      puntuaciones[area] = (puntuaciones[area] ?? 0) + 1;
+      for (final area in respuesta.areas) {
+        puntuaciones[area] = (puntuaciones[area] ?? 0) + 1;
+      }
     }
-  }
 
-  final resultados = puntuaciones.entries.toList()
-    ..sort((a, b) => b.value.compareTo(a.value));
+    final resultados = puntuaciones.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
 
-  // Guardar el resultado en el dispositivo.
-  final preferencias = await SharedPreferences.getInstance();
+    // Guardar el resultado en el dispositivo.
+    final preferencias = await SharedPreferences.getInstance();
 
-  final datosResultado = {
-    'resultados': resultados.map((resultado) {
-      return {
-        'area': resultado.key,
-        'puntos': resultado.value,
-      };
-    }).toList(),
-    'fecha': DateTime.now().toIso8601String(),
-  };
+    final datosResultado = {
+      'resultados': resultados.map((resultado) {
+        return {
+          'area': resultado.key,
+          'puntos': resultado.value,
+        };
+      }).toList(),
+      'fecha': DateTime.now().toIso8601String(),
+    };
 
-  await preferencias.setString(
-    'resultado_test_intereses',
-    jsonEncode(datosResultado),
-  );
+    await preferencias.setString(
+      'resultado_test_intereses',
+      jsonEncode(datosResultado),
+    );
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (_) => ResultadoInteresesScreen(
-        resultados: resultados,
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ResultadoInteresesScreen(
+          resultados: resultados,
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -438,12 +435,7 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/fondo.png',
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) =>
-                Container(color: const Color(0xFFEAF2E3)),
-          ),
+          const FondoVocacion(velo: 0.1),
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -469,16 +461,20 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
                                 },
                                 icon: const Icon(Icons.arrow_back),
                               ),
-                              const Spacer(),
-                              const Text(
-                                'DESCUBRE TUS INTERESES',
-                                style: TextStyle(
-                                  color: C.tinta,
-                                  fontSize: 22,
-                                  fontFamily: 'LilitaOne',
+                              const Expanded(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    'DESCUBRE TUS INTERESES',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontFamily: 'LilitaOne',
+                                      shadows: [Shadow(color: Colors.black54, blurRadius: 6)],
+                                    ),
+                                  ),
                                 ),
                               ),
-                              const Spacer(),
                               const SizedBox(width: 48),
                             ],
                           ),
@@ -496,14 +492,16 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
                             child: Column(
                               children: [
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const Text(
-                                      'Tu aventura de descubrimiento',
-                                      style: TextStyle(
-                                        color: C.tinta,
-                                        fontWeight: FontWeight.bold,
+                                    const Flexible(
+                                      child: Text(
+                                        'Tu aventura de descubrimiento',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: C.tinta,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     Text(
@@ -519,11 +517,9 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: LinearProgressIndicator(
-                                    value: (preguntaActual + 1) /
-                                        preguntasIntereses.length,
+                                    value: (preguntaActual + 1) / preguntasIntereses.length,
                                     minHeight: 12,
-                                    backgroundColor:
-                                        const Color(0xFFE1E8F5),
+                                    backgroundColor: const Color(0xFFE1E8F5),
                                     color: const Color(0xFF3D5AFE),
                                   ),
                                 ),
@@ -533,127 +529,124 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
 
                           const SizedBox(height: 20),
 
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(22),
-                              border: Border.all(
-                                color: const Color(0xFF8CC8F0),
-                                width: 2,
-                              ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
+                          TweenAnimationBuilder<double>(
+                            key: ValueKey(preguntaActual),
+                            tween: Tween(begin: 0, end: 1),
+                            duration: const Duration(milliseconds: 450),
+                            curve: Curves.easeOutBack,
+                            builder: (_, v, hijo) => Transform.translate(
+                              offset: Offset((1 - v) * 80, 0),
+                              child: Opacity(opacity: v.clamp(0.0, 1.0), child: hijo),
                             ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  pregunta.pregunta,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: C.tinta,
-                                    fontSize: 25,
-                                    fontFamily: 'LilitaOne',
-                                  ),
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(22),
+                                border: Border.all(
+                                  color: const Color(0xFF8CC8F0),
+                                  width: 2,
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  pregunta.descripcion,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    color: C.tinta,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 7,
+                                    offset: Offset(0, 4),
                                   ),
-                                ),
-                                const SizedBox(height: 20),
-
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  physics:
-                                      const NeverScrollableScrollPhysics(),
-                                  itemCount: pregunta.respuestas.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount:
-                                        esComputadora ? 2 : 1,
-                                    mainAxisExtent: 85,
-                                    crossAxisSpacing: 18,
-                                    mainAxisSpacing: 18,
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    pregunta.pregunta,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: C.tinta,
+                                      fontSize: 25,
+                                      fontFamily: 'LilitaOne',
+                                    ),
                                   ),
-                                  itemBuilder: (context, index) {
-                                    final respuesta =
-                                        pregunta.respuestas[index];
-                                    final estaSeleccionada =
-                                        seleccion == index;
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    pregunta.descripcion,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      color: C.tinta,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  GridView.builder(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: pregunta.respuestas.length,
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: esComputadora ? 2 : 1,
+                                      mainAxisExtent: 85,
+                                      crossAxisSpacing: 18,
+                                      mainAxisSpacing: 18,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      final respuesta = pregunta.respuestas[index];
+                                      final estaSeleccionada = seleccion == index;
 
-                                    return InkWell(
-                                      borderRadius:
-                                          BorderRadius.circular(16),
-                                      onTap: () {
-                                        setState(() {
-                                          respuestasSeleccionadas[
-                                              preguntaActual] = index;
-                                        });
-                                      },
-                                      child: AnimatedContainer(
-                                        duration: const Duration(
-                                            milliseconds: 180),
-                                        padding:
-                                            const EdgeInsets.all(12),
-                                        decoration: BoxDecoration(
-                                          color: estaSeleccionada
-                                              ? const Color(0xFFDCE5FF)
-                                              : const Color(0xFFF5F7FC),
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          border: Border.all(
-                                            color: estaSeleccionada
-                                                ? const Color(0xFF3D5AFE)
-                                                : Colors.black12,
-                                            width: estaSeleccionada
-                                                ? 3
-                                                : 1,
+                                      return InkWell(
+                                        borderRadius: BorderRadius.circular(16),
+                                        onTap: () {
+                                          setState(() {
+                                            respuestasSeleccionadas[preguntaActual] = index;
+                                          });
+                                        },
+                                        child: AnimatedScale(
+                                          scale: estaSeleccionada ? 1.04 : 1,
+                                          duration: const Duration(milliseconds: 220),
+                                          curve: Curves.easeOutBack,
+                                          child: AnimatedContainer(
+                                            duration: const Duration(milliseconds: 180),
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  estaSeleccionada ? const Color(0xFFDCE5FF) : const Color(0xFFF5F7FC),
+                                              borderRadius: BorderRadius.circular(16),
+                                              border: Border.all(
+                                                color: estaSeleccionada ? const Color(0xFF3D5AFE) : Colors.black12,
+                                                width: estaSeleccionada ? 3 : 1,
+                                              ),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  respuesta.icono,
+                                                  color: const Color(0xFF3D5AFE),
+                                                  size: 30,
+                                                ),
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: Text(
+                                                    respuesta.texto,
+                                                    style: const TextStyle(
+                                                      color: C.tinta,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w700,
+                                                    ),
+                                                  ),
+                                                ),
+                                                if (estaSeleccionada)
+                                                  const Icon(
+                                                    Icons.check_circle,
+                                                    color: Color(0xFF26965A),
+                                                  ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              respuesta.icono,
-                                              color: const Color(
-                                                  0xFF3D5AFE),
-                                              size: 30,
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Expanded(
-                                              child: Text(
-                                                respuesta.texto,
-                                                style: const TextStyle(
-                                                  color: C.tinta,
-                                                  fontSize: 14,
-                                                  fontWeight:
-                                                      FontWeight.w700,
-                                                ),
-                                              ),
-                                            ),
-                                            if (estaSeleccionada)
-                                              const Icon(
-                                                Icons.check_circle,
-                                                color: Color(0xFF26965A),
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
 
@@ -669,40 +662,29 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
                                     label: const Text('Anterior'),
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: C.tinta,
-                                      padding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 15),
+                                      padding: const EdgeInsets.symmetric(vertical: 15),
                                     ),
                                   ),
                                 ),
-                              if (preguntaActual > 0)
-                                const SizedBox(width: 12),
+                              if (preguntaActual > 0) const SizedBox(width: 12),
                               Expanded(
                                 child: ElevatedButton.icon(
-                                  onPressed: seleccion == null
-                                      ? null
-                                      : siguiente,
+                                  onPressed: seleccion == null ? null : siguiente,
                                   icon: Icon(
-                                    preguntaActual ==
-                                            preguntasIntereses.length - 1
+                                    preguntaActual == preguntasIntereses.length - 1
                                         ? Icons.workspace_premium
                                         : Icons.arrow_forward,
                                   ),
                                   label: Text(
-                                    preguntaActual ==
-                                            preguntasIntereses.length - 1
+                                    preguntaActual == preguntasIntereses.length - 1
                                         ? 'Ver mis resultados'
                                         : 'Siguiente',
                                   ),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color(0xFF3D5AFE),
+                                    backgroundColor: const Color(0xFF3D5AFE),
                                     foregroundColor: Colors.white,
-                                    disabledBackgroundColor:
-                                        Colors.grey.shade400,
-                                    padding:
-                                        const EdgeInsets.symmetric(
-                                            vertical: 15),
+                                    disabledBackgroundColor: Colors.grey.shade400,
+                                    padding: const EdgeInsets.symmetric(vertical: 15),
                                   ),
                                 ),
                               ),
@@ -714,8 +696,9 @@ class _TestInteresesScreenState extends State<TestInteresesScreen> {
                             '¡Elige lo que más te guste!',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: C.tinta,
-                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              shadows: [Shadow(color: Colors.black54, blurRadius: 4)],
                             ),
                           ),
                         ],
@@ -753,24 +736,15 @@ class ResultadoInteresesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mayorPuntuacion = resultados.first.value;
 
-    final principales = resultados
-        .where((resultado) => resultado.value == mayorPuntuacion)
-        .toList();
+    final principales = resultados.where((resultado) => resultado.value == mayorPuntuacion).toList();
 
-    final otrasAreas = resultados
-        .where((resultado) => resultado.value < mayorPuntuacion)
-        .toList();
+    final otrasAreas = resultados.where((resultado) => resultado.value < mayorPuntuacion).toList();
 
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/fondo.png',
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) =>
-                Container(color: const Color(0xFFEAF2E3)),
-          ),
+          const FondoVocacion(velo: 0.1),
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -815,7 +789,6 @@ class ResultadoInteresesScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 22),
-
                             const Text(
                               'Tus áreas destacadas',
                               style: TextStyle(
@@ -825,7 +798,6 @@ class ResultadoInteresesScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 12),
-
                             ...principales.map(
                               (resultado) => _TarjetaResultado(
                                 nombre: resultado.key,
@@ -833,7 +805,6 @@ class ResultadoInteresesScreen extends StatelessWidget {
                                 destacado: true,
                               ),
                             ),
-
                             if (otrasAreas.isNotEmpty) ...[
                               const SizedBox(height: 18),
                               const Text(
@@ -853,7 +824,6 @@ class ResultadoInteresesScreen extends StatelessWidget {
                                 ),
                               ),
                             ],
-
                             const SizedBox(height: 18),
                             const Text(
                               'Recuerda: este resultado no decide '
@@ -875,7 +845,7 @@ class ResultadoInteresesScreen extends StatelessWidget {
                                 icon: const Icon(Icons.home),
                                 label: const Text('Volver a vocación'),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor:const Color(0xFF3D5AFE),
+                                  backgroundColor: const Color(0xFF3D5AFE),
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 15),
                                 ),
@@ -886,8 +856,7 @@ class ResultadoInteresesScreen extends StatelessWidget {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) =>
-                                        const TestInteresesScreen(),
+                                    builder: (_) => const TestInteresesScreen(),
                                   ),
                                 );
                               },
@@ -927,14 +896,10 @@ class _TarjetaResultado extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 9),
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: destacado
-            ? const Color(0xFFDCE5FF)
-            : const Color(0xFFF3F6FC),
+        color: destacado ? const Color(0xFFDCE5FF) : const Color(0xFFF3F6FC),
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
-          color: destacado
-              ? const Color(0xFF3D5AFE)
-              : Colors.black12,
+          color: destacado ? const Color(0xFF3D5AFE) : Colors.black12,
           width: destacado ? 2 : 1,
         ),
       ),

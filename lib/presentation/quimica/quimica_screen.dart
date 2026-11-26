@@ -4,7 +4,11 @@ import '../../data/models.dart';
 import '../../data/qui_topics.dart';
 import '../biology/temas/motor.dart';
 import 'fondos_qui.dart';
+import '../../data/laboratorios.dart';
+import '../../main.dart' show store;
+import '../laboratorio_mundo.dart';
 import '../mundo_temas_screen.dart';
+import 'laboratorio_qui.dart';
 import 'qui_tema1.dart';
 import 'qui_tema2.dart';
 import 'qui_tema3.dart';
@@ -30,6 +34,17 @@ class QuimicaScreen extends StatelessWidget {
         emojis: _emojisTema,
         colorFondo: const Color(0xFF8D13FF),
         fondo: const FondoQuimica(FondoQui.laboratorio),
+        extra: (context, ancho, enFila) => TarjetaLaboratorioMundo(
+          lab: laboratoriosMundos['qui']!,
+          color: const Color(0xFF8E24AA),
+          ancho: ancho,
+          enFila: enFila,
+          temasHechos: quiTopics.values.where((i) => store.completadas.contains(i.missionIds.last)).length,
+          pantalla: (_) => PantallaLaboratorioMundo(
+            estilo: estiloQui(FondoQui.laboratorio),
+            child: LaboratorioQui(onTerminar: (_) => completarLaboratorio(laboratoriosMundos['qui']!)),
+          ),
+        ),
         descripcion: 'Investiga los materiales, los gases y cómo se transforma todo a tu alrededor.',
       );
 }

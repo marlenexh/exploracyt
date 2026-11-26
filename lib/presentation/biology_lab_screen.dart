@@ -6,7 +6,11 @@ import 'package:flutter/material.dart';
 import '../data/models.dart';
 import '../data/science_compass.dart';
 import '../main.dart' show store;
+import '../data/laboratorios.dart';
 import 'biology/fondo_mapa_bio.dart';
+import 'biology/laboratorio_bio.dart';
+import 'biology/tema1/estilo_mundo.dart';
+import 'laboratorio_mundo.dart';
 import 'biology/tema1_screen.dart';
 import 'biology/tema_bio_screen.dart';
 
@@ -372,6 +376,15 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
                     top: safeTop + 12,
                     left: 16,
                     child: buildBackButton(context),
+                  ),
+
+                  // ==================================
+                  // LABORATORIO FINAL
+                  // ==================================
+                  Positioned(
+                    top: safeTop + 12,
+                    right: 16,
+                    child: const BotonLaboratorioBio(),
                   ),
                 ],
               );
@@ -1119,6 +1132,53 @@ class BiologyTopicScreen extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+/// Botón del Laboratorio de la Vida en el mapa de Biología.
+class BotonLaboratorioBio extends StatelessWidget {
+  const BotonLaboratorioBio({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final lab = laboratoriosMundos['bio']!;
+    final hecho = store.recompensas.contains(lab.badgeId);
+    return Tooltip(
+      message: lab.titulo,
+      child: Material(
+        color: const Color(0xFFE8F5E9),
+        elevation: 6,
+        borderRadius: BorderRadius.circular(24),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PantallaLaboratorioMundo(
+                estilo: EstiloMundo(fondo: (_) => const FondoMapaBiologia()),
+                child: LaboratorioBio(onTerminar: (_) => completarLaboratorio(lab)),
+              ),
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFF2E7D32), width: 3),
+            ),
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(hecho ? '🏅' : lab.emoji, style: const TextStyle(fontSize: 24)),
+              const SizedBox(width: 6),
+              Text(
+                lab.titulo,
+                style: const TextStyle(fontFamily: 'LilitaOne', fontSize: 17, color: Color(0xFF1B5E20)),
+              ),
+            ]),
           ),
         ),
       ),

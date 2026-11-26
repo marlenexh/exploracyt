@@ -7,6 +7,7 @@ import 'pro_topics.dart';
 import 'qui_topics.dart';
 import 'fis_topics.dart';
 import 'ia_topics.dart';
+import 'laboratorios.dart';
 
 Tema _t(String w, int n, String titulo) {
   final id = '$w-t$n';
@@ -52,6 +53,9 @@ String nombreRecompensa(String id) {
   }
   if (id == proLabBadgeId) return proLabBadge;
   if (id == iaLabBadgeId) return iaLabBadge;
+  for (final l in laboratoriosMundos.values) {
+    if (id == l.badgeId) return l.insignia;
+  }
   return bodyBadgeName(id);
 }
 

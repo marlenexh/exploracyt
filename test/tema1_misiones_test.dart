@@ -118,6 +118,11 @@ void main() {
       await _cuadros(tester, 5);
       await tester.tap(find.text('Humo de cigarro'));
       await _cuadros(tester, 4);
+      // La tarjeta se abre en grande: se responde y se cierra
+      await tester.tap(find.textContaining('¡No lo sabía!'));
+      await _cuadros(tester, 6);
+      if (find.byTooltip('Cerrar').evaluate().isNotEmpty) await tester.tap(find.byTooltip('Cerrar'));
+      await _cuadros(tester, 4);
       await tester.tap(find.byTooltip('Siguiente'));
       await _cerrarCelebracion(tester);
     });
@@ -244,6 +249,11 @@ void main() {
       await tester.pumpWidget(_envolver(const PantallaHabitosDefensas()));
       await _cuadros(tester, 6);
       await tester.tap(find.text('Dormir poco'));
+      await _cuadros(tester, 4);
+      // La tarjeta se abre en grande: se responde y se cierra
+      await tester.tap(find.textContaining('¡No lo sabía!'));
+      await _cuadros(tester, 6);
+      if (find.byTooltip('Cerrar').evaluate().isNotEmpty) await tester.tap(find.byTooltip('Cerrar'));
       await _cuadros(tester, 4);
       await tester.tap(find.byTooltip('Siguiente'));
       await _cerrarCelebracion(tester);
