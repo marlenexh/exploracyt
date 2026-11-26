@@ -244,3 +244,26 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 ## Videos de YouTube
 
 Los videos de todos los mundos se configuran en un solo archivo: `lib/data/enlaces_videos.dart` (90 videos, uno por misión, con su mundo, tema y misión). Se pega el enlace de YouTube de cada uno; el reproductor (`lib/presentation/videos/video_youtube.dart`, con el paquete `youtube_player_iframe`) funciona en web, Android e iOS. El alumno puede continuar al ver el 80 % del video, si YouTube no permite insertarlo, o tras 90 segundos si no carga. Si un enlace queda vacío, se usa el archivo de `assets/videos/` (si existe) o se muestra un aviso para el docente. Prueba: `test/videos_youtube_test.dart` (formatos de enlace y que el archivo tenga exactamente los videos de todos los temas).
+
+## Laboratorios finales de Biología, Química, Física y Electrónica
+
+Como Programación e IA, estos mundos tienen un laboratorio final con insignia (`lib/data/laboratorios.dart`, tarjeta común en `lib/presentation/laboratorio_mundo.dart`):
+
+| Mundo | Laboratorio | Qué se hace | Insignia |
+| --- | --- | --- | --- |
+| Biología | Laboratorio de la Vida (`biology/laboratorio_bio.dart`, botón arriba del mapa) | Armar un terrario con sol, agua, plantas, conejos, zorros y hongos, y simular 30 días; si la cadena alimenticia no está equilibrada se ve qué falla | Guardián de Ecosistemas |
+| Química | Laboratorio de Experimentos (`quimica/laboratorio_qui.dart`) | Equipo de seguridad y tres experimentos con el método científico (volcán de espuma, tinta invisible, col morada): hipótesis, materiales, medir, experimentar y conclusión en la bitácora | Químico Experimentador |
+| Física | Laboratorio de Lanzamientos (`fisica/laboratorio_fis.dart`) | Catapulta con fuerza y ángulo para dar en el blanco en la Tierra, la Luna y Marte (con muro) según su gravedad | Ingeniero de Lanzamientos |
+| Electrónica | Laboratorio del Inventor (`electronica/laboratorio_ele.dart`) | Cuatro circuitos de una casa inteligente en el taller: focos en paralelo, timbre con luz, sensor de luz y ventilador con velocidades | Inventor de la Casa Inteligente |
+
+Pruebas: `test/laboratorios_test.dart`.
+
+## Vocación
+
+Todo el apartado tiene un fondo animado nuevo (`vocacion/fondo_vocacion.dart`, “el camino al futuro”) y animaciones de entrada.
+
+- **Explora profesiones** (`explora_profesiones_screen.dart`, datos en `profesiones_datos.dart`): 25 profesiones de ciencia y tecnología en 10 áreas (incluye salud, espacio, planeta e ingeniería), con filtros y favoritas. Cada una abre una página animada: qué hace, herramientas para tocar, “Vive un día” hora por hora, dónde trabaja, mini reto, dato curioso que se voltea y los mundos del juego relacionados.
+- **Personas que transforman el mundo** (`personas_transforman_screen.dart`, datos en `personajes_datos.dart`): un museo con 24 personas en 6 salas (retratos enmarcados con foco, placas y sello de visitante). Cada vitrina tiene su gran aporte con el objeto girando, línea del tiempo, dato curioso y lo que nos enseña. Incluye el juego “¿Quién soy?”.
+- **Descubre tus intereses** y **Mis descubrimientos**: nuevo fondo y animaciones.
+
+Pruebas: `test/vocacion_test.dart`.

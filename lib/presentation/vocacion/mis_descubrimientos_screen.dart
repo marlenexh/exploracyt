@@ -1,19 +1,18 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'fondo_vocacion.dart';
+
 class MisDescubrimientosScreen extends StatefulWidget {
   const MisDescubrimientosScreen({super.key});
 
   @override
-  State<MisDescubrimientosScreen> createState() =>
-      _MisDescubrimientosScreenState();
+  State<MisDescubrimientosScreen> createState() => _MisDescubrimientosScreenState();
 }
 
-class _MisDescubrimientosScreenState
-    extends State<MisDescubrimientosScreen> {
+class _MisDescubrimientosScreenState extends State<MisDescubrimientosScreen> {
   static const Color fondo = Color(0xFF14213D);
   static const Color panel = Color(0xFF213454);
   static const Color dorado = Color(0xFFF5C96A);
@@ -37,8 +36,7 @@ class _MisDescubrimientosScreenState
     final preferencias = await SharedPreferences.getInstance();
 
     // Recuperar resultado del test de intereses.
-    final datosTest =
-        preferencias.getString('resultado_test_intereses');
+    final datosTest = preferencias.getString('resultado_test_intereses');
 
     List<Map<String, dynamic>> nuevosResultados = [];
     String? nuevaFecha;
@@ -71,12 +69,10 @@ class _MisDescubrimientosScreenState
     }
 
     // Recuperar profesiones favoritas.
-    final nuevasFavoritas =
-        preferencias.getStringList('profesiones_favoritas') ?? [];
+    final nuevasFavoritas = preferencias.getStringList('profesiones_favoritas') ?? [];
 
     // Recuperar personas visitadas.
-    final nuevasVisitas =
-        preferencias.getStringList('personas_visitadas') ?? [];
+    final nuevasVisitas = preferencias.getStringList('personas_visitadas') ?? [];
 
     if (!mounted) return;
 
@@ -119,331 +115,321 @@ class _MisDescubrimientosScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: fondo,
-      body: SafeArea(
-        child: cargando
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: dorado,
-                ),
-              )
-            : LayoutBuilder(
-                builder: (context, constraints) {
-                  final computadora = constraints.maxWidth > 750;
+      body: Stack(fit: StackFit.expand, children: [
+        const FondoVocacion(velo: 0.3),
+        SafeArea(
+          child: cargando
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: dorado,
+                  ),
+                )
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    final computadora = constraints.maxWidth > 750;
 
-                  return SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: computadora ? 32 : 16,
-                      vertical: 18,
-                    ),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxWidth: 1050,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Encabezado.
-                            Row(
+                    return SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: computadora ? 32 : 16,
+                        vertical: 18,
+                      ),
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxWidth: 1050,
+                          ),
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween(begin: 0, end: 1),
+                            duration: const Duration(milliseconds: 600),
+                            curve: Curves.easeOutCubic,
+                            builder: (_, v, hijo) =>
+                                Transform.translate(offset: Offset(0, (1 - v) * 50), child: Opacity(opacity: v.clamp(0.0, 1.0), child: hijo)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                IconButton.filled(
-                                  tooltip: 'Volver a vocación',
-                                  style: IconButton.styleFrom(
-                                    backgroundColor: panel,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  onPressed: () =>
-                                      Navigator.pop(context),
-                                  icon: const Icon(Icons.arrow_back),
+                                // Encabezado.
+                                Row(
+                                  children: [
+                                    IconButton.filled(
+                                      tooltip: 'Volver a vocación',
+                                      style: IconButton.styleFrom(
+                                        backgroundColor: panel,
+                                        foregroundColor: Colors.white,
+                                      ),
+                                      onPressed: () => Navigator.pop(context),
+                                      icon: const Icon(Icons.arrow_back),
+                                    ),
+                                    const Spacer(),
+                                    const Icon(
+                                      Icons.auto_awesome,
+                                      color: dorado,
+                                    ),
+                                    const SizedBox(width: 7),
+                                    const Text(
+                                      'MI EXPEDIENTE',
+                                      style: TextStyle(
+                                        color: dorado,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 1.5,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                const Spacer(),
-                                const Icon(
-                                  Icons.auto_awesome,
+
+                                const SizedBox(height: 25),
+
+                                const Text(
+                                  'MIS DESCUBRIMIENTOS',
+                                  style: TextStyle(
+                                    color: turquesa,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 2,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 6),
+
+                                const Text(
+                                  '¡Este es tu camino!',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 34,
+                                    fontFamily: 'LilitaOne',
+                                  ),
+                                ),
+
+                                const SizedBox(height: 10),
+
+                                const Text(
+                                  'Aquí puedes consultar lo que has '
+                                  'descubierto en tu aventura por la '
+                                  'ciencia y la tecnología.',
+                                  style: TextStyle(
+                                    color: Color(0xFFD5E1F5),
+                                    fontSize: 15,
+                                    height: 1.5,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 22),
+
+                                // Resumen del progreso.
+                                _PanelProgreso(
+                                  insignias: insigniasDesbloqueadas,
+                                  resultados: resultados.isNotEmpty,
+                                  favoritas: profesionesFavoritas.length,
+                                  visitas: personasVisitadas.length,
+                                ),
+
+                                const SizedBox(height: 28),
+
+                                // Intereses.
+                                _TituloSeccion(
+                                  icono: Icons.psychology,
+                                  titulo: 'Mis intereses científicos',
+                                  color: const Color(0xFF8EA5FF),
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                if (resultados.isEmpty)
+                                  const _MensajeVacio(
+                                    icono: Icons.quiz_outlined,
+                                    titulo: 'Aún no has realizado el test',
+                                    descripcion: 'Responde el test de intereses para '
+                                        'descubrir qué áreas podrían gustarte.',
+                                  )
+                                else ...[
+                                  if (fechaTest != null)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: 10,
+                                      ),
+                                      child: Text(
+                                        _formatearFecha(fechaTest),
+                                        style: const TextStyle(
+                                          color: Color(0xFFB9C8DE),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ...resultados.map((resultado) {
+                                    final area = resultado['area']?.toString() ?? 'Área sin nombre';
+                                    final puntos = (resultado['puntos'] as num?)?.toInt() ?? 0;
+
+                                    final maximo = resultados.fold<int>(
+                                      0,
+                                      (mayor, elemento) {
+                                        final valor = (elemento['puntos'] as num?)?.toInt() ?? 0;
+                                        return valor > mayor ? valor : mayor;
+                                      },
+                                    );
+
+                                    final double porcentaje = maximo > 0 ? (puntos / maximo).clamp(0.0, 1.0).toDouble() : 0.0;
+
+                                    return _TarjetaInteres(
+                                      area: area,
+                                      puntos: puntos,
+                                      porcentaje: porcentaje,
+                                    );
+                                  }),
+                                ],
+
+                                const SizedBox(height: 28),
+
+                                // Profesiones favoritas.
+                                _TituloSeccion(
+                                  icono: Icons.work_outline,
+                                  titulo: 'Mis profesiones favoritas',
+                                  color: const Color(0xFFFFB46D),
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                if (profesionesFavoritas.isEmpty)
+                                  const _MensajeVacio(
+                                    icono: Icons.star_border,
+                                    titulo: 'Todavía no tienes favoritas',
+                                    descripcion: 'Explora las profesiones y marca '
+                                        'con una estrella las que más te '
+                                        'interesen.',
+                                  )
+                                else
+                                  Wrap(
+                                    spacing: 10,
+                                    runSpacing: 10,
+                                    children: profesionesFavoritas.map((area) {
+                                      return _EtiquetaDescubrimiento(
+                                        texto: area,
+                                        icono: Icons.star,
+                                        color: const Color(0xFFFFB46D),
+                                      );
+                                    }).toList(),
+                                  ),
+
+                                const SizedBox(height: 28),
+
+                                // Personas visitadas.
+                                _TituloSeccion(
+                                  icono: Icons.museum_outlined,
+                                  titulo: 'Personas que he conocido',
+                                  color: turquesa,
+                                ),
+
+                                const SizedBox(height: 12),
+
+                                if (personasVisitadas.isEmpty)
+                                  const _MensajeVacio(
+                                    icono: Icons.person_search,
+                                    titulo: 'El museo te está esperando',
+                                    descripcion: 'Visita las historias de científicos '
+                                        'e inventores para descubrir sus '
+                                        'aportaciones.',
+                                  )
+                                else
+                                  Wrap(
+                                    spacing: 10,
+                                    runSpacing: 10,
+                                    children: personasVisitadas.map((nombre) {
+                                      return _EtiquetaDescubrimiento(
+                                        texto: nombre,
+                                        icono: Icons.check_circle,
+                                        color: turquesa,
+                                      );
+                                    }).toList(),
+                                  ),
+
+                                const SizedBox(height: 28),
+
+                                // Insignias.
+                                _TituloSeccion(
+                                  icono: Icons.workspace_premium,
+                                  titulo: 'Mis insignias',
                                   color: dorado,
                                 ),
-                                const SizedBox(width: 7),
-                                const Text(
-                                  'MI EXPEDIENTE',
-                                  style: TextStyle(
-                                    color: dorado,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.5,
-                                  ),
+
+                                const SizedBox(height: 12),
+
+                                GridView.count(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  crossAxisCount: computadora ? 3 : 1,
+                                  childAspectRatio: computadora ? 2.2 : 3.1,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                  children: [
+                                    _TarjetaInsignia(
+                                      titulo: 'Mente curiosa',
+                                      descripcion: 'Realizaste el test',
+                                      icono: Icons.psychology,
+                                      desbloqueada: resultados.isNotEmpty,
+                                    ),
+                                    _TarjetaInsignia(
+                                      titulo: 'Explorador de profesiones',
+                                      descripcion: 'Guardaste una profesión favorita',
+                                      icono: Icons.work,
+                                      desbloqueada: profesionesFavoritas.isNotEmpty,
+                                    ),
+                                    _TarjetaInsignia(
+                                      titulo: 'Viajero del conocimiento',
+                                      descripcion: 'Visitaste el museo de ideas',
+                                      icono: Icons.museum,
+                                      desbloqueada: personasVisitadas.isNotEmpty,
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
 
-                            const SizedBox(height: 25),
+                                const SizedBox(height: 25),
 
-                            const Text(
-                              'MIS DESCUBRIMIENTOS',
-                              style: TextStyle(
-                                color: turquesa,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 2,
-                              ),
-                            ),
-
-                            const SizedBox(height: 6),
-
-                            const Text(
-                              '¡Este es tu camino!',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 34,
-                                fontFamily: 'LilitaOne',
-                              ),
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            const Text(
-                              'Aquí puedes consultar lo que has '
-                              'descubierto en tu aventura por la '
-                              'ciencia y la tecnología.',
-                              style: TextStyle(
-                                color: Color(0xFFD5E1F5),
-                                fontSize: 15,
-                                height: 1.5,
-                              ),
-                            ),
-
-                            const SizedBox(height: 22),
-
-                            // Resumen del progreso.
-                            _PanelProgreso(
-                              insignias: insigniasDesbloqueadas,
-                              resultados: resultados.isNotEmpty,
-                              favoritas: profesionesFavoritas.length,
-                              visitas: personasVisitadas.length,
-                            ),
-
-                            const SizedBox(height: 28),
-
-                            // Intereses.
-                            _TituloSeccion(
-                              icono: Icons.psychology,
-                              titulo: 'Mis intereses científicos',
-                              color: const Color(0xFF8EA5FF),
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            if (resultados.isEmpty)
-                              const _MensajeVacio(
-                                icono: Icons.quiz_outlined,
-                                titulo: 'Aún no has realizado el test',
-                                descripcion:
-                                    'Responde el test de intereses para '
-                                    'descubrir qué áreas podrían gustarte.',
-                              )
-                            else ...[
-                              if (fechaTest != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    bottom: 10,
-                                  ),
-                                  child: Text(
-                                    _formatearFecha(fechaTest),
-                                    style: const TextStyle(
-                                      color: Color(0xFFB9C8DE),
-                                      fontSize: 12,
+                                // Actualizar datos.
+                                Center(
+                                  child: OutlinedButton.icon(
+                                    onPressed: _cargarDescubrimientos,
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: turquesa,
+                                      side: const BorderSide(
+                                        color: turquesa,
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 13,
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.refresh),
+                                    label: const Text(
+                                      'Actualizar mis descubrimientos',
                                     ),
                                   ),
                                 ),
-                              ...resultados.map((resultado) {
-                                final area =
-                                    resultado['area']?.toString() ??
-                                        'Área sin nombre';
-                                final puntos =
-                                    (resultado['puntos'] as num?)
-                                            ?.toInt() ??
-                                        0;
 
-                                final maximo = resultados.fold<int>(
-                                  0,
-                                  (mayor, elemento) {
-                                    final valor =
-                                        (elemento['puntos'] as num?)
-                                                ?.toInt() ??
-                                            0;
-                                    return valor > mayor ? valor : mayor;
-                                  },
-                                );
+                                const SizedBox(height: 20),
 
-                                final double porcentaje = maximo > 0
-                                    ? (puntos / maximo).clamp(0.0, 1.0).toDouble()
-                                    : 0.0;
-
-                                return _TarjetaInteres(
-                                  area: area,
-                                  puntos: puntos,
-                                  porcentaje: porcentaje,
-                                );
-                              }),
-                            ],
-
-                            const SizedBox(height: 28),
-
-                            // Profesiones favoritas.
-                            _TituloSeccion(
-                              icono: Icons.work_outline,
-                              titulo: 'Mis profesiones favoritas',
-                              color: const Color(0xFFFFB46D),
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            if (profesionesFavoritas.isEmpty)
-                              const _MensajeVacio(
-                                icono: Icons.star_border,
-                                titulo: 'Todavía no tienes favoritas',
-                                descripcion:
-                                    'Explora las profesiones y marca '
-                                    'con una estrella las que más te '
-                                    'interesen.',
-                              )
-                            else
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                children: profesionesFavoritas.map((area) {
-                                  return _EtiquetaDescubrimiento(
-                                    texto: area,
-                                    icono: Icons.star,
-                                    color: const Color(0xFFFFB46D),
-                                  );
-                                }).toList(),
-                              ),
-
-                            const SizedBox(height: 28),
-
-                            // Personas visitadas.
-                            _TituloSeccion(
-                              icono: Icons.museum_outlined,
-                              titulo: 'Personas que he conocido',
-                              color: turquesa,
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            if (personasVisitadas.isEmpty)
-                              const _MensajeVacio(
-                                icono: Icons.person_search,
-                                titulo: 'El museo te está esperando',
-                                descripcion:
-                                    'Visita las historias de científicos '
-                                    'e inventores para descubrir sus '
-                                    'aportaciones.',
-                              )
-                            else
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                children: personasVisitadas.map((nombre) {
-                                  return _EtiquetaDescubrimiento(
-                                    texto: nombre,
-                                    icono: Icons.check_circle,
-                                    color: turquesa,
-                                  );
-                                }).toList(),
-                              ),
-
-                            const SizedBox(height: 28),
-
-                            // Insignias.
-                            _TituloSeccion(
-                              icono: Icons.workspace_premium,
-                              titulo: 'Mis insignias',
-                              color: dorado,
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            GridView.count(
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(),
-                              crossAxisCount: computadora ? 3 : 1,
-                              childAspectRatio:
-                                  computadora ? 2.2 : 3.1,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                              children: [
-                                _TarjetaInsignia(
-                                  titulo: 'Mente curiosa',
-                                  descripcion: 'Realizaste el test',
-                                  icono: Icons.psychology,
-                                  desbloqueada: resultados.isNotEmpty,
+                                const Center(
+                                  child: Text(
+                                    'Cada descubrimiento es el comienzo '
+                                    'de una nueva aventura.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: dorado,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                                _TarjetaInsignia(
-                                  titulo: 'Explorador de profesiones',
-                                  descripcion:
-                                      'Guardaste una profesión favorita',
-                                  icono: Icons.work,
-                                  desbloqueada:
-                                      profesionesFavoritas.isNotEmpty,
-                                ),
-                                _TarjetaInsignia(
-                                  titulo: 'Viajero del conocimiento',
-                                  descripcion:
-                                      'Visitaste el museo de ideas',
-                                  icono: Icons.museum,
-                                  desbloqueada:
-                                      personasVisitadas.isNotEmpty,
-                                ),
+
+                                const SizedBox(height: 20),
                               ],
                             ),
-
-                            const SizedBox(height: 25),
-
-                            // Actualizar datos.
-                            Center(
-                              child: OutlinedButton.icon(
-                                onPressed: _cargarDescubrimientos,
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: turquesa,
-                                  side: const BorderSide(
-                                    color: turquesa,
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 13,
-                                  ),
-                                ),
-                                icon: const Icon(Icons.refresh),
-                                label: const Text(
-                                  'Actualizar mis descubrimientos',
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            const Center(
-                              child: Text(
-                                'Cada descubrimiento es el comienzo '
-                                'de una nueva aventura.',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: dorado,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(height: 20),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-      ),
+                    );
+                  },
+                ),
+        ),
+      ]),
     );
   }
 }
@@ -807,9 +793,7 @@ class _TarjetaInsignia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = desbloqueada
-        ? const Color(0xFFF5C96A)
-        : const Color(0xFF8290A6);
+    final color = desbloqueada ? const Color(0xFFF5C96A) : const Color(0xFF8290A6);
 
     return Container(
       padding: const EdgeInsets.all(12),
