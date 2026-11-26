@@ -27,6 +27,11 @@ Widget fondoMontanas({required Widget child}) => Stack(
       ],
     );
 
+/// Botón "Eventos" de la pantalla de inicio. Está oculto mientras se decide
+/// qué hacer con él; el apartado completo sigue en `eventos/eventos_screen.dart`.
+/// Para volver a mostrarlo, cambia `false` por `true`.
+const mostrarBotonEventos = false;
+
 const _sombra = [
   Shadow(
     color: Colors.black54,
@@ -498,12 +503,6 @@ class Home extends StatelessWidget {
                     onChanged: (v) => set(() => son = v),
                   ),
                   SwitchListTile(
-                    secondary: const Icon(Icons.music_note),
-                    title: const Text('Música'),
-                    value: mus,
-                    onChanged: (v) => set(() => mus = v),
-                  ),
-                  SwitchListTile(
                     secondary: const Icon(Icons.text_fields),
                     title: const Text('Letra más grande'),
                     value: grande,
@@ -854,6 +853,8 @@ class Home extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            // Botón oculto por ahora (ver mostrarBotonEventos).
+                            if (mostrarBotonEventos)
                             GameButton(
                               'Eventos',
                               icon: Icons.event,
@@ -1153,16 +1154,6 @@ class Home extends StatelessWidget {
           ),
         ),
       );
-}
-
-/// Navegación a pantallas pendientes.
-void _pronto(BuildContext c, String t) {
-  Navigator.push(
-    c,
-    MaterialPageRoute(
-      builder: (_) => Proximamente(t),
-    ),
-  );
 }
 
 class Proximamente extends StatelessWidget {
@@ -1723,21 +1714,6 @@ class _MapaState extends State<MapaMundos>
             Wrap(
               spacing: 6,
               children: [
-                _mini(
-                  context,
-                  Icons.face,
-                  'Avatar',
-                  () => _pronto(context, 'Avatar'),
-                ),
-                _mini(
-                  context,
-                  Icons.storefront,
-                  'Tienda',
-                  () => _pronto(
-                    context,
-                    'Tienda de accesorios',
-                  ),
-                ),
                 _mini(
                   context,
                   Icons.emoji_events,
