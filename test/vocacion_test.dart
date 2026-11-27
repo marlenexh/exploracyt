@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:explora_ciencia/presentation/vocacion/creditos_retratos.dart';
 import 'package:explora_ciencia/presentation/vocacion/explora_profesiones_screen.dart';
 import 'package:explora_ciencia/presentation/vocacion/mis_descubrimientos_screen.dart';
 import 'package:explora_ciencia/presentation/vocacion/personajes_datos.dart';
@@ -48,6 +51,16 @@ void main() {
       expect(p.historia.length, 3, reason: p.nombre);
       expect(p.pista, isNot(contains(p.nombre)), reason: 'La pista no debe decir el nombre: ${p.nombre}');
     }
+  });
+
+  test('Museo: cada persona tiene retrato WebP ligero y crédito de la foto', () {
+    for (final p in personajes) {
+      final f = File(p.imagen);
+      expect(f.existsSync(), isTrue, reason: p.imagen);
+      expect(f.lengthSync(), lessThan(60 * 1024), reason: p.imagen);
+      expect(creditosRetratos[archivoRetrato(p.nombre)], isNotNull, reason: p.nombre);
+    }
+    expect(creditosRetratos.length, personajes.length);
   });
 
   testWidgets('Vocación: el menú se ve en todos los tamaños y abre cada sección', (tester) async {

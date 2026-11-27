@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:explora_ciencia/presentation/videos/video_youtube.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/comunes.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/integradora.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/juego.dart';
@@ -327,7 +328,8 @@ void main() {
       for (final paso in [m2, m3]) {
         await tester.pumpWidget(_envolver(paso.pantalla()));
         await _cuadros(tester, 8);
-        expect(find.text('Aquí va el video del tema'), findsOneWidget);
+        expect(find.byType(PortadaYoutube), findsOneWidget);
+        expect(find.byTooltip('Continuar con mi aventura'), findsOneWidget);
       }
     });
 

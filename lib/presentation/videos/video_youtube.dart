@@ -36,8 +36,11 @@ String? idYoutube(String enlace) {
 /// visto al menos el 80 % del video (o terminó) y con [onError] si YouTube no
 /// permite reproducirlo aquí.
 class ReproductorYoutube extends StatefulWidget {
-  const ReproductorYoutube({super.key, required this.id, required this.onVisto, required this.onError});
+  const ReproductorYoutube({super.key, required this.id, required this.onVisto, required this.onError, this.autoPlay = false});
   final String id;
+
+  /// Empieza a reproducirse en cuanto carga (cuando el alumno ya tocó Reproducir).
+  final bool autoPlay;
   final VoidCallback onVisto;
   final VoidCallback onError;
 
@@ -48,6 +51,7 @@ class ReproductorYoutube extends StatefulWidget {
 class _ReproductorYoutubeState extends State<ReproductorYoutube> {
   late final YoutubePlayerController _ctrl = YoutubePlayerController.fromVideoId(
     videoId: widget.id,
+    autoPlay: widget.autoPlay,
     params: const YoutubePlayerParams(
       showFullscreenButton: true,
       strictRelatedVideos: true,
@@ -103,4 +107,96 @@ class _ReproductorYoutubeState extends State<ReproductorYoutube> {
   Widget build(BuildContext context) => Center(
         child: AspectRatio(aspectRatio: 16 / 9, child: YoutubePlayer(controller: _ctrl, backgroundColor: Colors.black)),
       );
+}
+
+/// Carátula del video de YouTube con el botón “Reproducir”. La imagen viene
+/// de internet; si no hay conexión se avisa que el video necesita internet y
+/// no se muestra el botón.
+class PortadaYoutube extends StatefulWidget {
+  const PortadaYoutube({super.key, required this.id, required this.onReproducir});
+  final String id;
+  final VoidCallback onReproducir;
+
+  static String miniatura(String id) => 'https://img.youtube.com/vi/$id/hqdefault.jpg';
+
+  @override
+  State<PortadaYoutube> createState() => PortadaYoutubeState();
+}
+
+class PortadaYoutubeState extends State<PortadaYoutube> {
+  /// No se pudo cargar la carátula: probablemente no hay internet.
+  bool sinConexion = false;
+
+  void _marcarSinConexion() {
+    if (sinConexion) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) setState(() => sinConexion = true);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => Stack(fit: StackFit.expand, children: [
+        Image.network(
+          PortadaYoutube.miniatura(widget.id),
+          fit: BoxFit.cover,
+          webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+          loadingBuilder: (_, hijo, avance) =>
+              avance == null ? hijo : const ColoredBox(color: Color(0xFF1B1446), child: Center(child: CircularProgressIndicator(color: Colors.white))),
+          errorBuilder: (_, __, ___) {
+            _marcarSinConexion();
+            return const ColoredBox(
+              color: Color(0xFF1B1446),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
+                    Text('📶', style: TextStyle(fontSize: 52)),
+                    SizedBox(height: 6),
+                    Text('Sin conexión a internet', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800)),
+                    SizedBox(height: 4),
+                    Text('Este video solo se puede ver con internet. Presiona “Continuar con mi aventura” y míralo después.',
+                        textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontSize: 14)),
+                  ]),
+                ),
+              ),
+            );
+          },
+        ),
+        if (!sinConexion) ...[
+          const DecoratedBox(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x00000000), Color(0x99000000)])),
+          ),
+          Center(
+            child: Tooltip(
+              message: 'Reproducir video',
+              child: Material(
+                color: const Color(0xFFFF0033),
+                shape: const StadiumBorder(),
+                elevation: 8,
+                child: InkWell(
+                  customBorder: const StadiumBorder(),
+                  onTap: widget.onReproducir,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 26, vertical: 14),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.play_arrow_rounded, color: Colors.white, size: 40),
+                      SizedBox(width: 6),
+                      Text('Reproducir', style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w900)),
+                    ]),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const Positioned(
+            left: 12,
+            bottom: 10,
+            right: 12,
+            child: Text('🌐 Necesitas internet para ver el video',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w800, shadows: [Shadow(blurRadius: 4)])),
+          ),
+        ],
+      ]);
 }

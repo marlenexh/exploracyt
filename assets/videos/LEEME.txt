@@ -7,8 +7,11 @@ mundo, el tema y la misión de cada uno. Por ejemplo:
 Sirven enlaces de youtube.com/watch, youtu.be, shorts y embed.
 El video debe permitir insertarse en otros sitios (en YouTube Studio:
 "Permitir insertar"). Si no, el juego avisa y deja continuar.
-El alumno puede continuar al ver el 80 % del video (o tras 90 segundos si
-YouTube no carga).
+Los videos son OPCIONALES y complementarios: el alumno ve la carátula con
+el botón Reproducir (solo funciona con internet) y siempre puede presionar
+"Continuar con mi aventura". Cada tema usa un video al final de la Misión 3
+(Biología Tema 1 usa uno por misión). Si un enlace queda vacío, ese paso de
+video no aparece.
 
 VIDEOS DESCARGADOS (opcional, funcionan sin internet)
 =====================================================

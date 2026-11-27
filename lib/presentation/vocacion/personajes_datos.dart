@@ -17,11 +17,24 @@ class PersonajeInfo {
   });
   final String nombre, avatar, pais, anios, sala, aporte, dato, ensenanza, pista;
 
+  /// Retrato en assets/images/museo/ (si no existe se muestra [avatar]).
+  String get imagen => 'assets/images/museo/${archivoRetrato(nombre)}.webp';
+
   /// (año, lo que pasó)
   final List<(String, String)> historia;
 
   /// (emoji, nombre) del objeto de la vitrina.
   final (String, String) objeto;
+}
+
+/// Nombre de archivo del retrato: minúsculas, sin acentos y con guiones bajos.
+String archivoRetrato(String nombre) {
+  const acentos = {'á': 'a', 'é': 'e', 'í': 'i', 'ó': 'o', 'ú': 'u', 'ü': 'u', 'ñ': 'n'};
+  final b = StringBuffer();
+  for (final ch in nombre.toLowerCase().split('')) {
+    b.write(acentos[ch] ?? (RegExp(r'[a-z0-9]').hasMatch(ch) ? ch : '_'));
+  }
+  return b.toString().replaceAll(RegExp('_+'), '_');
 }
 
 /// Salas del museo: (nombre, emoji, color).
