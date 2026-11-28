@@ -32,25 +32,9 @@
   <title>Explora Ciencia y Tecnología</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#183e49">
-  <style>
-    #offline-status {
-      position: fixed; inset-inline-end: .5rem; top: .5rem; z-index: 99999;
-      max-width: min(23rem, 80vw); padding: .3rem .55rem; border-radius: .5rem;
-      color: #183e49; background: #f8fff9; border: 1px solid #52786c;
-      font: .8rem system-ui;
-    }
-    #offline-status[hidden] { display: none; }
-    #offline-status summary { cursor: pointer; min-height: 1.5rem; }
-    #offline-status button { min-height: 2.75rem; }
-  </style>
   <script src="offline-status.js" defer></script>
 </head>
 <body>
-  <details id="offline-status" hidden>
-    <summary>Preparación sin conexión</summary>
-    <p role="status">Verificando recursos locales…</p>
-    <button type="button">Preparar sin conexión</button>
-  </details>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader
