@@ -61,6 +61,9 @@ Future<void> _arrastrarAlPrimerHueco(WidgetTester tester, String texto) async {
 
 const _tamanos = [Size(844, 390), Size(1280, 800), Size(1920, 1080)];
 
+/// Una parte del dibujo: por su nombre, o la etiqueta “¿?” que la oculta.
+Finder _parte(String t) => find.byWidgetPredicate((w) => (w is Text && w.data == t) || (w is Semantics && w.properties.label == 'Descubre: $t')).first;
+
 void main() {
   setUpAll(_cargarFuentes);
 
@@ -80,7 +83,7 @@ void main() {
         await tester.tap(find.text(t));
         await _cuadros(tester, 4);
       }
-      await tester.tap(find.text('Alvéolos'));
+      await tester.tap(_parte('Alvéolos'));
       await _cuadros(tester, 6);
       await tester.tap(find.text('¡Entendido!'));
       await _cuadros(tester, 6);
@@ -243,7 +246,7 @@ void main() {
       }
       await tester.pumpWidget(_envolver(const PantallaInmunePartes()));
       await _cuadros(tester, 6);
-      await tester.tap(find.text('Médula ósea'));
+      await tester.tap(_parte('Médula ósea'));
       await _cuadros(tester, 6);
       await tester.tap(find.text('¡Entendido!'));
       await _cuadros(tester, 6);

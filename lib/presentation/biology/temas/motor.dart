@@ -258,7 +258,7 @@ class PantallaIntroBio extends StatelessWidget {
     final tema = TemaScope.of(context);
     final p = ProgresoScope.of(context);
     final nombre = ConfiguracionJuego.of(context).nombreAlumno;
-    final texto = '¡Hola, ${nombre == null || nombre.isEmpty ? 'explorador' : nombre}!\n\n${tema.saludo}\n\n¿Listo para comenzar?';
+    final texto = '${nombre == null || nombre.isEmpty ? '¡Hola!' : '¡Hola, $nombre!'}\n\n${tema.saludo}\n\n¿Comenzamos?';
     return Escenario(
       children: [
         Positioned(

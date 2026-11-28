@@ -701,7 +701,7 @@ final eleTema1 = TemaBio(
                       ),
                     ], color: const Color(0xFF6A1B9A), instruccion: 'Demuestra todo lo que sabes de componentes.'),
                   ],
-                  mensajeFinal: '¡Eres un Conocedor de Componentes!',
+                  mensajeFinal: '¡Ganaste la insignia «Conocedor de Componentes»!',
                 )),
       ],
     ),

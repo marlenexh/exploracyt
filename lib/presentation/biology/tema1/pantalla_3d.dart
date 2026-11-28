@@ -143,7 +143,7 @@ class _PantallaSimulacion3DState extends State<PantallaSimulacion3D>
         context,
         actividad: m.actividad,
         estrellas: 3,
-        titulo: '¡Explorador 3D!',
+        titulo: '¡Exploración 3D completa!',
         mensaje: 'Descubriste todas las partes del modelo “${m.nombre}”.',
       );
     }

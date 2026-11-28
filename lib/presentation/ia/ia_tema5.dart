@@ -353,7 +353,7 @@ final iaTema5 = TemaBio(
                           explicacion: '¡Nunca la compartas!'),
                     ], color: const Color(0xFF0D2F6B), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Guardián Digital Responsable!',
+                  mensajeFinal: '¡Ganaste la insignia «Guardián Digital Responsable»!',
                 )),
       ],
     ),

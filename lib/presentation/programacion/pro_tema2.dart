@@ -424,7 +424,7 @@ final proTema2 = TemaBio(
                   ),
                 ], color: const Color(0xFFE65100), instruccion: 'Demuestra todo lo que sabes de algoritmos.'),
               ],
-              mensajeFinal: '¡Eres un Maestro de los Algoritmos!',
+              mensajeFinal: '¡Ganaste la insignia «Maestro de los Algoritmos»!',
             )),
       ],
     ),

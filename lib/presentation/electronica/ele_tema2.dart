@@ -481,7 +481,7 @@ final eleTema2 = TemaBio(
                   ),
                 ], color: const Color(0xFFFF6F00), instruccion: 'Demuestra todo lo que sabes de circuitos.'),
               ],
-              mensajeFinal: '¡Eres un Maestro de los Circuitos!',
+              mensajeFinal: '¡Ganaste la insignia «Maestro de los Circuitos»!',
             )),
       ],
     ),

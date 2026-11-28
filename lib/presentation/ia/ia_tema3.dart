@@ -348,7 +348,7 @@ final iaTema3 = TemaBio(
                           explicacion: 'Por eso se llaman neuronales.'),
                     ], color: const Color(0xFF33691E), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Entrenador de Máquinas!',
+                  mensajeFinal: '¡Ganaste la insignia «Entrenador de Máquinas»!',
                 )),
       ],
     ),

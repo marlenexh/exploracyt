@@ -6,6 +6,7 @@ import 'aventura.dart';
 import 'comunes.dart';
 import 'escenario.dart';
 import '../../ciencia/glosario_chips.dart';
+import '../../../data/imagenes_tarjetas.dart';
 
 /// Piezas reutilizables para las pantallas de las misiones (todas sobre el
 /// lienzo fijo de [Escenario], así se ven igual en celular y computadora).
@@ -361,6 +362,8 @@ class _PantallaExplicacionState extends State<PantallaExplicacion> {
               resaltar: resaltadas.contains(e.id) ||
                   _partes.contains(e.id) ||
                   _ultima == e.id,
+              // Cada parte se descubre al tocarla: menos texto a la vez.
+              oculta: !_partes.contains(e.id),
               onTap: () {
                 setState(() {
                   _partes.add(e.id);
@@ -749,7 +752,19 @@ class PantallaTarjetasState extends State<PantallaTarjetas> {
             Row(
               children: [
                 if (vista)
-                  Text(t.emoji ?? (reaccion ? '🤩' : '😎'), style: const TextStyle(fontSize: 22))
+                  Text(t.emoji ?? imagenDeTarjeta(t.titulo) ?? (reaccion ? '🤩' : '😎'), style: const TextStyle(fontSize: 22))
+                else if ((t.emoji ?? imagenDeTarjeta(t.titulo)) != null)
+                  // La imagen de la tarjeta (la descripción se ve al abrirla)
+                  Reloj(
+                    builder: (_, s) => Transform.translate(
+                      offset: Offset(0, math.sin(s * 2.5 + indice) * 2),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(color: Color(0xDDFFFFFF), shape: BoxShape.circle),
+                        child: Text(t.emoji ?? imagenDeTarjeta(t.titulo)!, style: const TextStyle(fontSize: 20)),
+                      ),
+                    ),
+                  )
                 else
                   Reloj(
                     builder: (_, s) => Transform.translate(
@@ -858,7 +873,9 @@ class _TarjetaGrande extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [BoxShadow(color: oscurecer(c, 0.4).withValues(alpha: 0.5), blurRadius: 12, offset: const Offset(0, 6))],
                       ),
-                      child: tarjeta.emoji != null ? Text(tarjeta.emoji!, style: const TextStyle(fontSize: 62)) : Icon(tarjeta.icono, size: 66, color: c),
+                      child: (tarjeta.emoji ?? imagenDeTarjeta(tarjeta.titulo)) != null
+                          ? Text(tarjeta.emoji ?? imagenDeTarjeta(tarjeta.titulo)!, style: const TextStyle(fontSize: 62))
+                          : Icon(tarjeta.icono, size: 66, color: c),
                     ),
                   ),
                 ),
@@ -899,7 +916,7 @@ class _TarjetaGrande extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Text(reaccion == null ? '¿Ya lo sabías?' : (reaccion! ? '¡Aprendiste algo nuevo! 🤩' : '¡Eres un experto! 😎'),
+                Text(reaccion == null ? '¿Ya lo sabías?' : (reaccion! ? '¡Aprendiste algo nuevo! 🤩' : '¡Ya lo sabías! 😎'),
                     style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: ColoresJuego.texto)),
                 const SizedBox(height: 4),
                 Row(children: [

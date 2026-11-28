@@ -32,7 +32,7 @@ class VocacionScreen extends StatefulWidget {
     ),
     OpcionVocacion(
       titulo: 'Explora profesiones',
-      descripcion: 'Conoce más de 20 profesiones de ciencia y tecnología: qué hacen, sus herramientas y un día de trabajo.',
+      descripcion: 'Conoce 31 carreras de ciencia y tecnología, con imágenes animadas: qué hacen, sus herramientas y un día de trabajo.',
       emoji: '💼',
       colores: const [Color(0xFFFF9E40), Color(0xFFD84315)],
       pantalla: (_) => const ExploraProfesionesScreen(),

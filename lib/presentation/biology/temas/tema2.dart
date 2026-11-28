@@ -473,7 +473,7 @@ final tema2 = TemaBio(
                   ),
                 ], color: const Color(0xFFFF8A00), instruccion: 'Demuestra todo lo que sabes de las células.'),
               ],
-              mensajeFinal: '¡Eres todo un experto en células!',
+              mensajeFinal: '¡Ya sabes muchísimo de las células!',
             )),
       ],
     ),

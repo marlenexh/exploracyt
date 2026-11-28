@@ -161,7 +161,7 @@ class LaboratorioBioState extends State<LaboratorioBio> {
     if (resultado != null && !simulando) return resultado!.mensaje;
     if (simulando) return 'Día $dia de 30… Observa qué pasa con cada población.';
     if (!sol || !agua) {
-      return '¡Bienvenido al Laboratorio de la Vida! Vas a crear un ecosistema en un terrario. Primero dale lo que todo ser vivo necesita: enciende el ☀️ Sol y el 💧 Agua.';
+      return '¡Te damos la bienvenida al Laboratorio de la Vida! Vas a crear un ecosistema en un terrario. Primero dale lo que todo ser vivo necesita: enciende el ☀️ Sol y el 💧 Agua.';
     }
     if (n[0] == 0) return 'Ahora agrega productores: las 🌿 plantas fabrican su alimento con la luz del Sol.';
     if (n[1] == 0 || n[2] == 0) {

@@ -438,7 +438,7 @@ class _LabPulsoState extends State<LabPulso> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       'Tu pulso: $_toques × 4 = $_pulsoReal latidos por minuto.\n'
-                      '${_pulsoReal! < 60 ? '¿Seguro que contaste todos? Inténtalo de nuevo.' : _pulsoReal! > 130 ? '¡Está muy rápido! ¿Acabas de moverte?' : 'Un pulso normal para un niño en reposo es de 70 a 110.'}',
+                      '${_pulsoReal! < 60 ? '¿Contaste todos los latidos? Inténtalo de nuevo.' : _pulsoReal! > 130 ? '¡Está muy rápido! ¿Acabas de moverte?' : 'Un pulso normal para un niño en reposo es de 70 a 110.'}',
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),

@@ -198,7 +198,7 @@ class BiologyWorldScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '¡Hola, explorador!',
+            '¡Hola!',
             style: TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.w900,
@@ -207,7 +207,7 @@ class BiologyWorldScreen extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Text(
-            '¡Bienvenido al Laboratorio de la Vida! '
+            '¡Te damos la bienvenida al Laboratorio de la Vida! '
             'Aquí descubrirás cómo funciona tu cuerpo, '
             'cómo viven otros seres y por qué debemos '
             'cuidar la naturaleza.',

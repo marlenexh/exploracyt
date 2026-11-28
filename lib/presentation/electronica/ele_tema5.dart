@@ -478,7 +478,7 @@ final eleTema5 = TemaBio(
                   ),
                 ], color: const Color(0xFF00897B), instruccion: 'Demuestra todo lo que sabes de inventos.'),
               ],
-              mensajeFinal: '¡Eres un Inventor Electrónico!',
+              mensajeFinal: '¡Ganaste la insignia «Inventor Electrónico»!',
             )),
       ],
     ),

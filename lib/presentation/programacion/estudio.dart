@@ -66,7 +66,7 @@ class EstudioVideojuegosState extends State<EstudioVideojuegos> with SingleTicke
   bool probado = false;
   bool ganado = false;
   int _pruebas = 0;
-  String _mensaje = '¡Bienvenido al laboratorio del programador! Crea tu propio videojuego: elige personaje y escenario, y programa qué pasa con cada evento. Luego presiona “Probar juego”.';
+  String _mensaje = '¡Te damos la bienvenida al laboratorio de programación! Crea tu propio videojuego: elige personaje y escenario, y programa qué pasa con cada evento. Luego presiona “Probar juego”.';
 
   // Estado de la partida
   double _x = 304, _t = 0, _spawn = 0;

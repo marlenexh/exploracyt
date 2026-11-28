@@ -367,7 +367,7 @@ class _MisDescubrimientosScreenState extends State<MisDescubrimientosScreen> {
                                       desbloqueada: resultados.isNotEmpty,
                                     ),
                                     _TarjetaInsignia(
-                                      titulo: 'Explorador de profesiones',
+                                      titulo: 'Exploración de profesiones',
                                       descripcion: 'Guardaste una profesión favorita',
                                       icono: Icons.work,
                                       desbloqueada: profesionesFavoritas.isNotEmpty,

@@ -135,43 +135,52 @@ void main() {
     });
   });
 
-  testWidgets('Laboratorio: se construye, se mejora y se publica una IA', (tester) async {
+  testWidgets('Laboratorio: escoge 6, etiqueta, entrena, prueba y publica', (tester) async {
     pantalla(tester, const Size(844, 390));
     var publicado = 0;
     await tester.pumpWidget(MaterialApp(home: Theme(data: temaJuego(), child: LaboratorioIA(onTerminar: (e) => publicado = e))));
     await cuadros(tester, 4);
     final st = tester.state<LaboratorioIAState>(find.byType(LaboratorioIA));
     Future<void> tocar(String t) async {
-      await tester.tap(find.byTooltip(t));
+      await tester.tap(find.byTooltip(t).first);
       await tester.pump();
     }
 
-    final p = proyectoBasura;
-    await tocar('Proyecto ${p.titulo}');
+    final p = problemasLab[2]; // Reciclaje
+    await tocar('Problema ${p.titulo}');
     expect(st.paso, 1);
-    expect(st.puedeAvanzar, isFalse);
-    await tocar('Usar todos');
-    await tocar('Siguiente paso');
-    expect(st.paso, 2);
-    for (final e in p.banco) {
-      await tocar('Ejemplo ${e.nombre}');
-      await tocar('${e.nombre}: ${p.etiquetas[e.etiqueta].nombre}');
+    // Con 5 no se puede avanzar; con 6 cualesquiera, sí (aunque sean del mismo grupo)
+    final mismos = [
+      for (var i = 0; i < p.objetos.length; i++)
+        if (p.objetos[i].grupo == 0) i
+    ];
+    for (final i in mismos.take(5)) {
+      await tocar('Objeto ${p.objetos[i].nombre}');
     }
+    expect(st.puedeAvanzar, isFalse);
+    await tocar('Objeto ${p.objetos[1].nombre}');
+    expect(st.elegidos.length, 6);
+    expect(st.puedeAvanzar, isTrue);
     await tocar('Siguiente paso');
-    // Primero con un rasgo que no sirve
-    await tocar('Rasgo Color');
+    // Etiqueta todo al revés a propósito
+    while (st.porEtiquetar != null) {
+      final o = p.objetos[st.porEtiquetar!];
+      await tocar('Etiqueta ${p.grupos[1 - o.grupo].$1}');
+    }
     await tocar('Siguiente paso');
     await tocar('Entrenar');
     await cuadros(tester, 30, 60);
     await tocar('Siguiente paso');
-    expect(st.paso, 5);
-    expect(st.precision, lessThan(0.8));
-    expect(find.byTooltip('Publicar IA'), findsNothing);
-    expect(st.pistas, isNotEmpty);
-    // Mejora los rasgos y vuelve a entrenar
-    await tocar('Cambiar rasgos');
-    await tocar('Rasgo Color');
-    await tocar('Rasgo ¿Se pudre?');
+    expect(st.paso, 4);
+    // La prueba usa objetos del mismo estante que no se eligieron
+    expect(st.prueba.every((r) => !st.elegidos.contains(r.$1)), isTrue);
+    expect(st.precision, lessThan(1));
+    expect(find.textContaining('etiquetas estaban mal'), findsOneWidget);
+    // Corrige las etiquetas y vuelve a entrenar
+    await tocar('Corregir etiquetas');
+    while (st.porEtiquetar != null) {
+      await tocar('Etiqueta ${p.grupos[p.objetos[st.porEtiquetar!].grupo].$1}');
+    }
     await tocar('Siguiente paso');
     await tocar('Entrenar');
     await cuadros(tester, 30, 60);
@@ -185,31 +194,38 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Laboratorio: se ve bien en cada paso y tamaño', (tester) async {
+  testWidgets('Laboratorio: cada problema se puede resolver y se ve bien en cada paso', (tester) async {
     for (final s in const [Size(844, 390), Size(1280, 800)]) {
       pantalla(tester, s);
-      await tester.pumpWidget(MaterialApp(home: Theme(data: temaJuego(), child: LaboratorioIA(onTerminar: (_) {}))));
+      await tester.pumpWidget(MaterialApp(home: Theme(data: temaJuego(), child: LaboratorioIA(key: ValueKey(s), onTerminar: (_) {}))));
       await cuadros(tester, 3);
       final st = tester.state<LaboratorioIAState>(find.byType(LaboratorioIA));
-      for (var i = 0; i < proyectosLaboratorio.length; i++) {
-        st.elegirProyecto(i);
-        st.usarTodos();
-        for (final k in st.datos) {
-          st.etiquetar(k, proyectosLaboratorio[i].banco[k].etiqueta);
+      for (var k = 0; k < problemasLab.length; k++) {
+        st.elegirProblema(k);
+        // 3 de cada grupo
+        final p = problemasLab[k];
+        for (final g in [0, 1]) {
+          for (final i in [
+            for (var i = 0; i < p.objetos.length; i++)
+              if (p.objetos[i].grupo == g) i
+          ].take(3)) {
+            st.alternar(i);
+          }
         }
-        for (final r in proyectosLaboratorio[i].rasgos.where((r) => r.util)) {
-          st.alternarRasgo(r.id);
-        }
-        for (var paso = 1; paso <= 4; paso++) {
+        for (var paso = 1; paso <= 2; paso++) {
           st.irA(paso);
           await cuadros(tester, 2);
-          expect(tester.takeException(), isNull, reason: '$s paso $paso');
+          expect(tester.takeException(), isNull, reason: '$s ${p.titulo} paso $paso');
         }
+        while (st.porEtiquetar != null) {
+          st.etiquetar(p.objetos[st.porEtiquetar!].grupo);
+        }
+        st.irA(3);
         st.entrenar();
         await cuadros(tester, 30, 60);
-        st.irA(5);
+        st.irA(4);
         await cuadros(tester, 2);
-        expect(st.precision, 1.0, reason: proyectosLaboratorio[i].titulo);
+        expect(st.precision, 1.0, reason: p.titulo);
         expect(tester.takeException(), isNull, reason: '$s prueba');
       }
       await tester.pumpWidget(const SizedBox());

@@ -430,7 +430,7 @@ final proTema1 = TemaBio(
                   ),
                 ], color: const Color(0xFFC2185B), instruccion: 'Demuestra todo lo que sabes.'),
               ],
-              mensajeFinal: '¡Eres un Pensador Computacional!',
+              mensajeFinal: '¡Ganaste la insignia «Pensador Computacional»!',
             )),
       ],
     ),

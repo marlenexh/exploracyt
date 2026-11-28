@@ -483,7 +483,7 @@ class PantallaIntroTema extends StatelessWidget {
   final String? nombre;
 
   String get textoZati =>
-      '¡Hola, ${nombre ?? 'explorador'}!\n\nEn este tema conoceremos cómo está formado nuestro cuerpo y cómo funcionan algunos de sus sistemas.\n\n¿Listo para comenzar?';
+      '${(nombre ?? '').isEmpty ? '¡Hola!' : '¡Hola, $nombre!'}\n\nEn este tema conoceremos cómo está formado nuestro cuerpo y cómo funcionan algunos de sus sistemas.\n\n¿Comenzamos?';
 
   @override
   Widget build(BuildContext context) {

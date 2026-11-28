@@ -73,7 +73,7 @@ class TarjetaLaboratorioMundo extends StatelessWidget {
                         Text(
                           hecho
                               ? '🏅 ${lab.insignia} · 🧭 ¡${piezaDelMundo(lab.mundo).nombre} recuperada!'
-                              : '🧭 Aquí está la ${piezaDelMundo(lab.mundo).nombre}. ${lab.descripcion} ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                              : '🧭 Aquí está la ${piezaDelMundo(lab.mundo).nombre}. ${lab.descripcion} ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya puedes hacerlo!'}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: sub,

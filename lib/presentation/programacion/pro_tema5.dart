@@ -491,7 +491,7 @@ final proTema5 = TemaBio(
                   ),
                 ], color: const Color(0xFFC62828), instruccion: 'Demuestra todo lo que sabes de errores.'),
               ],
-              mensajeFinal: '¡Eres un Cazador de Errores!',
+              mensajeFinal: '¡Ganaste la insignia «Cazador de Errores»!',
             )),
       ],
     ),

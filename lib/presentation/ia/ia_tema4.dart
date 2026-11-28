@@ -345,7 +345,7 @@ final iaTema4 = TemaBio(
                           explicacion: 'Así muestra mejores resultados.'),
                     ], color: const Color(0xFF004D57), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Detective de la IA Cotidiana!',
+                  mensajeFinal: '¡Ganaste la insignia «Detective de la IA Cotidiana»!',
                 )),
       ],
     ),

@@ -424,7 +424,7 @@ final eleTema4 = TemaBio(
                   ),
                 ], color: const Color(0xFFD84315), instruccion: 'Demuestra todo lo que sabes de máquinas.'),
               ],
-              mensajeFinal: '¡Eres un Ingeniero en Movimiento!',
+              mensajeFinal: '¡Ganaste la insignia «Ingeniero en Movimiento»!',
             )),
       ],
     ),

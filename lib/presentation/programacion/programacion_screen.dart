@@ -97,7 +97,7 @@ class TarjetaLaboratorio extends StatelessWidget {
                         Text(
                             hecho
                                 ? '🏅 $proLabBadge · 🧭 ¡Pieza del Código recuperada!'
-                                : '🧭 Aquí está la Pieza del Código. Programa los eventos de tu propio juego, pruébalo, encuentra sus bugs y publícalo. ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                                : '🧭 Aquí está la Pieza del Código. Programa los eventos de tu propio juego, pruébalo, encuentra sus bugs y publícalo. ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya puedes hacerlo!'}',
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(

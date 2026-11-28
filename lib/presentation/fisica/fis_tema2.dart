@@ -336,7 +336,7 @@ final fisTema2 = TemaBio(
                           explicacion: 'La Luna jala el agua de los océanos.'),
                     ], color: const Color(0xFF283593), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Explorador de la Gravedad!',
+                  mensajeFinal: '¡Ganaste la insignia «Explorador de la Gravedad»!',
                 )),
       ],
     ),

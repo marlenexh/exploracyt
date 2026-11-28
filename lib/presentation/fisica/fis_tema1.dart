@@ -368,7 +368,7 @@ final fisTema1 = TemaBio(
                           explicacion: 'Luces de colores en el cielo.'),
                     ], color: const Color(0xFF6A1B9A), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Maestro de los Imanes!',
+                  mensajeFinal: '¡Ganaste la insignia «Maestro de los Imanes»!',
                 )),
       ],
     ),

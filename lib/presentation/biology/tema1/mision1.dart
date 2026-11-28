@@ -179,6 +179,7 @@ class _PantallaCuerpoHumanoState extends State<PantallaCuerpoHumano> {
             color: color,
             ancho: ancho,
             resaltar: _resaltada(id) || _partesVistas.contains(id),
+            oculta: !_partesVistas.contains(id),
             icono: _iconoParte(id),
             onTap: () {
               setState(() => _partesVistas.add(id));
@@ -247,13 +248,26 @@ class _PantallaCuerpoHumanoState extends State<PantallaCuerpoHumano> {
             globoArriba: true,
           ),
         ),
-        Positioned(
-          left: 650,
-          top: 8,
-          width: 204,
-          height: 402,
-          child: _TresSistemas(resaltar: _pestana == 1),
-        ),
+        // Los 3 sistemas aparecen solo en “¿Para qué sirve?” (menos texto a la vez)
+        if (_pestana == 1)
+          Positioned(
+            left: 650,
+            top: 8,
+            width: 204,
+            height: 402,
+            child: _TresSistemas(resaltar: _pestana == 1),
+          )
+        else
+          Positioned(
+            left: 660,
+            top: 70,
+            width: 186,
+            child: _PistaToca(
+              _partesVistas.length < _partes.length
+                  ? 'Toca cada “¿?” para descubrir las partes de tu cuerpo. Llevas ${_partesVistas.length} de ${_partes.length}.'
+                  : '¡Descubriste todas las partes! Revisa las pestañas de arriba.',
+            ),
+          ),
         Positioned(
           left: 300,
           top: 436,
@@ -493,6 +507,12 @@ class _PantallaCirculatorioExplicacionState
     extends State<PantallaCirculatorioExplicacion> {
   int _pestana = 0;
   final _vistas = <int>{0};
+  final _descubiertas = <String>{};
+
+  void _descubrir(String id, String titulo, String texto, Color color) {
+    setState(() => _descubiertas.add(id));
+    ventanaZati(context, titulo: titulo, texto: texto, color: color);
+  }
 
   static const _textos = [
     '¡Ahora conozcamos el sistema circulatorio!\n\nEs una red de órganos y vasos que mueve la sangre por todo tu cuerpo para llevar oxígeno y nutrientes y retirar desechos.',
@@ -625,6 +645,8 @@ class _PantallaCirculatorioExplicacionState
             color: ColoresJuego.circulatorio,
             ancho: 102,
             resaltar: _pestana == 2,
+            oculta: !_descubiertas.contains('corazon'),
+            onTap: () => _descubrir('corazon', 'Corazón', 'Es un músculo del tamaño de tu puño. Se aprieta y empuja la sangre: ¡eso es un latido!', ColoresJuego.circulatorio),
           ),
         ),
         Positioned(
@@ -636,6 +658,8 @@ class _PantallaCirculatorioExplicacionState
             color: rojoArteria,
             ancho: 102,
             resaltar: _pestana == 1,
+            oculta: !_descubiertas.contains('arterias'),
+            onTap: () => _descubrir('arterias', 'Arterias', 'Son los tubos que llevan la sangre con oxígeno desde el corazón a todo tu cuerpo.', rojoArteria),
           ),
         ),
         Positioned(
@@ -647,9 +671,23 @@ class _PantallaCirculatorioExplicacionState
             color: azulVena,
             ancho: 102,
             resaltar: _pestana == 1,
+            oculta: !_descubiertas.contains('venas'),
+            onTap: () => _descubrir('venas', 'Venas', 'Son los tubos que regresan la sangre al corazón para que vuelva a empezar su viaje.', azulVena),
           ),
         ),
-        // Tu pulso
+        if (_pestana != 3)
+          Positioned(
+            left: 600,
+            top: 90,
+            width: 240,
+            child: _PistaToca(
+              _descubiertas.length < 3
+                  ? 'Toca cada “¿?” junto al corazón para descubrir sus partes (${_descubiertas.length} de 3).'
+                  : '¡Muy bien! Ahora mira la pestaña “En la vida diaria” para sentir tu pulso.',
+            ),
+          ),
+        // Tu pulso (solo en “En la vida diaria”)
+        if (_pestana == 3)
         Positioned(
           left: 584,
           top: 62,
@@ -704,7 +742,8 @@ class _PantallaCirculatorioExplicacionState
             ),
           ),
         ),
-        // Ejercicio
+        // Ejercicio (solo en “En la vida diaria”)
+        if (_pestana == 3)
         Positioned(
           left: 724,
           top: 62,
@@ -752,7 +791,7 @@ class _PantallaCirculatorioExplicacionState
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Text(
-              '🔍 Explora las 4 pestañas de arriba: ¿Qué es?, ¿Para qué sirve?, ¿Cómo funciona? y En la vida diaria.',
+              '🔍 Toca las pestañas de arriba y los “¿?”.',
               style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
             ),
           ),
@@ -877,8 +916,8 @@ class _PantallaVasosSanguineosState extends State<PantallaVasosSanguineos> {
   String? _parteElegida;
 
   static const _textoZati =
-      '¿Qué es? El sistema circulatorio es el conjunto del corazón, los vasos sanguíneos (arterias, venas y capilares) y la sangre.\n\n'
-      '¿Para qué sirve? Transporta la sangre por todo el cuerpo para llevar oxígeno y nutrientes, y recoger desechos como el dióxido de carbono.';
+      'El corazón y los vasos sanguíneos forman un circuito por donde viaja la sangre.\n\n'
+      'Mira los 4 pasos de la derecha y toca cada “¿?” para descubrir las partes.';
 
   // (parte, color, texto)
   static const _pasos = [
@@ -994,6 +1033,7 @@ class _PantallaVasosSanguineosState extends State<PantallaVasosSanguineos> {
             color: color,
             ancho: 130,
             resaltar: resaltar == id,
+            oculta: !_partesVistas.contains(id),
             icono: IconoVaso(icono),
             onTap: () {
               setState(() {
@@ -1059,61 +1099,77 @@ class _PantallaVasosSanguineosState extends State<PantallaVasosSanguineos> {
             color: const Color(0xFF8B5CF6),
             padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                for (var i = 0; i < 4; i++)
-                  Expanded(
-                    child: Rebote(
-                      escala: 0.97,
-                      onTap: () => setState(() {
-                        _paso = i;
-                        _pasosVistos.add(i);
-                        _parteElegida = null;
-                        _auto = false;
-                      }),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        margin: const EdgeInsets.only(bottom: 4),
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: i == _paso
-                              ? aclarar(_pasos[i].$2, 0.82)
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: i == _paso ? _pasos[i].$2 : Colors.black12,
-                            width: i == _paso ? 2.5 : 1,
+                // Un paso a la vez: números arriba y solo el texto del paso actual.
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    for (var i = 0; i < 4; i++)
+                      Rebote(
+                        onTap: () => setState(() {
+                          _paso = i;
+                          _pasosVistos.add(i);
+                          _parteElegida = null;
+                          _auto = false;
+                        }),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          width: i == _paso ? 40 : 32,
+                          height: i == _paso ? 40 : 32,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: i == _paso ? _pasos[i].$2 : (_pasosVistos.contains(i) ? aclarar(_pasos[i].$2, 0.6) : Colors.white),
+                            shape: BoxShape.circle,
+                            border: Border.all(color: _pasos[i].$2, width: 2.5),
+                          ),
+                          child: Text(
+                            '${i + 1}',
+                            style: TextStyle(color: i == _paso ? Colors.white : _pasos[i].$2, fontWeight: FontWeight.w900, fontSize: 16),
                           ),
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 12,
-                              backgroundColor: _pasos[i].$2,
-                              child: Text(
-                                '${i + 1}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            Expanded(
-                              child: Text(
-                                _pasos[i].$3,
-                                style: const TextStyle(
-                                  fontSize: 12.2,
-                                  height: 1.12,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: Container(
+                      key: ValueKey(_paso),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: aclarar(_pasos[_paso].$2, 0.85),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: _pasos[_paso].$2, width: 2.5),
+                      ),
+                      child: Column(children: [
+                        Text('Paso ${_paso + 1} de 4', style: TextStyle(fontWeight: FontWeight.w900, color: oscurecer(_pasos[_paso].$2, 0.2))),
+                        const SizedBox(height: 4),
+                        Expanded(
+                          child: Center(
+                            child: Text(_pasos[_paso].$3, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14.5, height: 1.2, fontWeight: FontWeight.w600)),
+                          ),
+                        ),
+                      ]),
                     ),
                   ),
+                ),
+                const SizedBox(height: 6),
+                Rebote(
+                  onTap: () => setState(() {
+                    _paso = (_paso + 1) % 4;
+                    _pasosVistos.add(_paso);
+                    _parteElegida = null;
+                    _auto = false;
+                  }),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(color: const Color(0xFF8B5CF6), borderRadius: BorderRadius.circular(14)),
+                    child: Text(_paso < 3 ? 'Siguiente paso ▶' : 'Volver al paso 1 ↺',
+                        textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+                  ),
+                ),
               ],
             ),
           ),
@@ -1141,7 +1197,7 @@ class _PantallaVasosSanguineosState extends State<PantallaVasosSanguineos> {
                     _pasosVistos.length + _partesVistas.length,
                     8,
                   ),
-                  titulo: '¡Experto en vasos sanguíneos!',
+                  titulo: '¡Ya conoces los vasos sanguíneos!',
                   mensaje:
                       'Corazón, arterias, capilares y venas: ¡ya conoces todo el camino! Ahora veamos el viaje de la sangre.',
                 ),
@@ -1170,9 +1226,20 @@ class _PantallaViajeSangreState extends State<PantallaViajeSangre>
       AnimationController(vsync: this, duration: const Duration(seconds: 12))
         ..addListener(() => setState(() {}))
         ..addStatusListener((s) {
-          if (s == AnimationStatus.completed) setState(() => _vista = true);
+          if (s == AnimationStatus.completed && _anim.value >= 1) setState(() => _vista = true);
         });
   bool _vista = false;
+
+  /// Paso del viaje que se está mostrando (-1 = todavía no empieza).
+  int _actual = -1;
+
+  /// Muestra el siguiente paso: solo su texto y su parte de la animación.
+  void _avanzar() {
+    if (_anim.isAnimating) return;
+    setState(() => _actual = _actual >= 3 ? 0 : _actual + 1);
+    _anim.value = _actual / 4;
+    _anim.animateTo((_actual + 1) / 4, duration: const Duration(seconds: 3));
+  }
 
   static const _textos = [
     'El corazón manda a los pulmones la sangre que ya tiene poco oxígeno.',
@@ -1192,7 +1259,7 @@ class _PantallaViajeSangreState extends State<PantallaViajeSangre>
 
   @override
   Widget build(BuildContext context) {
-    Widget callout(int i, double left, double top, double ancho, Color color) =>
+    Widget calloutCompleto(int i, double left, double top, double ancho, Color color) =>
         Positioned(
           left: left,
           top: top,
@@ -1247,6 +1314,19 @@ class _PantallaViajeSangreState extends State<PantallaViajeSangre>
             ),
           ),
         );
+    // Solo se lee el paso actual; los demás son un número (✓ si ya se vio).
+    Widget callout(int i, double left, double top, double ancho, Color color) => i == _actual
+        ? calloutCompleto(i, left, top, ancho, color)
+        : Positioned(
+            left: left,
+            top: top,
+            child: CircleAvatar(
+              radius: 17,
+              backgroundColor: i < _actual || _vista ? color : Colors.white,
+              child: Text(i < _actual || _vista ? '✓' : '${i + 1}',
+                  style: TextStyle(color: i < _actual || _vista ? Colors.white : color, fontWeight: FontWeight.w900, fontSize: 16)),
+            ),
+          );
     return Escenario(
       velo: 0.15,
       colorVelo: const Color(0xFF3D5AFE),
@@ -1273,6 +1353,7 @@ class _PantallaViajeSangreState extends State<PantallaViajeSangre>
         callout(1, 6, 210, 142, ColoresJuego.respiratorio),
         callout(2, 586, 56, 268, rojoArteria),
         callout(3, 712, 176, 142, const Color(0xFF8B5CF6)),
+        if (_vista)
         Positioned(
           left: 56,
           top: 384,
@@ -1324,12 +1405,16 @@ class _PantallaViajeSangreState extends State<PantallaViajeSangre>
           left: 660,
           top: 372,
           child: Tooltip(
-            message: 'Ver animación',
+            message: 'Siguiente paso del viaje',
             child: BotonJuego(
-              texto: _anim.isAnimating ? 'Mirando…' : 'Ver animación',
-              icono: Icons.movie_filter_rounded,
+              texto: _anim.isAnimating
+                  ? 'Mirando…'
+                  : _actual == -1
+                      ? 'Empezar el viaje'
+                      : (_actual < 3 ? 'Paso ${_actual + 2} de 4' : 'Ver otra vez'),
+              icono: Icons.play_arrow_rounded,
               color: const Color(0xFFFF8A00),
-              onTap: _anim.isAnimating ? null : () => _anim.forward(from: 0),
+              onTap: _anim.isAnimating ? null : _avanzar,
             ),
           ),
         ),
@@ -1345,7 +1430,7 @@ class _PantallaViajeSangreState extends State<PantallaViajeSangre>
               titulo: '¡Qué gran viaje!',
               mensaje: _vista
                   ? 'Seguiste a la sangre por todo su recorrido. ¡Ahora veamos un video!'
-                  : 'Tip: presiona “Ver animación” para ganar 3 estrellas.',
+                  : 'Tip: sigue los 4 pasos del viaje para ganar 3 estrellas.',
             ),
           ),
         ),
@@ -1628,6 +1713,28 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
     super.dispose();
   }
 
+  bool _saliendo = false;
+
+  /// Primero se quita el reproductor de YouTube (en la web su ventana captura
+  /// los toques y la celebración quedaba “congelada” encima) y se pausa el
+  /// video; después se muestra la celebración y se sigue con la aventura.
+  Future<void> _continuar() async {
+    if (_saliendo) return;
+    _saliendo = true;
+    await _video?.pause();
+    if (mounted) setState(() => _reproducir = false);
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return;
+    await _terminarPaso(
+      context,
+      actividad: widget.actividad,
+      estrellas: 3,
+      titulo: '¡Seguimos con la aventura!',
+      mensaje: widget.siguiente,
+    );
+    _saliendo = false;
+  }
+
   String _tiempo(Duration d) =>
       '${d.inMinutes}:${(d.inSeconds % 60).toString().padLeft(2, '0')}';
 
@@ -1808,13 +1915,7 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
           child: BotonSiguiente(
             latir: _visto || _sinVideo,
             texto: 'Continuar con mi aventura',
-            onTap: () => _terminarPaso(
-              context,
-              actividad: widget.actividad,
-              estrellas: 3,
-              titulo: '¡Seguimos con la aventura!',
-              mensaje: widget.siguiente,
-            ),
+            onTap: _continuar,
           ),
         ),
       ],
@@ -2905,7 +3006,7 @@ class _PantallaMiniMisionCirculatorioState
       estrellas: estrellas,
       titulo: '¡Mini misión cumplida!',
       mensaje:
-          'Uniste cada parte con su nombre y sabes para qué sirve. ¡Eres un experto del sistema circulatorio!',
+          'Uniste cada parte con su nombre y sabes para qué sirve. ¡Ya dominas el sistema circulatorio!',
     );
   }
 
@@ -3425,3 +3526,27 @@ const accionesCorazon = [
   Accion(Icons.local_drink_rounded, 'Tomar refrescos todos los días', false,
       'Tienen mucha azúcar. Es mejor tomar agua.'),
 ];
+
+/// Una pista corta y animada que invita a tocar (en lugar de mucho texto).
+class _PistaToca extends StatelessWidget {
+  const _PistaToca(this.texto);
+  final String texto;
+  @override
+  Widget build(BuildContext context) => Movimiento(
+        tipo: TipoMovimiento.flotar,
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.95),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: const Color(0xFFFFB300), width: 3),
+            boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 8, offset: Offset(0, 3))],
+          ),
+          child: Row(children: [
+            const Text('👆', style: TextStyle(fontSize: 30)),
+            const SizedBox(width: 8),
+            Expanded(child: Text(texto, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, height: 1.2, color: ColoresJuego.texto))),
+          ]),
+        ),
+      );
+}

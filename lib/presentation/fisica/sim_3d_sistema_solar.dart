@@ -189,7 +189,7 @@ class SimSistemaSolar3DState extends State<SimSistemaSolar3D> {
     terminarPaso(context,
         actividad: widget.actividad,
         estrellas: 3,
-        titulo: '¡Explorador del Sistema Solar!',
+        titulo: '¡Viaje por el Sistema Solar completo!',
         mensaje: 'Los 8 planetas giran alrededor del Sol en sus órbitas. Los cercanos dan la vuelta más rápido que los lejanos.');
   }
 

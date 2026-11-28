@@ -73,6 +73,9 @@ Future<void> _cargarFuentes() async {
   await fredoka.load();
 }
 
+/// Una parte del dibujo: por su nombre, o la etiqueta “¿?” que la oculta.
+Finder _parte(String t) => find.byWidgetPredicate((w) => (w is Text && w.data == t) || (w is Semantics && w.properties.label == 'Descubre: $t')).first;
+
 void main() {
   setUpAll(_cargarFuentes);
   testWidgets('Intro del tema → menú de misiones', (tester) async {
@@ -267,7 +270,7 @@ void main() {
         await tester.tap(find.text(t));
         await _cuadros(tester, 5);
       }
-      await tester.tap(find.text('Nariz'));
+      await tester.tap(_parte('Nariz'));
       await _cuadros(tester, 8);
       await tester.tap(find.text('¡Entendido!'));
       await _cuadros(tester, 8);
@@ -297,7 +300,7 @@ void main() {
       _telefono(tester, tam: tam);
       await tester.pumpWidget(_envolver(const PantallaVasosSanguineos()));
       await _cuadros(tester, 50);
-      await tester.tap(find.text('Capilares'));
+      await tester.tap(_parte('Capilares'));
       await _cuadros(tester, 8);
       await tester.tap(find.text('¡Entendido!'));
       await _cuadros(tester, 8);
@@ -309,8 +312,11 @@ void main() {
       _telefono(tester, tam: tam);
       await tester.pumpWidget(_envolver(const PantallaViajeSangre()));
       await _cuadros(tester, 5);
-      await tester.tap(find.byTooltip('Ver animación'));
-      await _cuadros(tester, 130);
+      // El viaje se ve paso a paso (4 pasos)
+      for (var k = 0; k < 4; k++) {
+        await tester.tap(find.byTooltip('Siguiente paso del viaje'));
+        await _cuadros(tester, 40);
+      }
       await tester.tap(find.byTooltip('Siguiente'));
       await cerrarCelebracion(tester);
     });

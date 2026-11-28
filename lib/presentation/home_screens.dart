@@ -7,6 +7,7 @@ import '../data/models.dart';
 import '../data/body_topic.dart';
 import '../data/worlds.dart';
 import 'brujula/brujula.dart';
+import 'insignias/insignias_screen.dart';
 import '../main.dart' show store;
 import 'game_widgets.dart';
 import 'screens.dart' show RutaMundo;
@@ -110,7 +111,7 @@ class _BienvenidaState extends State<Bienvenida> {
                                 children: [
                                   const Text(
                                     '¡Hola! Soy Zati. '
-                                    '¿Cómo te llamas, explorador?',
+                                    '¿Cómo te llamas?',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: C.tinta,
@@ -127,7 +128,7 @@ class _BienvenidaState extends State<Bienvenida> {
                                       fontSize: 20,
                                     ),
                                     decoration: const InputDecoration(
-                                      labelText: 'Nombre de explorador',
+                                      labelText: 'Tu nombre',
                                       border: OutlineInputBorder(),
                                     ),
                                   ),
@@ -478,7 +479,7 @@ class Home extends StatelessWidget {
                     controller: n,
                     maxLength: 20,
                     decoration: const InputDecoration(
-                      labelText: 'Nombre de explorador',
+                      labelText: 'Tu nombre',
                       prefixIcon: Icon(Icons.person),
                     ),
                   ),
@@ -580,7 +581,7 @@ class Home extends StatelessWidget {
                         builder: (c2) => AlertDialog(
                           title: const Text('¿Quieres salir?'),
                           content: const Text(
-                            '¿Estás seguro de que deseas salir '
+                            '¿De verdad quieres salir '
                             'de Explora Ciencia y Tecnología?',
                           ),
                           actions: [
@@ -1181,41 +1182,9 @@ class Proximamente extends StatelessWidget {
 class Insignias extends StatelessWidget {
   const Insignias({super.key});
 
+  /// Cada insignia se ve con su medalla, como cuando se ganó.
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Mis insignias')),
-        body: ListenableBuilder(
-          listenable: store,
-          builder: (_, __) => store.recompensas.isEmpty
-              ? const Center(
-                  child: Text(
-                    'Aún no tienes insignias.\n'
-                    '¡Completa una misión para ganar la primera!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                )
-              : ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    for (final r in store.recompensas)
-                      Card(
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.military_tech,
-                            color: C.sol,
-                            size: 36,
-                          ),
-                          title: Text(
-                            nombreRecompensa(r),
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-        ),
-      );
+  Widget build(BuildContext context) => const PantallaInsignias();
 }
 
 
@@ -1234,7 +1203,7 @@ class _IntroduccionHistoriaState extends State<IntroduccionHistoria> {
   int _caracteres = 0;
 
   final List<String> _dialogos = [
-    '¡Hola, explorador! Soy Zati. Hace poco descubrí algo increíble... '
+    '¡Hola! Soy Zati. Hace poco descubrí algo increíble... '
         'La Brújula de la Ciencia, un objeto muy especial que nos ayuda '
         'a descubrir los secretos del mundo, ¡se ha roto!',
 
@@ -1244,7 +1213,7 @@ class _IntroduccionHistoriaState extends State<IntroduccionHistoria> {
 
     '¡Necesito tu ayuda para recuperar todas las piezas y reconstruir '
         'la brújula! Podrás explorar los mundos en el orden que prefieras. '
-        '¿Estás listo para comenzar esta gran aventura?'
+        '¿Comenzamos esta gran aventura?'
   ];
 
   String get _textoActual => _dialogos[_pagina];

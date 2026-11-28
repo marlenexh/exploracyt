@@ -412,7 +412,7 @@ final quiTema2 = TemaBio(
                           explicacion: 'Las partículas se esparcen.'),
                     ], color: const Color(0xFFE65100), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Explorador de los Gases!',
+                  mensajeFinal: '¡Ganaste la insignia «Explorador de los Gases»!',
                 )),
       ],
     ),
