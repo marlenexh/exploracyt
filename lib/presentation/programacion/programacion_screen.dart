@@ -14,6 +14,7 @@ import 'pro_tema2.dart';
 import 'pro_tema3.dart';
 import 'pro_tema4.dart';
 import 'pro_tema5.dart';
+import '../ciencia/piensa_antes.dart';
 
 /// Juegos de los temas de Programación, por número de tema.
 final temasPro = <int, TemaBio>{1: proTema1, 2: proTema2, 3: proTema3, 4: proTema4, 5: proTema5};
@@ -56,7 +57,7 @@ class TarjetaLaboratorio extends StatelessWidget {
         color: const Color(0xFFFFF8E1),
         child: InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LaboratorioProgramadorScreen())),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => conPrediccion('pro-lab', const LaboratorioProgramadorScreen()))),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(

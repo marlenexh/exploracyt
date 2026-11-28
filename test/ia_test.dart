@@ -56,7 +56,7 @@ void main() {
     });
     await resolver(tester, temasIA, 'i2_m2_sim', () async {
       for (var r = 0; r < retosPatrones.length; r++) {
-        await tester.tap(find.byTooltip('Opción ${retosPatrones[r].correcta + 1}'));
+        await tester.tap(find.text(retosPatrones[r].opciones[retosPatrones[r].correcta]).last);
         await tester.pump();
         if (r < retosPatrones.length - 1) {
           await tester.tap(find.byTooltip('Siguiente reto'));

@@ -7,6 +7,7 @@ import 'ele_tema1.dart' show pz, taller, abiertoYListo;
 import 'fondos.dart';
 import 'ilustraciones_ele.dart';
 import 'taller.dart';
+import 'sim_3d_circuito.dart';
 
 /// Electrónica · Tema 2: Conecta y enciende.
 
@@ -117,6 +118,7 @@ final eleTema2 = TemaBio(
                 ),
               ],
             )),
+        PasoBio('Circuito en 3D', TipoPasoBio.simulacion, 'e2_m1_3d', (a) => SimCircuito3D(actividad: a, color: _c1)),
         PasoBio('El viaje de la corriente', TipoPasoBio.juego, 'e2_m1_ord', (a) => ordenar(
               a,
               seccion: '3. El recorrido',

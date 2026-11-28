@@ -6,6 +6,7 @@ import 'fondos_ia.dart';
 import 'ilustraciones_ia.dart';
 import 'proyectos_ia.dart';
 import 'sims_ia.dart';
+import 'sim_3d_red.dart';
 
 /// Inteligencia Artificial · Tema 3: Enseña a una máquina.
 
@@ -244,6 +245,7 @@ final iaTema3 = TemaBio(
                   mensajeFinal: '¡Ahora entrena una neurona!',
                 )),
         PasoBio('Entrena una neurona', TipoPasoBio.simulacion, 'i3_m3_sim', (a) => SimNeurona(actividad: a, color: _c3)),
+        PasoBio('Red neuronal en 3D', TipoPasoBio.simulacion, 'i3_m3_3d', (a) => SimRedNeuronal3D(actividad: a, color: _c3)),
         PasoBio(
             'Video del tema',
             TipoPasoBio.video,

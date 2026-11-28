@@ -9,6 +9,7 @@ import 'escenario.dart';
 import 'misiones.dart' show ConfiguracionJuego;
 import 'pantalla_recorrido.dart' show BotonOpcion, EstadoOpcion;
 import 'progreso.dart';
+import '../../ciencia/barajar.dart';
 
 /// Actividad integradora: una situación que se resuelve con lo aprendido de
 /// los 3 sistemas, y la pantalla final con la insignia del Tema 1.
@@ -230,11 +231,11 @@ class _PantallaSituacionIntegradoraState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        for (var k = 0; k < e.opciones.length; k++)
+                        for (final (posK, k) in ordenOpciones(e.pregunta, e.opciones.length).indexed)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 6),
                             child: BotonOpcion(
-                              letra: 'ABC'[k],
+                              letra: 'ABCD'[posK],
                               texto: e.opciones[k],
                               estado: _elegida == k
                                   ? (k == e.correcta

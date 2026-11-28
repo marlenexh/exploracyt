@@ -11,6 +11,7 @@ import '../tema1/contenido.dart' show PreguntaQuiz;
 import '../tema1/escenario.dart';
 import '../tema1/pantalla_recorrido.dart' show BotonOpcion, EstadoOpcion;
 import 'motor.dart';
+import '../../ciencia/barajar.dart';
 
 /// Actividades genéricas, todas sobre el lienzo fijo de [Escenario].
 
@@ -598,11 +599,11 @@ class _FasePreguntasState extends State<FasePreguntas> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      for (var k = 0; k < q.opciones.length; k++)
+                      for (final (posK, k) in ordenOpciones(q.pregunta, q.opciones.length).indexed)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: BotonOpcion(
-                            letra: 'ABCD'[k],
+                            letra: 'ABCD'[posK],
                             texto: q.opciones[k],
                             estado: _elegida == k ? (k == q.correcta ? EstadoOpcion.correcta : EstadoOpcion.incorrecta) : EstadoOpcion.normal,
                             onTap: acerto
@@ -1207,11 +1208,11 @@ class _PantallaSituacionBioState extends State<PantallaSituacionBio> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        for (var k = 0; k < e.opciones.length; k++)
+                        for (final (posK, k) in ordenOpciones(e.pregunta, e.opciones.length).indexed)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 6),
                             child: BotonOpcion(
-                              letra: 'ABCD'[k],
+                              letra: 'ABCD'[posK],
                               texto: e.opciones[k],
                               estado: _elegida == k ? (k == e.correcta ? EstadoOpcion.correcta : EstadoOpcion.incorrecta) : EstadoOpcion.normal,
                               onTap: acerto

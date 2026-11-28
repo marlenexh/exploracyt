@@ -18,6 +18,7 @@ import 'misiones.dart';
 import 'motor_3d.dart';
 import 'pantalla_recorrido.dart' show BotonOpcion, EstadoOpcion;
 import 'progreso.dart';
+import '../../ciencia/barajar.dart';
 
 /// Pantallas de la Misión 1 "¡El corazón en acción!" según los bocetos:
 /// cuerpohumano → sistemacirculatorio_explicacion1 → vasos_sanguineos →
@@ -2475,11 +2476,11 @@ class _PantallaLabFrecuenciaState extends State<PantallaLabFrecuencia> {
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
             const SizedBox(height: 6),
-            for (var i = 0; i < 3; i++)
+            for (final (posI, i) in ordenOpciones(_pregunta.pregunta, 3).indexed)
               Padding(
                 padding: const EdgeInsets.only(bottom: 6),
                 child: BotonOpcion(
-                  letra: 'ABC'[i],
+                  letra: 'ABC'[posI],
                   texto: _pregunta.opciones[i],
                   estado: _respuesta == i
                       ? (i == _pregunta.correcta
@@ -3293,11 +3294,11 @@ class _PantallaMiniMisionCirculatorioState
                         ),
                       ),
                       const SizedBox(height: 8),
-                      for (var i = 0; i < q.opciones.length; i++)
+                      for (final (posI, i) in ordenOpciones(q.pregunta, q.opciones.length).indexed)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 6),
                           child: BotonOpcion(
-                            letra: 'ABC'[i],
+                            letra: 'ABCD'[posI],
                             texto: q.opciones[i],
                             estado: _elegida == i
                                 ? (i == q.correcta

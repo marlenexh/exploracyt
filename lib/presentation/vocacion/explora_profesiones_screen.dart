@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../biology/tema1/comunes.dart' show Reloj;
 import 'fondo_vocacion.dart';
 import 'profesiones_datos.dart';
+import '../ciencia/barajar.dart';
 
 /// Explora profesiones de ciencia y tecnología.
 class ExploraProfesionesScreen extends StatefulWidget {
@@ -625,11 +626,11 @@ class DetalleProfesionScreenState extends State<DetalleProfesionScreen> {
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(pregunta, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w800)),
         const SizedBox(height: 8),
-        for (var i = 0; i < opciones.length; i++)
+        for (final (pos, i) in ordenOpciones(pregunta, opciones.length).indexed)
           Padding(
             padding: const EdgeInsets.only(bottom: 6),
             child: Tooltip(
-              message: 'Respuesta ${i + 1}',
+              message: 'Respuesta ${pos + 1}',
               child: GestureDetector(
                 onTap: respuesta == correcta ? null : () => responder(i),
                 child: AnimatedContainer(

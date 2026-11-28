@@ -44,6 +44,97 @@ class RetoCircuito {
   final bool quemarEsError;
 }
 
+/// Cómo se arma cada reto, por fases (algunos retos piden primero un
+/// circuito “equivocado” para observar qué pasa y luego corregirlo). Lo usa el
+/// botón 💡 Pista para guiar al alumno cable por cable.
+const solucionesTaller = <String, List<List<(String, String)>>>{
+  'Tu primer LED': [_led],
+  '¿Y si lo volteas?': [
+    [('r.1', 'led.1'), ('led.0', 'pila.1')],
+    [('r.1', 'led.0'), ('led.1', 'pila.1')],
+  ],
+  'Elige la resistencia': [_led],
+  'Linterna': [
+    [('pila.0', 'sw.0'), ('sw.1', 'foco.0'), ('foco.1', 'pila.1')]
+  ],
+  'Timbre': [
+    [('pila.0', 'b.0'), ('b.1', 'z.0'), ('z.1', 'pila.1')]
+  ],
+  'Enciende el foco': [
+    [('pila.0', 'sw.0'), ('sw.1', 'foco.0'), ('foco.1', 'pila.1')]
+  ],
+  'Circuito con interruptor': [
+    [('pila.0', 'sw.0'), ('sw.1', 'r.0'), ('r.1', 'led.0'), ('led.1', 'pila.1')]
+  ],
+  'Encuentra la falla': [
+    [('r.1', 'led.0')]
+  ],
+  'En serie': [
+    [('pila.0', 'r.0'), ('r.1', 'a.0'), ('a.1', 'b.0'), ('b.1', 'pila.1')]
+  ],
+  'En paralelo': [
+    [('pila.0', 'r1.0'), ('pila.0', 'r2.0'), ('r1.1', 'a.0'), ('r2.1', 'b.0'), ('a.1', 'pila.1'), ('b.1', 'pila.1')]
+  ],
+  'Cortocircuito': [
+    [('pila.0', 'pila.1')],
+    _led,
+  ],
+  'Fotorresistencia': [
+    [('pila.0', 'ldr.0'), ('ldr.1', 'r.0'), ('r.1', 'led.0'), ('led.1', 'pila.1')]
+  ],
+  'Sensor de luz del jardín': [
+    [('pila.0', 'ldr.0'), ('ldr.1', 'r.0'), ('r.1', 'led.0'), ('led.1', 'pila.1')]
+  ],
+  'Enciende el motor': [
+    [('pila.0', 'sw.0'), ('sw.1', 'm.0'), ('m.1', 'pila.1')]
+  ],
+  'Cambia el sentido': [
+    [('pila.0', 'm.0'), ('m.1', 'pila.1')],
+    [('pila.0', 'm.1'), ('m.0', 'pila.1')],
+  ],
+  'Control de velocidad': [
+    [('pila.0', 'pot.0'), ('pot.1', 'm.0'), ('m.1', 'pila.1')]
+  ],
+  'Ventilador': [
+    [('pila.0', 'sw.0'), ('sw.1', 'm.0'), ('m.1', 'pila.1'), ('sw.1', 'r.0'), ('r.1', 'led.0'), ('led.1', 'pila.1')]
+  ],
+  'Alarma con luz': [_alarma],
+  'Timbre con luz': [_alarma],
+  'Luces de la sala y la cocina': [
+    [('pila.0', 'sw.0'), ('sw.1', 'f1.0'), ('sw.1', 'f2.0'), ('f1.1', 'pila.1'), ('f2.1', 'pila.1')]
+  ],
+  'Ventilador con velocidades': [
+    [('pila.0', 'sw.0'), ('sw.1', 'pot.0'), ('pot.1', 'm.0'), ('m.1', 'pila.1')]
+  ],
+};
+const _led = [('pila.0', 'r.0'), ('r.1', 'led.0'), ('led.1', 'pila.1')];
+const _alarma = [('pila.0', 'b.0'), ('b.1', 'z.0'), ('z.1', 'pila.1'), ('b.1', 'r.0'), ('r.1', 'led.0'), ('led.1', 'pila.1')];
+
+/// Nombre de una terminal en palabras sencillas (para las pistas).
+String nombreTerminal(List<Pieza> piezas, String terminal) {
+  final partes = terminal.split('.');
+  final p = piezas.firstWhere((x) => x.id == partes[0]);
+  final k = int.parse(partes[1]);
+  final iguales = [
+    for (final x in piezas)
+      if (x.tipo == p.tipo) x.id
+  ];
+  final n = iguales.length > 1 ? ' ${iguales.indexOf(p.id) + 1}' : '';
+  final otra = k == 0 ? 'una punta' : 'la otra punta';
+  return switch (p.tipo) {
+    TipoPieza.pila9v || TipoPieza.pila3v => k == 0 ? 'el + de la pila (rojo)' : 'el − de la pila (negro)',
+    TipoPieza.led => k == 0 ? 'la pata + del LED$n (ánodo, la pata doblada)' : 'la pata − del LED$n (cátodo, la pata recta)',
+    TipoPieza.zumbador => k == 0 ? 'el + del zumbador' : 'el − del zumbador',
+    TipoPieza.resistencia => '$otra de la resistencia$n',
+    TipoPieza.interruptor => '$otra del interruptor',
+    TipoPieza.boton => '$otra del botón',
+    TipoPieza.motor => '$otra del motor',
+    TipoPieza.foco => '$otra del foco$n',
+    TipoPieza.ldr => '$otra de la fotorresistencia',
+    TipoPieza.potenciometro => k == 1 ? 'la pata central del potenciómetro' : (k == 0 ? 'una orilla del potenciómetro' : 'la otra orilla del potenciómetro'),
+  };
+}
+
 const anchoArea = 608.0, altoArea = 350.0;
 const _origenArea = Offset(244, 60);
 
@@ -83,6 +174,11 @@ class TallerCircuitosState extends State<TallerCircuitos> {
   Offset? _abajo;
   String? _botonApretado;
 
+  /// Cable que sugiere la pista (terminales que brillan) o cable que sobra.
+  (String, String)? pista;
+  int? cableSobrante;
+  int pistasUsadas = 0;
+
   RetoCircuito get reto => widget.retos[_reto];
 
   @override
@@ -100,7 +196,87 @@ class TallerCircuitosState extends State<TallerCircuitos> {
     _estado = null;
     luz = 1;
     _completo = false;
+    pista = null;
+    cableSobrante = null;
     _mensaje = reto.instruccion;
+  }
+
+  // --- Pistas -------------------------------------------------------------------
+
+  bool _hay(String a, String b) => cables.any((c) => c.une(a, b));
+
+  /// 💡 Pista: dice qué cable falta (o sobra). Si la vuelve a pedir para el
+  /// mismo cable, lo conecta (o lo quita) por el alumno.
+  void darPista() {
+    HapticFeedback.selectionClick();
+    final fases = solucionesTaller[reto.titulo];
+    setState(() {
+      pistasUsadas++;
+      if (_completo) {
+        _mensaje = '¡Ya lo lograste! Presiona “${_reto < widget.retos.length - 1 ? 'Siguiente reto' : 'Terminar'}”.';
+        return;
+      }
+      if (fases == null) {
+        final falta = [
+          for (var i = 0; i < reto.condiciones.length; i++)
+            if (!_logradas.contains(i)) reto.condiciones[i].texto
+        ];
+        _mensaje =
+            '💡 Pista: lee el objetivo “${falta.isEmpty ? reto.instruccion : falta.first}” y sigue el camino de la corriente: del + de la pila, por los componentes, hasta el −.';
+        return;
+      }
+      final fase = fases[math.min(_logradas.length, fases.length - 1)];
+      // ¿Sobra un cable? (que no esté en la solución de esta fase)
+      final sobra = cables.indexWhere((c) => !c.fijo && !fase.any((f) => c.une(f.$1, f.$2)));
+      if (sobra != -1) {
+        if (cableSobrante == sobra) {
+          cables.removeAt(sobra);
+          cableSobrante = null;
+          _mensaje = '🧹 Quité ese cable por ti. Pide otra 💡 Pista si la necesitas.';
+          _resolver();
+        } else {
+          pista = null;
+          cableSobrante = sobra;
+          _mensaje = '💡 Pista: el cable que parpadea en rojo no va ahí. Tócalo para quitarlo (o toca 💡 otra vez y lo quito yo).';
+        }
+        return;
+      }
+      cableSobrante = null;
+      final falta = fase.where((f) => !_hay(f.$1, f.$2)).firstOrNull;
+      if (falta != null) {
+        if (pista == falta) {
+          cables.add(Cable(falta.$1, falta.$2, color: _colorPara(falta.$1, falta.$2)));
+          pista = null;
+          final quedan = fase.where((f) => !_hay(f.$1, f.$2)).length;
+          _mensaje = quedan == 0
+              ? '🔌 ¡Conecté el último cable! Ahora presiona “Iniciar simulación” ▶ para ver si funciona.'
+              : '🔌 Conecté ese cable por ti. Faltan $quedan. Intenta el siguiente tú solo, o pide otra 💡 Pista.';
+          _resolver();
+        } else {
+          pista = falta;
+          _mensaje =
+              '💡 Une ${nombreTerminal(piezas, falta.$1)} con ${nombreTerminal(piezas, falta.$2)}. ¡Brillan en amarillo! ✨ (Toca 💡 otra vez y lo conecto yo.)';
+        }
+        return;
+      }
+      pista = null;
+      if (!corriendo) {
+        _mensaje = '✅ ¡Todos los cables están bien! Presiona “Iniciar simulación” ▶ para probar tu circuito.';
+        return;
+      }
+      final pendiente = [
+        for (var i = 0; i < reto.condiciones.length; i++)
+          if (!_logradas.contains(i)) reto.condiciones[i].texto
+      ].firstOrNull;
+      final acciones = <String>[
+        if (piezas.any((p) => p.tipo == TipoPieza.interruptor)) 'toca el interruptor para encenderlo o apagarlo',
+        if (piezas.any((p) => p.tipo == TipoPieza.boton)) 'mantén presionado el botón',
+        if (piezas.any((p) => p.tipo == TipoPieza.ldr)) 'mueve el control de luz ☀️/🌙',
+        if (piezas.any((p) => p.tipo == TipoPieza.potenciometro)) 'gira la perilla 🎛️',
+        if (piezas.any((p) => p.editable)) 'toca un componente y cambia su valor en el Inspector',
+      ];
+      _mensaje = '💡 Pista: los cables ya están bien. Falta: “${pendiente ?? reto.logro}”.${acciones.isEmpty ? '' : ' Prueba: ${acciones.join(', o ')}.'}';
+    });
   }
 
   Pieza _pieza(String id) => piezas.firstWhere((p) => p.id == id);
@@ -263,6 +439,8 @@ class TallerCircuitosState extends State<TallerCircuitos> {
           _terminalSel = null;
           if (!cables.any((c) => c.une(a, t))) {
             cables.add(Cable(a, t, color: _colorPara(a, t)));
+            if (pista != null && _hay(pista!.$1, pista!.$2)) pista = null;
+            cableSobrante = null;
             if (!_completo) _mensaje = corriendo ? 'Cable conectado.' : 'Cable conectado. Cuando termines, presiona “Iniciar simulación”.';
             _resolver();
           }
@@ -277,6 +455,7 @@ class TallerCircuitosState extends State<TallerCircuitos> {
           _mensaje = 'Ese cable ya venía puesto en el proyecto.';
         } else {
           cables.removeAt(c);
+          cableSobrante = null;
           _mensaje = 'Quitaste un cable.';
           _resolver();
         }
@@ -297,6 +476,7 @@ class TallerCircuitosState extends State<TallerCircuitos> {
 
   void _quitarCables() => setState(() {
         cables.removeWhere((c) => !c.fijo);
+        cableSobrante = null;
         _terminalSel = null;
         _resolver();
       });
@@ -318,7 +498,10 @@ class TallerCircuitosState extends State<TallerCircuitos> {
   @override
   Widget build(BuildContext context) {
     final tieneLdr = piezas.any((p) => p.tipo == TipoPieza.ldr);
-    final pots = [for (final p in piezas) if (p.tipo == TipoPieza.potenciometro) p];
+    final pots = [
+      for (final p in piezas)
+        if (p.tipo == TipoPieza.potenciometro) p
+    ];
     return Escenario(
       velo: 0.08,
       colorVelo: widget.color,
@@ -356,17 +539,27 @@ class TallerCircuitosState extends State<TallerCircuitos> {
             width: 190,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(12), border: Border.all(color: widget.color, width: 2)),
+              decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(12), border: Border.all(color: widget.color, width: 2)),
               child: Column(mainAxisSize: MainAxisSize.min, children: [
-                if (tieneLdr) _deslizador(luz < 0.35 ? '🌙' : '☀️', 'Luz del ambiente', luz, (v) => setState(() {
-                      luz = v;
-                      _resolver();
-                    })),
+                if (tieneLdr)
+                  _deslizador(
+                      luz < 0.35 ? '🌙' : '☀️',
+                      'Luz del ambiente',
+                      luz,
+                      (v) => setState(() {
+                            luz = v;
+                            _resolver();
+                          })),
                 for (final p in pots)
-                  _deslizador('🎛️', 'Perilla del potenciómetro', p.posicion, (v) => setState(() {
-                        p.posicion = v;
-                        _resolver();
-                      })),
+                  _deslizador(
+                      '🎛️',
+                      'Perilla del potenciómetro',
+                      p.posicion,
+                      (v) => setState(() {
+                            p.posicion = v;
+                            _resolver();
+                          })),
               ]),
             ),
           ),
@@ -391,6 +584,15 @@ class TallerCircuitosState extends State<TallerCircuitos> {
             child: BotonJuego(texto: 'Quitar cables', icono: Icons.delete_sweep_rounded, color: const Color(0xFF78909C), onTap: _quitarCables),
           ),
         ),
+        if (!_completo)
+          Positioned(
+            left: 690,
+            top: 418,
+            child: Tooltip(
+              message: 'Pista',
+              child: BotonJuego(texto: 'Pista', icono: Icons.lightbulb_rounded, color: const Color(0xFFFFA000), onTap: darPista),
+            ),
+          ),
         if (_completo)
           Positioned(
             left: 690,
@@ -452,7 +654,8 @@ class TallerCircuitosState extends State<TallerCircuitos> {
         titulo: 'Inspector',
         icono: Icons.search_rounded,
         color: const Color(0xFF546E7A),
-        child: const Text('Toca un componente para ver qué es y para qué sirve.\n\nToca una terminal ■ y luego otra para poner un cable. Toca un cable para quitarlo.',
+        child: const Text(
+            'Toca un componente para ver qué es y para qué sirve.\n\nToca una terminal ■ y luego otra para poner un cable. Toca un cable para quitarlo.',
             style: TextStyle(fontSize: 12, height: 1.2)),
       );
     }
@@ -580,6 +783,30 @@ class _PintorTaller extends CustomPainter {
         }
       }
     }
+    // Cable que sobra (parpadea en rojo)
+    final sobra = s.cableSobrante;
+    if (sobra != null && sobra < s.cables.length) {
+      final pts = puntosCable(s.terminalPos(s.cables[sobra].a), s.terminalPos(s.cables[sobra].b));
+      final path = Path()..moveTo(pts.first.dx, pts.first.dy);
+      for (final q in pts.skip(1)) {
+        path.lineTo(q.dx, q.dy);
+      }
+      c.drawPath(path, linea(Color.fromRGBO(229, 57, 53, 0.35 + 0.35 * math.sin(t * 8)), 12)..strokeCap = StrokeCap.round);
+    }
+    // Pista: las dos terminales brillan y una línea punteada las une
+    final pista = s.pista;
+    if (pista != null) {
+      final a = s.terminalPos(pista.$1), b = s.terminalPos(pista.$2);
+      final pulso = 13 + 3 * math.sin(t * 6);
+      for (final q in [a, b]) {
+        c.drawCircle(q, pulso + 4, relleno(const Color(0x55FFEB3B)));
+        c.drawCircle(q, pulso, linea(const Color(0xFFFFA000), 3));
+      }
+      final pts = puntosCable(a, b);
+      for (var k = 0; k < pts.length - 1; k += 2) {
+        c.drawLine(pts[k], pts[k + 1], linea(const Color(0xFFFFA000), 3)..strokeCap = StrokeCap.round);
+      }
+    }
     // Terminales
     for (final p in s.piezas) {
       final ts = p.terminales;
@@ -595,6 +822,17 @@ class _PintorTaller extends CustomPainter {
         final r = Rect.fromCenter(center: ts[k], width: 10, height: 10);
         c.drawRect(r, relleno(sel ? const Color(0xFFFFA000) : (conectada ? const Color(0xFF424242) : const Color(0xFF263238))));
         c.drawRect(r, linea(Colors.white, 1.2));
+        // Signos + y − para saber de qué lado va cada cable
+        final signo = switch (p.tipo) {
+          TipoPieza.pila9v || TipoPieza.pila3v || TipoPieza.led || TipoPieza.zumbador => k == 0 ? '+' : '−',
+          _ => null,
+        };
+        if (signo != null) {
+          final fuera = ts[k] - p.pos;
+          final dir = fuera.distance < 1 ? const Offset(0, -1) : fuera / fuera.distance;
+          textoEn(c, signo, ts[k] + dir * 13 + const Offset(0, -1),
+              tam: 13, color: Colors.white, fondo: signo == '+' ? const Color(0xFFD32F2F) : const Color(0xFF263238));
+        }
       }
     }
     if (s.corriendo) {

@@ -9,6 +9,7 @@ import 'comunes.dart';
 import 'contenido.dart';
 import 'pantalla_recorrido.dart' show BotonOpcion, EstadoOpcion;
 import 'progreso.dart';
+import '../../ciencia/barajar.dart';
 
 class PantallaRetos extends StatelessWidget {
   const PantallaRetos({super.key});
@@ -241,11 +242,11 @@ class _RetoQuizState extends State<RetoQuiz> {
                   ),
                 ),
                 const SizedBox(height: 14),
-                for (var i = 0; i < q.opciones.length; i++)
+                for (final (posI, i) in ordenOpciones(q.pregunta, q.opciones.length).indexed)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: BotonOpcion(
-                      letra: 'ABCD'[i],
+                      letra: 'ABCD'[posI],
                       texto: q.opciones[i],
                       estado: _elegida == null
                           ? EstadoOpcion.normal

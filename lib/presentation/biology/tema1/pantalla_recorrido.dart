@@ -7,6 +7,7 @@ import 'aventura.dart';
 import 'comunes.dart';
 import 'contenido.dart';
 import 'progreso.dart';
+import '../../ciencia/barajar.dart';
 
 /// Lista de capítulos del recorrido interactivo.
 class PantallaCapitulos extends StatelessWidget {
@@ -644,8 +645,8 @@ class _PreguntaRapida extends StatelessWidget {
   final ValueChanged<int> onElegir;
   final int columnas;
 
-  Widget _opcion(int i, bool acerto) => BotonOpcion(
-        letra: 'ABCD'[i],
+  Widget _opcion(int posicion, int i, bool acerto) => BotonOpcion(
+        letra: 'ABCD'[posicion],
         texto: pregunta.opciones[i],
         estado: elegida == i
             ? (i == pregunta.correcta
@@ -745,7 +746,7 @@ class _PreguntaRapida extends StatelessWidget {
                               if (k > i) const SizedBox(width: 8),
                               Expanded(
                                 child: k < pregunta.opciones.length
-                                    ? _opcion(k, acerto)
+                                    ? _opcion(k, ordenOpciones(pregunta.pregunta, pregunta.opciones.length)[k], acerto)
                                     : const SizedBox.shrink(),
                               ),
                             ],

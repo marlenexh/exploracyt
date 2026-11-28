@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/laboratorios.dart';
+import 'ciencia/piensa_antes.dart';
 import '../data/brujula.dart';
 import '../main.dart' show store;
 import 'biology/tema1/comunes.dart' show temaJuego;
@@ -40,7 +41,7 @@ class TarjetaLaboratorioMundo extends StatelessWidget {
         color: claro,
         child: InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: pantalla)),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => conPrediccion(lab.id, pantalla(c)))),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
