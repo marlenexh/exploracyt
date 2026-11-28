@@ -39,13 +39,14 @@
       color: #183e49; background: #f8fff9; border: 1px solid #52786c;
       font: .8rem system-ui;
     }
+    #offline-status[hidden] { display: none; }
     #offline-status summary { cursor: pointer; min-height: 1.5rem; }
     #offline-status button { min-height: 2.75rem; }
   </style>
   <script src="offline-status.js" defer></script>
 </head>
 <body>
-  <details id="offline-status">
+  <details id="offline-status" hidden>
     <summary>Preparación sin conexión</summary>
     <p role="status">Verificando recursos locales…</p>
     <button type="button">Preparar sin conexión</button>

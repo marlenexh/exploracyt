@@ -38,7 +38,7 @@ python3 -m http.server 8080 --bind 127.0.0.1 --directory build/web
 ```
 
 1. Abre la aplicación servida en el navegador. Usa HTTPS en un servidor real o localhost para pruebas. Conserva todos los archivos de `build/web` al desplegar.
-2. Espera el estado **Disponible sin conexión**. El menú del estado permite volver a preparar la caché. La primera preparación requiere Internet o acceso al servidor local.
+2. Espera el estado **Disponible sin conexión**, que se oculta solo después de unos segundos. Si un archivo opcional no se pudo guardar, la aplicación queda lista igualmente y ese recurso usa Internet. El aviso solo permanece visible cuando hace falta reintentar. La primera preparación requiere Internet o acceso al servidor local.
 3. En un navegador compatible, elige **Instalar Explora Ciencia** desde su menú. También puedes seguir usando la pestaña web.
 4. Desconecta la red, recarga y abre **Biología → El cuerpo humano**. Prueba un experimento, completa una investigación y recarga otra vez para verificar la insignia y el desbloqueo.
 5. Para actualizar, despliega la carpeta como una unidad. Una versión nueva se prepara en segundo plano. Cierra las pestañas de la versión anterior y vuelve a abrir la aplicación para activarla.
