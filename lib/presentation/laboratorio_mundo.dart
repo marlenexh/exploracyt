@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/laboratorios.dart';
+import 'ciencia/piensa_antes.dart';
 import '../data/brujula.dart';
 import '../main.dart' show store;
 import 'biology/tema1/comunes.dart' show temaJuego;
@@ -91,11 +92,15 @@ class TarjetaLaboratorioMundo extends StatelessWidget {
 /// Envoltura común de las pantallas de laboratorio: fondo del mundo y tema
 /// del juego.
 class PantallaLaboratorioMundo extends StatelessWidget {
-  const PantallaLaboratorioMundo({super.key, required this.estilo, required this.child});
+  const PantallaLaboratorioMundo({super.key, required this.estilo, required this.child, this.prediccion});
   final EstiloMundo estilo;
   final Widget child;
+
+  /// Id de la pregunta “Piensa antes de empezar” (se muestra con el fondo del mundo).
+  final String? prediccion;
   @override
-  Widget build(BuildContext context) => FondoJuego(estilo: estilo, child: Theme(data: temaJuego(), child: child));
+  Widget build(BuildContext context) =>
+      FondoJuego(estilo: estilo, child: Theme(data: temaJuego(), child: prediccion == null ? child : conPrediccion(prediccion!, child)));
 }
 
 /// Registra el laboratorio como terminado y entrega su insignia.

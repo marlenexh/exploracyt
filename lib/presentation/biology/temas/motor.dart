@@ -11,6 +11,7 @@ import '../tema1/estilo_mundo.dart';
 import '../tema1/juego.dart' show PantallaGirable;
 import '../tema1/misiones.dart' show ConfiguracionJuego;
 import '../tema1/progreso.dart';
+import '../../ciencia/piensa_antes.dart';
 
 /// Motor genérico para los temas 2 a 5 de Biología. Usa las mismas piezas del
 /// Tema 1 (Zati, lienzo adaptable, videos, mini misiones) y cada tema solo
@@ -539,7 +540,7 @@ Future<void> abrirMisionBio(BuildContext context, int indice) async {
   var i = m.pasos.indexWhere((x) => !hecho(x));
   while (i != -1) {
     final paso = m.pasos[i];
-    await abrirPantallaTema(context, paso.pantalla(paso.id));
+    await abrirPantallaTema(context, conPrediccion(paso.id, paso.pantalla(paso.id)));
     if (!context.mounted) return;
     if (!hecho(paso)) {
       await abrirPantallaTema(context, PantallaPasosBio(indice: indice));
@@ -660,7 +661,7 @@ class _PantallaPasosBioState extends State<PantallaPasosBio> {
               abierto: libre || i == 0 || p.estrellasDe(m.pasos[i - 1].id) > 0,
               actual: i == siguiente,
               estrellas: p.estrellasDe(m.pasos[i].id),
-              onTap: () => abrirPantallaTema(context, m.pasos[i].pantalla(m.pasos[i].id)),
+              onTap: () => abrirPantallaTema(context, conPrediccion(m.pasos[i].id, m.pasos[i].pantalla(m.pasos[i].id))),
             ),
           ),
         const BotonVolverEscena(),

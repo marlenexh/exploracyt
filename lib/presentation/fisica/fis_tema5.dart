@@ -5,6 +5,7 @@ import '../biology/temas/motor.dart';
 import 'fondos_fis.dart';
 import 'ilustraciones_fis.dart';
 import 'sims_fis.dart';
+import 'sim_3d_sistema_solar.dart';
 
 /// Física · Tema 5: Explorando el Sistema Solar.
 
@@ -75,6 +76,7 @@ final fisTema5 = TemaBio(
                   mensajeFinal: '¡Ahora despega y visita cada planeta!',
                 )),
         PasoBio('Viaje por los planetas', TipoPasoBio.simulacion, 'f5_m1_sim', (a) => SimSistemaSolar(actividad: a, color: _c1)),
+        PasoBio('El Sistema Solar en 3D', TipoPasoBio.simulacion, 'f5_m1_3d', (a) => SimSistemaSolar3D(actividad: a, color: _c1)),
         PasoBio(
             'Ordena los planetas',
             TipoPasoBio.juego,

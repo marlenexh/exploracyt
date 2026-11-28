@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'aventura.dart';
 import 'comunes.dart';
 import 'escenario.dart';
+import '../../ciencia/glosario_chips.dart';
 
 /// Piezas reutilizables para las pantallas de las misiones (todas sobre el
 /// lienzo fijo de [Escenario], así se ven igual en celular y computadora).
@@ -412,6 +413,13 @@ class _PantallaExplicacionState extends State<PantallaExplicacion> {
             tamLetra: 14.5,
             globoArriba: true,
           ),
+        ),
+        // Palabras difíciles del texto, explicadas por Zati.
+        Positioned(
+          left: 4,
+          top: 438,
+          width: 292,
+          child: ChipsGlosario(texto: widget.textos[_pestana], color: widget.color),
         ),
         if (conPanel)
           Positioned(

@@ -9,6 +9,7 @@ import '../biology/tema1/escenario.dart';
 import '../ciencia/sim_comun.dart';
 import '../electronica/comun.dart';
 import 'modelo_ia.dart';
+import '../ciencia/barajar.dart';
 
 Widget _siguiente(BuildContext context, String actividad, String titulo, String mensaje, {int estrellas = 3}) => Positioned(
       left: 690,
@@ -315,11 +316,11 @@ class SimPatronesState extends State<SimPatrones> {
                 ]),
               ),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                for (var i = 0; i < r.opciones.length; i++)
+                for (final (pos, i) in ordenOpciones(r.secuencia.join() + r.instruccion, r.opciones.length).indexed)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Tooltip(
-                      message: 'Opción ${i + 1}',
+                      message: 'Opción ${pos + 1}',
                       child: OpcionIA(
                         texto: r.opciones[i],
                         color: widget.color,

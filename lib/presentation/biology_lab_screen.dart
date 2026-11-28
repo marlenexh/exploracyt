@@ -1160,6 +1160,7 @@ class BotonLaboratorioBio extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (_) => PantallaLaboratorioMundo(
+                prediccion: 'bio-lab',
                 estilo: EstiloMundo(fondo: (_) => const FondoMapaBiologia()),
                 child: LaboratorioBio(onTerminar: (_) => completarLaboratorio(lab)),
               ),

@@ -87,8 +87,64 @@ Map<String, bool> ejecutarPrograma(RetoProg reto, List<Regla> reglas, Map<String
   return out;
 }
 
+/// Busca un programa que resuelva el reto y que se parezca lo más posible al
+/// del alumno (para la 💡 Pista). Devuelve null si no hay solución.
+List<Regla>? solucionCercana(RetoProg reto, List<Regla> actual) {
+  final opciones = <Regla>[];
+  for (var se = 0; se < reto.sensores.length; se++) {
+    for (var u = 0; u < reto.sensores[se].umbrales.length; u++) {
+      for (final ma in [true, false]) {
+        for (var sa = 0; sa < reto.salidas.length; sa++) {
+          for (final en in [true, false]) {
+            opciones.add(Regla()
+              ..sensor = se
+              ..umbral = u
+              ..mayor = ma
+              ..salida = sa
+              ..encender = en);
+          }
+        }
+      }
+    }
+  }
+  int distancia(Regla a, Regla b) =>
+      (a.sensor != b.sensor ? 1 : 0) +
+      (a.umbral != b.umbral ? 1 : 0) +
+      (a.mayor != b.mayor ? 1 : 0) +
+      (a.salida != b.salida ? 1 : 0) +
+      (a.encender != b.encender ? 1 : 0);
+  bool resuelve(List<Regla> rs) => reto.momentos.every((m) {
+        final esp = reto.esperado(m.lecturas);
+        final obt = ejecutarPrograma(reto, rs, m.lecturas);
+        return esp.entries.every((e) => obt[e.key] == e.value);
+      });
+  List<Regla>? mejor;
+  var dMejor = 1 << 30;
+  void buscar(List<Regla> parcial) {
+    if (parcial.length == actual.length) {
+      if (!resuelve(parcial)) return;
+      var d = 0;
+      for (var i = 0; i < parcial.length; i++) {
+        d += distancia(parcial[i], actual[i]);
+      }
+      if (d < dMejor) {
+        dMejor = d;
+        mejor = [...parcial];
+      }
+      return;
+    }
+    for (final o in opciones) {
+      buscar([...parcial, o]);
+    }
+  }
+
+  buscar([]);
+  return mejor;
+}
+
 class ProgramaBloques extends StatefulWidget {
-  const ProgramaBloques({super.key, required this.actividad, required this.seccion, required this.titulo, required this.color, required this.retos, required this.mensajeFinal});
+  const ProgramaBloques(
+      {super.key, required this.actividad, required this.seccion, required this.titulo, required this.color, required this.retos, required this.mensajeFinal});
   final String actividad, seccion, titulo, mensajeFinal;
   final Color color;
   final List<RetoProg> retos;
@@ -133,6 +189,63 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
     final obtenido = ejecutarPrograma(reto, reglas, m.lecturas);
     final esperado = reto.esperado(m.lecturas);
     return esperado.entries.every((e) => obtenido[e.key] == e.value);
+  }
+
+  /// 💡 Pista: dice qué bloque cambiar; si la pide otra vez, lo cambia.
+  String? _ultimaPista;
+  int pistasUsadas = 0;
+  void darPista() {
+    if (_completo) return;
+    final sol = solucionCercana(reto, reglas);
+    if (sol == null) return;
+    HapticFeedback.selectionClick();
+    setState(() {
+      pistasUsadas++;
+      for (var i = 0; i < reglas.length; i++) {
+        final r = reglas[i], b = sol[i];
+        final regla = reglas.length > 1 ? ' de la regla ${i + 1}' : '';
+        final s = reto.sensores[b.sensor];
+        final cambios = <(String, String, VoidCallback)>[
+          if (r.sensor != b.sensor)
+            (
+              'sensor$i',
+              'En el bloque morado$regla elige el sensor ${s.emoji} ${s.nombre}: es el que mide lo que importa aquí.',
+              () {
+                r.sensor = b.sensor;
+                r.umbral = 0;
+              }
+            ),
+          if (r.mayor != b.mayor)
+            (
+              'mayor$i',
+              s.id == 'mov'
+                  ? 'Cambia “${r.mayor ? 'detecta' : 'no detecta'}”$regla: piensa cuándo debe pasar.'
+                  : 'Cambia la comparación$regla a “${b.mayor ? 'mayor que >' : 'menor que <'}”: ¿debe pasar cuando hay más o cuando hay menos ${s.nombre}?',
+              () => r.mayor = b.mayor
+            ),
+          if (r.umbral != b.umbral)
+            ('umbral$i', 'Cambia el número$regla a ${s.umbrales[b.umbral].round()} ${s.unidad}: lee bien la instrucción.', () => r.umbral = b.umbral),
+          if (r.salida != b.salida)
+            ('salida$i', 'En el bloque azul$regla elige ${reto.salidas[b.salida].emoji} ${reto.salidas[b.salida].nombre}.', () => r.salida = b.salida),
+          if (r.encender != b.encender)
+            ('encender$i', 'Cambia “${r.encender ? 'encender' : 'apagar'}”$regla por “${b.encender ? 'encender' : 'apagar'}”.', () => r.encender = b.encender),
+        ];
+        if (cambios.isEmpty) continue;
+        final (id, texto, aplicar) = cambios.first;
+        if (_ultimaPista == id) {
+          aplicar();
+          _ultimaPista = null;
+          _resultados = List.filled(reto.momentos.length, null);
+          _mostrando = null;
+          _mensaje = '🔧 Lo cambié por ti. Pide otra 💡 Pista o presiona “Probar programa”.';
+        } else {
+          _ultimaPista = id;
+          _mensaje = '💡 Pista: $texto\n(Toca 💡 otra vez y lo cambio por ti.)';
+        }
+        return;
+      }
+      _mensaje = '✅ ¡Tus bloques ya están bien! Presiona “Probar programa” ▶ para comprobarlo.';
+    });
   }
 
   void probar() {
@@ -234,7 +347,8 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
           height: 350,
           child: Container(
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(color: const Color(0xFF2B2B3A), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF555570), width: 2)),
+            decoration: BoxDecoration(
+                color: const Color(0xFF2B2B3A), borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFF555570), width: 2)),
             child: SingleChildScrollView(
               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 _bloque(colorControl, [const _TextoBloque('al iniciar, repetir siempre:')]),
@@ -251,7 +365,8 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
           width: 262,
           height: 350,
           child: Container(
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(16), border: Border.all(color: widget.color, width: 2.5)),
+            decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(16), border: Border.all(color: widget.color, width: 2.5)),
             child: Column(children: [
               const SizedBox(height: 6),
               Text(_mostrando == null ? 'Simulación' : '${m.emoji} ${m.nombre}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
@@ -295,6 +410,15 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
               child: BotonJuego(texto: 'Probar programa', icono: Icons.play_arrow_rounded, color: const Color(0xFF2DB84C), onTap: probar),
             ),
           ),
+        if (!_completo)
+          Positioned(
+            left: 690,
+            top: 418,
+            child: Tooltip(
+              message: 'Pista',
+              child: BotonJuego(texto: 'Pista', icono: Icons.lightbulb_rounded, color: const Color(0xFFFFA000), onTap: darPista),
+            ),
+          ),
         if (_completo)
           Positioned(left: 690, top: 420, child: BotonSiguiente(texto: _r < widget.retos.length - 1 ? 'Siguiente invento' : 'Terminar', onTap: _siguiente)),
         const BotonVolverEscena(),
@@ -314,7 +438,8 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
     final esMov = s.id == 'mov';
     return Container(
       padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
-      decoration: BoxDecoration(color: colorControl, borderRadius: BorderRadius.circular(10), boxShadow: const [BoxShadow(color: Color(0xFFB9770E), offset: Offset(0, 3))]),
+      decoration: BoxDecoration(
+          color: colorControl, borderRadius: BorderRadius.circular(10), boxShadow: const [BoxShadow(color: Color(0xFFB9770E), offset: Offset(0, 3))]),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Wrap(spacing: 4, runSpacing: 4, crossAxisAlignment: WrapCrossAlignment.center, children: [
           const _TextoBloque('si'),
@@ -330,7 +455,8 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
             _Ficha('Regla ${i + 1} comparar', colorEntrada, r.mayor ? 'detecta' : 'no detecta', () => _cambiar(() => r.mayor = !r.mayor))
           else ...[
             _Ficha('Regla ${i + 1} comparar', colorEntrada, r.mayor ? 'es mayor que' : 'es menor que', () => _cambiar(() => r.mayor = !r.mayor)),
-            _Ficha('Regla ${i + 1} valor', colorEntrada, '${s.umbrales[r.umbral].round()} ${s.unidad}', () => _cambiar(() => r.umbral = (r.umbral + 1) % s.umbrales.length)),
+            _Ficha('Regla ${i + 1} valor', colorEntrada, '${s.umbrales[r.umbral].round()} ${s.unidad}',
+                () => _cambiar(() => r.umbral = (r.umbral + 1) % s.umbrales.length)),
           ],
           const _TextoBloque('entonces'),
         ]),
@@ -346,7 +472,8 @@ class ProgramaBloquesState extends State<ProgramaBloques> {
           margin: const EdgeInsets.only(left: 14, top: 6),
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(color: colorSalida.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(8)),
-          child: Text('${r.encender ? 'apagar' : 'encender'} ${sal.emoji} ${sal.nombre}', style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white)),
+          child: Text('${r.encender ? 'apagar' : 'encender'} ${sal.emoji} ${sal.nombre}',
+              style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: Colors.white)),
         ),
       ]),
     );
@@ -456,8 +583,9 @@ class _PintorSalidas extends CustomPainter {
           }
       }
       final estadoTxt = salidas[i].id == 'barrera' ? (on ? 'ARRIBA' : 'ABAJO') : (on ? 'ENCENDIDO' : 'APAGADO');
-      textoEn(c, '${salidas[i].nombre}: $estadoTxt', Offset(p.dx, s.height - 12), tam: 11,
-          color: Colors.white, fondo: on ? const Color(0xFF2DB84C) : const Color(0xFF90A4AE));
+      // Con dos aparatos se usa el emoji para que los letreros no se encimen.
+      textoEn(c, salidas.length > 1 ? '${salidas[i].emoji} $estadoTxt' : '${salidas[i].nombre}: $estadoTxt', Offset(p.dx, s.height - 12),
+          tam: 11, color: Colors.white, fondo: on ? const Color(0xFF2DB84C) : const Color(0xFF90A4AE));
     }
   }
 

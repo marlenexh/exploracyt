@@ -6,6 +6,7 @@ import 'fondos_pro.dart';
 import 'ilustraciones_pro.dart';
 import 'pro_tema1.dart' show robot, conGemas;
 import 'robot.dart';
+import 'sim_3d_robot.dart';
 
 /// Programación · Tema 2: Sigue las instrucciones (algoritmos y secuencias).
 
@@ -187,6 +188,7 @@ final proTema2 = TemaBio(
                 ),
               ],
             )),
+        PasoBio('Robot en 3D', TipoPasoBio.simulacion, 'p2_m2_3d', (a) => SimRobot3D(actividad: a, color: _c2)),
         PasoBio('Video del tema', TipoPasoBio.video, 'p2_m2_video', (a) => video(a,
             clave: 'algoritmos_2', titulo: 'Video: las secuencias', tema: 'cómo se ejecutan las instrucciones en orden', siguiente: '¡A ordenar otra secuencia!')),
         PasoBio('Lávate las manos', TipoPasoBio.juego, 'p2_m2_ord', (a) => ordenar(

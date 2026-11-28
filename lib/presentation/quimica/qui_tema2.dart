@@ -5,6 +5,7 @@ import '../biology/temas/motor.dart';
 import 'fondos_qui.dart';
 import 'ilustraciones_qui.dart';
 import 'sims_qui.dart';
+import 'sim_3d_estados.dart';
 
 /// Química · Tema 2: Los gases y sus propiedades.
 
@@ -123,6 +124,7 @@ final quiTema2 = TemaBio(
                   ],
                   mensajeFinal: 'El agua puede estar en los tres estados.',
                 )),
+        PasoBio('Las partículas en 3D', TipoPasoBio.simulacion, 'q2_m1_3d', (a) => SimEstados3D(actividad: a, color: _c1)),
         PasoBio(
             'Pon a prueba lo que aprendiste',
             TipoPasoBio.reto,

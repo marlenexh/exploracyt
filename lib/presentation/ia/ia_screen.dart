@@ -14,6 +14,7 @@ import 'ia_tema3.dart';
 import 'ia_tema4.dart';
 import 'ia_tema5.dart';
 import 'laboratorio_ia.dart';
+import '../ciencia/piensa_antes.dart';
 
 /// Juegos de los temas de Inteligencia Artificial, por número de tema.
 final temasIA = <int, TemaBio>{1: iaTema1, 2: iaTema2, 3: iaTema3, 4: iaTema4, 5: iaTema5};
@@ -117,7 +118,7 @@ class LaboratorioIAScreen extends StatelessWidget {
         estilo: estiloIA(FondoIA.laboratorio),
         child: Theme(
           data: temaJuego(),
-          child: LaboratorioIA(onTerminar: (_) => store.completar(iaLabId, recompensaId: iaLabBadgeId)),
+          child: conPrediccion('ia-lab', LaboratorioIA(onTerminar: (_) => store.completar(iaLabId, recompensaId: iaLabBadgeId))),
         ),
       );
 }

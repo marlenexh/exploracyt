@@ -12,6 +12,7 @@ import 'dibujos_m1.dart';
 import 'escenario.dart';
 import 'pantalla_recorrido.dart' show BotonOpcion, EstadoOpcion;
 import 'progreso.dart';
+import '../../ciencia/barajar.dart';
 
 /// Pantallas de la Misión 2 "¡El viaje del aire!" (sistema respiratorio).
 
@@ -415,7 +416,7 @@ class _PantallaIntercambioGasesState extends State<PantallaIntercambioGases> {
         if (_vistos.length == 4)
           Positioned(
             left: 250,
-            top: 300,
+            top: 226,
             width: 380,
             child: Container(
               padding: const EdgeInsets.all(10),
@@ -430,11 +431,11 @@ class _PantallaIntercambioGasesState extends State<PantallaIntercambioGases> {
                       style: const TextStyle(
                           fontSize: 14.5, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 4),
-                  for (var i = 0; i < 3; i++)
+                  for (final (posI, i) in ordenOpciones(_pregunta.pregunta, 3).indexed)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: BotonOpcion(
-                        letra: 'ABC'[i],
+                        letra: 'ABC'[posI],
                         texto: _pregunta.opciones[i],
                         estado: _respuesta == i
                             ? (i == _pregunta.correcta
@@ -1683,11 +1684,11 @@ class _PantallaLabRespiracionState extends State<PantallaLabRespiracion> {
                       style: const TextStyle(
                           fontSize: 14.5, fontWeight: FontWeight.w700)),
                   const SizedBox(height: 4),
-                  for (var i = 0; i < 3; i++)
+                  for (final (posI, i) in ordenOpciones(_pregunta.pregunta, 3).indexed)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: BotonOpcion(
-                        letra: 'ABC'[i],
+                        letra: 'ABC'[posI],
                         texto: _pregunta.opciones[i],
                         estado: _respuesta == i
                             ? (i == _pregunta.correcta

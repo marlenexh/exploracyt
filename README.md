@@ -241,6 +241,16 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 - Progreso: clave `v1.ia.temaN.juego`; misiones `ia-tN-m1..m3` y `ia-tN-integration` (`lib/data/ia_topics.dart`).
 - Pruebas: `test/ia_modelo_test.dart` (el motor aprende, falla con rasgos inútiles o etiquetas equivocadas y corrige el sesgo) y `test/ia_test.dart` (datos, mapa, todas las pantallas, cada simulación y el laboratorio completo).
 
+## Para pensar y aprender mejor
+
+- **Opciones mezcladas:** en todas las preguntas las opciones se muestran revueltas (`lib/presentation/ciencia/barajar.dart`), así la respuesta correcta no siempre es la primera. El orden es siempre el mismo para la misma pregunta.
+- **Piensa antes de empezar:** antes de las simulaciones, experimentos y laboratorios finales el alumno responde “¿Qué crees que pasará?” (no se califica: es su hipótesis). Durante la actividad el botón 🤔 muestra su idea y lo que en verdad pasa. Preguntas en `lib/data/predicciones.dart`; pantalla en `lib/presentation/ciencia/piensa_antes.dart`.
+- **Palabras difíciles:** en las explicaciones aparece “📖 Palabras difíciles” con las palabras complicadas del texto; al tocarlas, Zati las explica para niños. Glosario de más de 90 palabras en `lib/data/glosario.dart`.
+- **Electrónica más fácil:** el taller de circuitos y la programación con bloques tienen el botón **💡 Pista**: señala qué cable falta (las terminales brillan) o cuál sobra, y si se vuelve a tocar lo conecta por el alumno. Las terminales muestran sus signos + y −.
+- **Simulaciones 3D** (con el mismo motor 3D del cuerpo humano, `lib/presentation/ciencia/visor_3d.dart`): Electrónica T2 M1 “Circuito en 3D” (encender, 2 pilas, cable cortado), IA T3 M3 “Red neuronal en 3D” (ave o mamífero, la señal viaja por las neuronas) y Programación T2 M2 “Robot en 3D” (3 niveles: arma el programa y el robot lo ejecuta), Física T5 M1 “El Sistema Solar en 3D” (el Sol y los 8 planetas en órbita; la Tierra con continentes, polos y la Luna) y Química T2 M1 “Las partículas en 3D” (sólido, líquido y gas al enfriar o calentar). Cada simulación se ve con el fondo de su mundo (el panel 3D es semitransparente) y la pregunta “Piensa antes” de los laboratorios finales también usa el fondo de su mundo.
+
+Pruebas: `test/piensa_antes_test.dart`, `test/glosario_test.dart`, `test/simulaciones_3d_test.dart`, `test/electronica_taller_test.dart`.
+
 ## La Brújula de la Ciencia
 
 En la historia, la Brújula de la Ciencia se rompió y sus 6 piezas quedaron en los 6 mundos. Al terminar el **laboratorio final** de cada mundo el alumno recupera su pieza (Vida, Materia, Energía, Circuitos, Inteligencia y Código): aparece una celebración sobre cualquier pantalla con la pieza volando a su lugar, y con las 6 la brújula queda reconstruida. En el mapa de los mundos el botón **Brújula n/6** abre la brújula y dice dónde está cada pieza que falta. Datos en `lib/data/brujula.dart`, pantallas en `lib/presentation/brujula/brujula.dart`; prueba: `test/brujula_test.dart`.

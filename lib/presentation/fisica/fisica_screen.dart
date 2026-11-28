@@ -41,6 +41,7 @@ class FisicaScreen extends StatelessWidget {
           enFila: enFila,
           temasHechos: fisTopics.values.where((i) => store.completadas.contains(i.missionIds.last)).length,
           pantalla: (_) => PantallaLaboratorioMundo(
+            prediccion: 'fis-lab',
             estilo: estiloFis(FondoFis.fuerzas),
             child: LaboratorioFis(onTerminar: (_) => completarLaboratorio(laboratoriosMundos['fis']!)),
           ),

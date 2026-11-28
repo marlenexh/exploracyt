@@ -12,6 +12,7 @@ import '../tema1/escenario.dart';
 import '../tema1/pantalla_recorrido.dart' show BotonOpcion, EstadoOpcion;
 import 'ilustraciones.dart';
 import 'motor.dart';
+import '../../ciencia/barajar.dart';
 
 /// Simulaciones y laboratorios propios de cada tema.
 
@@ -66,11 +67,11 @@ class _PreguntaPanelState extends State<PreguntaPanel> {
       children: [
         Text(q.pregunta, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700)),
         const SizedBox(height: 4),
-        for (var k = 0; k < q.opciones.length; k++)
+        for (final (posK, k) in ordenOpciones(q.pregunta, q.opciones.length).indexed)
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
             child: BotonOpcion(
-              letra: 'ABCD'[k],
+              letra: 'ABCD'[posK],
               texto: q.opciones[k],
               estado: _e == k ? (k == q.correcta ? EstadoOpcion.correcta : EstadoOpcion.incorrecta) : EstadoOpcion.normal,
               onTap: acerto

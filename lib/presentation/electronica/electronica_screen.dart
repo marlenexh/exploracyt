@@ -40,6 +40,7 @@ class ElectronicaScreen extends StatelessWidget {
           enFila: enFila,
           temasHechos: eleTopics.values.where((i) => store.completadas.contains(i.missionIds.last)).length,
           pantalla: (_) => PantallaLaboratorioMundo(
+            prediccion: 'ele-lab',
             estilo: estiloEle(FondoEle.taller),
             child: LaboratorioEle(onTerminar: (_) => completarLaboratorio(laboratoriosMundos['ele']!)),
           ),
