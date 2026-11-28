@@ -6,6 +6,7 @@ import '../ciencia/fabrica_ciencia.dart';
 import 'fondos_qui.dart';
 import '../ciencia/juego_rapido.dart';
 import 'ilustraciones_qui.dart';
+import '../minijuegos/minijuegos.dart';
 
 /// Química · Tema 3: Todo se transforma (cambios temporales y permanentes).
 
@@ -185,6 +186,7 @@ final quiTema3 = TemaBio(
                   ],
                   mensajeFinal: 'Los cambios permanentes forman materiales nuevos.',
                 )),
+        PasoBio('Arma moléculas', TipoPasoBio.juego, 'q3_m2_flame', (a) => juegoMoleculas(a, color: _c2)),
         PasoBio(
             'Video del tema',
             TipoPasoBio.video,

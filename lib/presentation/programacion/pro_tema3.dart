@@ -6,6 +6,7 @@ import 'fondos_pro.dart';
 import 'ilustraciones_pro.dart';
 import 'pro_tema1.dart' show robot, conGemas;
 import 'robot.dart';
+import '../minijuegos/minijuegos.dart';
 
 /// Programación · Tema 3: Programa con bloques.
 
@@ -165,6 +166,7 @@ final proTema3 = TemaBio(
                 ),
               ],
             )),
+        PasoBio('Plataformas con bloques', TipoPasoBio.juego, 'p3_m2_flame', (a) => juegoPlataformas(a, color: _c2)),
         PasoBio('Video del tema', TipoPasoBio.video, 'p3_m2_video', (a) => video(a,
             clave: 'bloques_2', titulo: 'Video: programa al robot', tema: 'cómo armar programas con bloques', siguiente: '¡A ordenar un programa de Scratch!')),
         PasoBio('Programa de Scratch', TipoPasoBio.juego, 'p3_m2_ord', (a) => ordenar(

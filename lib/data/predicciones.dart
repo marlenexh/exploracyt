@@ -271,4 +271,13 @@ const predicciones = <String, Prediccion>{
       'Si calientas mucho el agua, ¿qué crees que les pasa a sus partículas?',
       ['Se mueven más rápido y se separan', 'Se quedan quietas', 'Se hacen más pequeñas'],
       'El calor les da energía: se mueven cada vez más rápido y se separan, hasta que el agua se vuelve vapor (gas).'),
+  // ---------------- Mini-juegos ----------------
+  'f2_m2_flame': Prediccion(
+      'Si lanzas la pelota con la misma fuerza en la Tierra y en la Luna, ¿dónde crees que llegará más lejos?',
+      ['En la Luna', 'En la Tierra', 'Llega igual de lejos'],
+      'La gravedad de la Luna es 6 veces menor, así que la pelota tarda más en caer y vuela mucho más lejos.'),
+  'i3_m2_flame': Prediccion(
+      'Si le enseñas a una IA con datos mal etiquetados (por ejemplo, un calcetín marcado como fruta), ¿qué crees que pasará?',
+      ['La IA aprenderá mal y se equivocará', 'La IA lo corregirá sola', 'No importa, la IA sabe todo'],
+      'La IA aprende exactamente lo que le enseñamos. Si los datos están mal, la IA se equivoca. ¡Los datos deben ser correctos!'),
 };

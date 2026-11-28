@@ -8,6 +8,7 @@ import 'fondos.dart';
 import 'ilustraciones_ele.dart';
 import 'taller.dart';
 import 'sim_3d_circuito.dart';
+import '../minijuegos/minijuegos.dart';
 
 /// Electrónica · Tema 2: Conecta y enciende.
 
@@ -340,6 +341,7 @@ final eleTema2 = TemaBio(
                 ),
               ],
             )),
+        PasoBio('El viaje del electrón', TipoPasoBio.juego, 'e2_m3_flame', (a) => juegoElectron(a, color: _c3)),
         PasoBio('Video del tema', TipoPasoBio.video, 'e2_m3_video', (a) => video(a,
             clave: 'circuitos_3', titulo: 'Video: conductores y aislantes', tema: 'qué materiales conducen y cómo protegernos', siguiente: '¡A atrapar conductores!')),
         PasoBio('Atrapa los conductores', TipoPasoBio.juego, 'e2_m3_juego', (a) => atrapar(

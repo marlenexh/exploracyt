@@ -79,6 +79,7 @@ class ProgresoScope extends InheritedNotifier<ProgresoJuego> {
 
 /// Identificadores de cada actividad que otorga estrellas.
 class Actividades {
+  static const m3Flame = 'm3_flame';
   static const tourIntro = 'tour_intro';
   static const tourCirculatorio = 'tour_circulatorio';
   static const tourRespiratorio = 'tour_respiratorio';
@@ -130,7 +131,7 @@ class Actividades {
     m2Video, simPulmones, m2Lab, m2Juego, m2Mini, //
     // Misión 3
     m3Explicacion, m3Partes, tourInmune, m3Habitos, m3Video, simInmune,
-    labMicroscopio, labVacunas, retoDefensa, m3Mini, //
+    labMicroscopio, labVacunas, retoDefensa, m3Flame, m3Mini, //
     // Actividad integradora
     simCuerpo, intSituacion, retoArma, retoQuiz,
   ];

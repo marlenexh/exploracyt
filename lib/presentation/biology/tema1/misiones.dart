@@ -13,6 +13,7 @@ import 'pantalla_3d.dart';
 import 'pantalla_recorrido.dart';
 import 'progreso.dart';
 import 'retos.dart';
+import '../../minijuegos/minijuegos.dart';
 
 /// Estructura de misiones del Tema 1. Cada misión se desbloquea al completar
 /// la anterior, y sus pasos también se juegan en orden.
@@ -213,6 +214,8 @@ final misionesTema1 = <Mision>[
           () => const LabVacunas()),
       _v('Defensa inmune', TipoPaso.reto, Actividades.retoDefensa,
           () => const RetoDefensa()),
+      _v('Glóbulo blanco al ataque', TipoPaso.reto, Actividades.m3Flame,
+          () => juegoGlobulo(Actividades.m3Flame)),
       _p('Pon a prueba lo que aprendiste', TipoPaso.reto, Actividades.m3Mini,
           () => const PantallaMiniMisionInmune()),
     ],

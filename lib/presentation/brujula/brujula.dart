@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import '../../data/brujula.dart';
 import '../../data/worlds.dart';
 import '../../main.dart' show store;
+import '../minijuegos/minijuegos.dart';
+
+/// Id de la aventura final (se guarda como completada al ganarla).
+const aventuraFinalId = 'aventura_final';
 
 Color colorPieza(String mundo) => mundos.firstWhere((m) => m.id == mundo).color;
 
@@ -222,6 +226,36 @@ class _PantallaBrujulaState extends State<PantallaBrujula> with SingleTickerProv
               style: const TextStyle(fontFamily: 'Fredoka', fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF4E342E)),
             ),
           );
+          final hecha = store.completadas.contains(aventuraFinalId);
+          // Aventura final (mini-juego con Flame): se desbloquea con las 6 piezas.
+          final aventura = completa
+              ? Tooltip(
+                  message: 'Aventura final',
+                  child: FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFFF57C00),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                      textStyle: const TextStyle(fontFamily: 'LilitaOne', fontSize: 18),
+                    ),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) => juegoAventuraFinal(onTerminar: (_) {
+                          store.completar(aventuraFinalId);
+                          Navigator.pop(c);
+                        }),
+                      ),
+                    ),
+                    icon: const Icon(Icons.sports_esports_rounded),
+                    label: Text(hecha ? '🏆 Volver a jugar la aventura final' : '🎮 ¡Aventura final: vuela con Zati!'),
+                  ),
+                )
+              : Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(color: Colors.white10, borderRadius: BorderRadius.circular(14), border: Border.all(color: Colors.white24)),
+                  child: const Text('🔒 Aventura final: se desbloquea cuando recuperes las 6 piezas.',
+                      textAlign: TextAlign.center, style: TextStyle(color: Colors.white70, fontFamily: 'Fredoka', fontWeight: FontWeight.w600)),
+                );
           return ListView(padding: const EdgeInsets.fromLTRB(12, 8, 12, 24), children: [
             Row(children: [
               IconButton.filled(
@@ -241,11 +275,11 @@ class _PantallaBrujulaState extends State<PantallaBrujula> with SingleTickerProv
               constraints: const BoxConstraints(maxWidth: 900),
               child: horizontal
                   ? Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                      Expanded(child: Column(children: [brujula, const SizedBox(height: 10), mensaje])),
+                      Expanded(child: Column(children: [brujula, const SizedBox(height: 10), mensaje, const SizedBox(height: 10), aventura])),
                       const SizedBox(width: 16),
                       Expanded(child: lista),
                     ])
-                  : Column(children: [brujula, const SizedBox(height: 10), mensaje, const SizedBox(height: 10), lista]),
+                  : Column(children: [brujula, const SizedBox(height: 10), mensaje, const SizedBox(height: 10), aventura, const SizedBox(height: 10), lista]),
             ),
           ]);
         }),
