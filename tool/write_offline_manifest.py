@@ -22,6 +22,8 @@ if missing:
 files = sorted(
     path for path in root.rglob("*")
     if path.is_file() and path != manifest and path.suffix != ".map"
+    # Many hosts do not serve hidden files such as .last_build_id.
+    and not any(part.startswith(".") for part in path.relative_to(root).parts)
 )
 version = hashlib.sha256()
 urls = []
@@ -32,7 +34,7 @@ for path in files:
     version.update(hashlib.sha256(path.read_bytes()).digest())
 temporary = manifest.with_suffix(".tmp")
 temporary.write_text(
-    f"self.exploraOffline = {json.dumps({'version': version.hexdigest(), 'files': urls})};\n",
+    f"self.exploraOffline = {json.dumps({'version': version.hexdigest(), 'files': urls, 'required': list(required)})};\n",
     encoding="utf-8",
 )
 temporary.replace(manifest)

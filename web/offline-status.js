@@ -4,37 +4,44 @@ const statusPanel = document.querySelector('#offline-status');
 const detail = statusPanel.querySelector('p');
 const prepare = statusPanel.querySelector('button');
 const summary = statusPanel.querySelector('summary');
-const setStatus = (label, explanation) => {
+let hideTimer;
+// The panel only stays visible while preparing or when something needs attention.
+const setStatus = (label, explanation, {hideAfter = 0} = {}) => {
   summary.textContent = label;
   detail.textContent = explanation;
+  clearTimeout(hideTimer);
+  statusPanel.hidden = false;
+  if (hideAfter) hideTimer = setTimeout(() => { if (!statusPanel.open) statusPanel.hidden = true; }, hideAfter);
 };
 
 async function checkOffline(worker) {
   if (!worker) return;
   const channel = new MessageChannel();
-  const valid = await new Promise(resolve => {
+  const state = await new Promise(resolve => {
     const timeout = setTimeout(() => {
       channel.port1.close();
-      resolve(false);
+      resolve(null);
     }, 5000);
     channel.port1.onmessage = event => {
       clearTimeout(timeout);
       channel.port1.close();
-      resolve(event.data === true);
+      resolve(event.data);
     };
     worker.postMessage('check-offline', [channel.port2]);
   });
-  if (valid) {
-    setStatus('Disponible sin conexión', 'Los recursos de la aplicación se guardaron en este navegador.');
+  if (state && (state === true || (state.ready && state.saved === state.total))) {
+    setStatus('Disponible sin conexión', 'Los recursos de la aplicación se guardaron en este navegador.', {hideAfter: 4000});
+  } else if (state && state.ready) {
+    setStatus('Disponible sin conexión', `Se guardaron ${state.saved} de ${state.total} recursos. Algunos extras necesitarán Internet.`, {hideAfter: 6000});
   } else {
-    setStatus('Caché incompleta', 'Vuelve a preparar la aplicación con Internet antes de usarla sin conexión.');
+    setStatus('Uso sin conexión pendiente', 'La aplicación funciona con Internet. Pulsa el botón para volver a intentar guardarla.');
   }
 }
 
 async function prepareOffline() {
   if (!('serviceWorker' in navigator)) {
-    prepare.disabled = true;
-    setStatus('Modo offline no disponible', 'Usa un navegador compatible en un sitio HTTPS.');
+    // Without HTTPS (or localhost) browsers do not allow offline mode: stay quiet.
+    statusPanel.hidden = true;
     return;
   }
   if (!navigator.onLine && navigator.serviceWorker.controller) {
@@ -66,7 +73,7 @@ async function prepareOffline() {
       detail.textContent += ' Hay una actualización preparada. Cierra las pestañas de Explora Ciencia y vuelve a abrirla.';
     }
   } catch (error) {
-    setStatus('Error al preparar uso sin conexión', 'Comprueba la conexión y el espacio del navegador. Luego vuelve a intentar.');
+    setStatus('Uso sin conexión pendiente', 'La aplicación funciona con Internet. Revisa la conexión o el espacio del navegador y pulsa el botón para reintentar.');
   } finally {
     prepare.disabled = false;
   }
