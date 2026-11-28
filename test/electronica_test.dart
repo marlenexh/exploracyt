@@ -232,9 +232,10 @@ void main() {
       final ids = [for (final m in tema.misiones) for (final p in m.pasos) p.id];
       expect(ids.toSet().length, ids.length, reason: tema.titulo);
       for (final m in tema.misiones.take(3)) {
-        expect(m.pasos.any((p) => p.tipo == TipoPasoBio.video), isTrue, reason: m.subtitulo);
         expect(m.pasos.last.titulo, 'Pon a prueba lo que aprendiste', reason: m.subtitulo);
       }
+      // Un solo video complementario por tema, al final de la misión 3.
+      expect([for (var k = 0; k < 3; k++) tema.misiones[k].pasos.any((p) => p.tipo == TipoPasoBio.video)], [false, false, true], reason: tema.titulo);
       final info = eleTopics[tema.numero]!;
       expect(info.missionIds, tema.idsMisiones);
       expect(info.missions, [for (final m in tema.misiones) m.subtitulo]);

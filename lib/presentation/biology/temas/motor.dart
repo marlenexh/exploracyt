@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../data/enlaces_videos.dart';
 import '../tema1/aventura.dart' show BannerTitulo, BotonRedondo, GloboTexto, LetreroMadera, moradoBanner;
 import '../tema1/comunes.dart';
 import '../tema1/escenario.dart';
@@ -63,7 +64,7 @@ class MisionBio {
 }
 
 class TemaBio {
-  const TemaBio({
+  TemaBio({
     required this.numero,
     required this.titulo,
     required this.saludo,
@@ -76,7 +77,16 @@ class TemaBio {
     this.videos = const {},
     this.mundo = 'bio',
     this.estilo,
-  });
+  }) {
+    // Los videos son complementarios: si una misión no tiene enlace en
+    // lib/data/enlaces_videos.dart, su paso de video no se muestra.
+    for (var k = 0; k < misiones.length && k < videos.length; k++) {
+      final clave = videos.keys.elementAt(k);
+      if ((enlacesVideos[clave] ?? '').trim().isEmpty) {
+        misiones[k].pasos.removeWhere((p) => p.tipo == TipoPasoBio.video);
+      }
+    }
+  }
   final int numero;
 
   /// Id del mundo en la app ('bio', 'ele', …).

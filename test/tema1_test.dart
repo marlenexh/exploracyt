@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:explora_ciencia/presentation/videos/video_youtube.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/aventura.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/comunes.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/juego.dart';
@@ -314,14 +315,16 @@ void main() {
       await cerrarCelebracion(tester);
     });
 
-    testWidgets('Video sin archivo muestra el espacio para el video ($n)', (
+    testWidgets('Video complementario con carátula y Continuar con mi aventura ($n)', (
       tester,
     ) async {
       _telefono(tester, tam: tam);
       await tester.pumpWidget(_envolver(const PantallaVideoTema()));
       await _cuadros(tester, 10);
-      expect(find.text('Aquí va el video del tema'), findsOneWidget);
-      await tester.tap(find.byTooltip('Continuar'));
+      // Video complementario: carátula con Reproducir y siempre se puede seguir
+      expect(find.textContaining('¿Te quedaron dudas?'), findsOneWidget);
+      expect(find.byType(PortadaYoutube), findsOneWidget);
+      await tester.tap(find.byTooltip('Continuar con mi aventura'));
       await cerrarCelebracion(tester);
     });
 

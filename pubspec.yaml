@@ -23,6 +23,7 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/biology/
+    - assets/images/museo/
     - assets/videos/
   fonts:
     - family: LilitaOne

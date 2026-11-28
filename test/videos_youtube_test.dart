@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:explora_ciencia/data/enlaces_videos.dart';
@@ -60,8 +61,21 @@ void main() {
     final claves = {...ConfiguracionJuego.videosPorDefecto.keys, for (final t in temas) ...t.videos.keys};
     expect(enlacesVideos.keys.toSet(), claves);
     expect(enlacesVideos.length, 90);
+    // 32 videos: uno por tema (misión 3) y uno por misión en Biología tema 1
+    expect(enlacesVideos.values.where((v) => v.trim().isNotEmpty).length, 32);
     for (final MapEntry(:key, :value) in enlacesVideos.entries) {
       if (value.trim().isNotEmpty) expect(idYoutube(value), isNotNull, reason: 'El enlace de “$key” no es un video de YouTube válido');
     }
+  });
+
+  testWidgets('Sin internet la carátula avisa y no muestra Reproducir', (tester) async {
+    await tester
+        .pumpWidget(MaterialApp(home: Scaffold(body: SizedBox(width: 576, height: 340, child: PortadaYoutube(id: 'dQw4w9WgXcQ', onReproducir: () {})))));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    // En las pruebas no hay internet: la imagen falla
+    expect(find.text('Sin conexión a internet'), findsOneWidget);
+    expect(find.byTooltip('Reproducir video'), findsNothing);
   });
 }

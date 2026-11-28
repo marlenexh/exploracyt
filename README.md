@@ -243,7 +243,7 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 
 ## Videos de YouTube
 
-Los videos de todos los mundos se configuran en un solo archivo: `lib/data/enlaces_videos.dart` (90 videos, uno por misión, con su mundo, tema y misión). Se pega el enlace de YouTube de cada uno; el reproductor (`lib/presentation/videos/video_youtube.dart`, con el paquete `youtube_player_iframe`) funciona en web, Android e iOS. El alumno puede continuar al ver el 80 % del video, si YouTube no permite insertarlo, o tras 90 segundos si no carga. Si un enlace queda vacío, se usa el archivo de `assets/videos/` (si existe) o se muestra un aviso para el docente. Prueba: `test/videos_youtube_test.dart` (formatos de enlace y que el archivo tenga exactamente los videos de todos los temas).
+Los videos son **opcionales y complementarios**. Se configuran en un solo archivo: `lib/data/enlaces_videos.dart`. Cada tema tiene un video al final de la Misión 3 (Biología Tema 1 tiene uno por misión); los pasos de video sin enlace no se muestran. La pantalla dice “¿Te quedaron dudas? Mira este video para comprender mejor lo que acabas de aprender.”, muestra la carátula con el botón **Reproducir** (necesita internet; sin conexión se avisa) y el botón **Continuar con mi aventura** siempre deja seguir. El reproductor (`lib/presentation/videos/video_youtube.dart`, paquete `youtube_player_iframe`) funciona en web, Android e iOS. Prueba: `test/videos_youtube_test.dart`.
 
 ## Laboratorios finales de Biología, Química, Física y Electrónica
 
@@ -263,7 +263,7 @@ Pruebas: `test/laboratorios_test.dart`.
 Todo el apartado tiene un fondo animado nuevo (`vocacion/fondo_vocacion.dart`, “el camino al futuro”) y animaciones de entrada.
 
 - **Explora profesiones** (`explora_profesiones_screen.dart`, datos en `profesiones_datos.dart`): 25 profesiones de ciencia y tecnología en 10 áreas (incluye salud, espacio, planeta e ingeniería), con filtros y favoritas. Cada una abre una página animada: qué hace, herramientas para tocar, “Vive un día” hora por hora, dónde trabaja, mini reto, dato curioso que se voltea y los mundos del juego relacionados.
-- **Personas que transforman el mundo** (`personas_transforman_screen.dart`, datos en `personajes_datos.dart`): un museo con 24 personas en 6 salas (retratos enmarcados con foco, placas y sello de visitante). Cada vitrina tiene su gran aporte con el objeto girando, línea del tiempo, dato curioso y lo que nos enseña. Incluye el juego “¿Quién soy?”.
+- **Personas que transforman el mundo** (`personas_transforman_screen.dart`, datos en `personajes_datos.dart`): un museo con 24 personas en 6 salas (retratos con la foto real de cada persona en WebP de 320×400 —unos 15 KB cada una— en `assets/images/museo/`, con su crédito de Wikimedia Commons en `creditos_retratos.dart` y en `assets/images/museo/CREDITOS.txt`; placas y sello de visitante). Cada vitrina tiene su gran aporte con el objeto girando, línea del tiempo, dato curioso y lo que nos enseña. Incluye el juego “¿Quién soy?”.
 - **Descubre tus intereses** y **Mis descubrimientos**: nuevo fondo y animaciones.
 
 Pruebas: `test/vocacion_test.dart`.

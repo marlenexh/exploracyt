@@ -102,13 +102,10 @@ void probarMundo({
         expect(todos.add(id), isTrue, reason: 'Id repetido: $id');
       }
       for (final m in tema.misiones.take(3)) {
-        final claves = [
-          for (final p in m.pasos)
-            if (p.tipo == TipoPasoBio.video) p
-        ];
-        expect(claves, isNotEmpty, reason: m.subtitulo);
         expect(m.pasos.last.titulo, 'Pon a prueba lo que aprendiste', reason: m.subtitulo);
       }
+      // Un solo video complementario por tema, al final de la misión 3.
+      expect([for (var k = 0; k < 3; k++) tema.misiones[k].pasos.any((p) => p.tipo == TipoPasoBio.video)], [false, false, true], reason: tema.titulo);
       expect(tema.videos.length, 3);
       final info = infos[tema.numero]!;
       expect(info.missionIds, tema.idsMisiones);

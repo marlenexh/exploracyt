@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import 'comunes.dart';
+import 'escenario.dart' show Escenario;
 import 'estilo_mundo.dart';
 import 'contenido.dart';
 import 'integradora.dart' show PantallaInsigniaFinal;
@@ -486,140 +487,58 @@ class PantallaIntroTema extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FondoBosque(
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, cons) {
-              final horizontal = cons.maxWidth > cons.maxHeight;
-              final titulo = Entrada(
-                desde: const Offset(0, -50),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: BannerTitulo(
-                    'El cuerpo humano\ny sus sistemas',
-                    tam: horizontal ? 26 : 24,
-                  ),
-                ),
-              );
-              final zati = Entrada(
-                indice: 1,
-                desde: const Offset(-80, 0),
-                child: const ZatiMascota(tam: 400, hablando: true),
-              );
-              final globo = Entrada(
-                indice: 2,
-                child: GloboTexto(
-                  child: TextoMaquina(
-                    textoZati,
-                    estilo: TextStyle(
-                      fontSize: horizontal ? 17 : 18,
-                      height: 1.3,
-                      color: ColoresJuego.texto,
-                    ),
-                  ),
-                ),
-              );
-              const mision = Entrada(
-                indice: 3,
-                desde: Offset(80, 0),
-                child: _PanelMisionTema(),
-              );
-              final comenzar = Entrada(
-                indice: 4,
-                desde: const Offset(0, 60),
-                child: Movimiento(
-                  tipo: TipoMovimiento.latir,
-                  intensidad: 0.35,
-                  child: BotonJuego(
-                    texto: 'Comenzar',
-                    icono: Icons.play_arrow_rounded,
-                    color: const Color(0xFF2DB84C),
-                    grande: true,
-                    onTap: () => abrirPantalla(
-                      context,
-                      const PantallaMisiones(),
-                      fondoBosque: true,
-                    ),
-                  ),
-                ),
-              );
-              if (horizontal) {
-                return Stack(
-                  children: [
-                    Positioned(left: 8, top: 8, child: _BotonSalir()),
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: 6,
-                      height: cons.maxHeight * 0.24,
-                      child: Center(child: titulo),
-                    ),
-                    Positioned(
-                      left: cons.maxWidth * 0.01,
-                      bottom: 0,
-                      width: cons.maxWidth * 0.28,
-                      height: cons.maxHeight * 0.78,
-                      child: zati,
-                    ),
-                    Positioned(
-                      left: cons.maxWidth * 0.29,
-                      width: cons.maxWidth * 0.36,
-                      top: cons.maxHeight * 0.27,
-                      bottom: cons.maxHeight * 0.22,
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: SingleChildScrollView(child: globo),
-                      ),
-                    ),
-                    Positioned(
-                      right: cons.maxWidth * 0.02,
-                      width: cons.maxWidth * 0.3,
-                      top: cons.maxHeight * 0.2,
-                      bottom: cons.maxHeight * 0.06,
-                      child: mision,
-                    ),
-                    Positioned(
-                      left: cons.maxWidth * 0.29,
-                      width: cons.maxWidth * 0.36,
-                      bottom: cons.maxHeight * 0.04,
-                      child: Center(child: comenzar),
-                    ),
-                  ],
-                );
-              }
-              return ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  Row(children: [_BotonSalir()]),
-                  titulo,
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 220,
-                    child: Row(
-                      children: [
-                        Expanded(flex: 4, child: zati),
-                        const SizedBox(width: 18),
-                        Expanded(
-                          flex: 6,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: SingleChildScrollView(child: globo),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 14),
-                  const SizedBox(height: 300, child: mision),
-                  const SizedBox(height: 16),
-                  Center(child: comenzar),
-                ],
-              );
-            },
+    // Misma distribución, tamaños y tipografía que la bienvenida de los
+    // demás temas: un lienzo fijo que se adapta a cualquier pantalla.
+    return Escenario(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          top: 6,
+          child: Center(
+            child: Entrada(
+              desde: const Offset(0, -40),
+              child: BannerTitulo('Tema 1\nEl cuerpo humano y sus sistemas', tam: 24),
+            ),
           ),
         ),
-      ),
+        const Positioned(left: 4, top: 150, child: SizedBox(width: 230, height: 320, child: ZatiMascota(tam: 320))),
+        Positioned(
+          left: 236,
+          top: 130,
+          width: 330,
+          child: Entrada(
+            indice: 1,
+            child: GloboTexto(child: TextoMaquina(textoZati, estilo: const TextStyle(fontSize: 17, height: 1.3, color: ColoresJuego.texto))),
+          ),
+        ),
+        const Positioned(
+          left: 590,
+          top: 92,
+          width: 258,
+          height: 370,
+          child: Entrada(indice: 2, desde: Offset(60, 0), child: _PanelMisionTema()),
+        ),
+        Positioned(
+          left: 300,
+          top: 400,
+          child: Entrada(
+            indice: 3,
+            desde: const Offset(0, 50),
+            child: Tooltip(
+              message: 'Comenzar',
+              child: BotonJuego(
+                texto: 'Comenzar',
+                icono: Icons.play_arrow_rounded,
+                color: const Color(0xFF2DB84C),
+                grande: true,
+                onTap: () => abrirPantalla(context, const PantallaMisiones(), fondoBosque: true),
+              ),
+            ),
+          ),
+        ),
+        Positioned(left: 8, top: 8, child: _BotonSalir()),
+      ],
     );
   }
 }

@@ -1,0 +1,149 @@
+CRÉDITOS DE LOS RETRATOS DEL MUSEO
+==================================
+Imágenes de Wikimedia Commons, recortadas a 4:5 y convertidas a WebP (320×400).
+Las licencias CC BY y CC BY-SA piden mencionar al autor y la licencia; las
+imágenes recortadas con CC BY-SA se comparten bajo la misma licencia.
+
+Ada Lovelace (ada_lovelace.webp)
+  Archivo:  File:Ada Lovelace portrait.jpg
+  Autor:    Alfred Edward Chalon
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AAda_Lovelace_portrait.jpg
+
+Alan Turing (alan_turing.webp)
+  Archivo:  File:Alan Turing Aged 16.jpg
+  Autor:    Posiblemente Arthur Reginald Chaffin
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AAlan_Turing_Aged_16.jpg
+
+Albert Einstein (albert_einstein.webp)
+  Archivo:  File:Albert Einstein Head.jpg
+  Autor:    Orren Jack Turner
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AAlbert_Einstein_Head.jpg
+
+Alexander Fleming (alexander_fleming.webp)
+  Archivo:  File:Synthetic Production of Penicillin TR1468.jpg
+  Autor:    Fotógrafo oficial del Ministerio de Información (Reino Unido)
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ASynthetic_Production_of_Penicillin_TR1468.jpg
+
+Antoine Lavoisier (antoine_lavoisier.webp)
+  Archivo:  File:Antoine lavoisier color.jpg
+  Autor:    Louis Jean Désiré Delaistre
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AAntoine_lavoisier_color.jpg
+
+Charles Darwin (charles_darwin.webp)
+  Archivo:  File:Charles Darwin by Julia Margaret Cameron, c. 1868.jpg
+  Autor:    Julia Margaret Cameron
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ACharles_Darwin_by_Julia_Margaret_Cameron%2C_c._1868.jpg
+
+Dmitri Mendeléyev (dmitri_mendeleyev.webp)
+  Archivo:  File:Medeleeff by repin.jpg
+  Autor:    Iliá Repin
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AMedeleeff_by_repin.jpg
+
+Ellen Ochoa (ellen_ochoa.webp)
+  Archivo:  File:Ellen Ochoa.jpg
+  Autor:    NASA
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AEllen_Ochoa.jpg
+
+Galileo Galilei (galileo_galilei.webp)
+  Archivo:  File:Justus Sustermans - Portrait of Galileo Galilei, 1636.jpg
+  Autor:    Justus Sustermans
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AJustus_Sustermans_-_Portrait_of_Galileo_Galilei%2C_1636.jpg
+
+Grace Hopper (grace_hopper.webp)
+  Archivo:  File:Commodore Grace M. Hopper, USN (covered).jpg
+  Autor:    James S. Davis, Marina de EE. UU.
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ACommodore_Grace_M._Hopper%2C_USN_%28covered%29.jpg
+
+Gregor Mendel (gregor_mendel.webp)
+  Archivo:  File:Gregor Mendel 2.jpg
+  Autor:    Autor desconocido
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AGregor_Mendel_2.jpg
+
+Guillermo González Camarena (guillermo_gonzalez_camarena.webp)
+  Archivo:  File:Ing. Guillermo González Camarena.jpg
+  Autor:    Jorge Terre Oliva
+  Licencia: CC BY-SA 4.0
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AIng._Guillermo_Gonz%C3%A1lez_Camarena.jpg
+
+Hedy Lamarr (hedy_lamarr.webp)
+  Archivo:  File:Hedy Lamarr Publicity Photo for The Heavenly Body 1944.jpg
+  Autor:    Foto publicitaria (1944)
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AHedy_Lamarr_Publicity_Photo_for_The_Heavenly_Body_1944.jpg
+
+Isaac Newton (isaac_newton.webp)
+  Archivo:  File:GodfreyKneller-IsaacNewton-1689.jpg
+  Autor:    Godfrey Kneller
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AGodfreyKneller-IsaacNewton-1689.jpg
+
+Jane Goodall (jane_goodall.webp)
+  Archivo:  File:Jane Goodall HK.jpg
+  Autor:    Jeekc
+  Licencia: CC BY 2.5
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AJane_Goodall_HK.jpg
+
+Julieta Fierro (julieta_fierro.webp)
+  Archivo:  File:Julieta Fierro, 2024 (cropped).jpg
+  Autor:    Alejandro Medina Guzmán, Secretaría de Cultura de la Ciudad de México
+  Licencia: CC BY 2.0
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AJulieta_Fierro%2C_2024_%28cropped%29.jpg
+
+Katherine Johnson (katherine_johnson.webp)
+  Archivo:  File:Katherine Johnson 1983.jpg
+  Autor:    NASA
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AKatherine_Johnson_1983.jpg
+
+Louis Pasteur (louis_pasteur.webp)
+  Archivo:  File:Louis Pasteur, foto av Paul Nadar, Crisco edit.jpg
+  Autor:    Paul Nadar
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ALouis_Pasteur%2C_foto_av_Paul_Nadar%2C_Crisco_edit.jpg
+
+Marie Curie (marie_curie.webp)
+  Archivo:  File:Marie Curie c. 1920s.jpg
+  Autor:    Henri Manuel
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AMarie_Curie_c._1920s.jpg
+
+Mario Molina (mario_molina.webp)
+  Archivo:  File:Mario Molina 1c389 8387 (cropped).jpg
+  Autor:    Janwikifoto
+  Licencia: CC BY-SA 3.0
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AMario_Molina_1c389_8387_%28cropped%29.jpg
+
+Nikola Tesla (nikola_tesla.webp)
+  Archivo:  File:Tesla circa 1890.jpeg
+  Autor:    Napoleon Sarony
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ATesla_circa_1890.jpeg
+
+Rodolfo Neri Vela (rodolfo_neri_vela.webp)
+  Archivo:  File:Mexico.RodolfoNeriVela.01.jpg
+  Autor:    NASA
+  Licencia: Dominio público
+  Fuente:   https://commons.wikimedia.org/wiki/File%3AMexico.RodolfoNeriVela.01.jpg
+
+Rosalind Franklin (rosalind_franklin.webp)
+  Archivo:  File:Rosalind Franklin.jpg
+  Autor:    MRC Laboratory of Molecular Biology
+  Licencia: CC BY-SA 4.0
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ARosalind_Franklin.jpg
+
+Tim Berners-Lee (tim_berners_lee.webp)
+  Archivo:  File:Sir Tim Berners-Lee (cropped).jpg
+  Autor:    Paul Clarke
+  Licencia: CC BY-SA 4.0
+  Fuente:   https://commons.wikimedia.org/wiki/File%3ASir_Tim_Berners-Lee_%28cropped%29.jpg

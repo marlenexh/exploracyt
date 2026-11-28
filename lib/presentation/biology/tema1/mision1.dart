@@ -1537,6 +1537,9 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
 
   /// Identificador del video si el enlace es de YouTube.
   String? _youtube;
+
+  /// El alumno tocó “Reproducir” en la carátula.
+  bool _reproducir = false;
   bool _cargando = true;
   bool _sinVideo = false;
   bool _visto = false;
@@ -1635,10 +1638,13 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
       pantalla = const Center(
         child: CircularProgressIndicator(color: Colors.white),
       );
+    } else if (_youtube != null && !_sinVideo && !_reproducir) {
+      pantalla = PortadaYoutube(id: _youtube!, onReproducir: () => setState(() => _reproducir = true));
     } else if (_youtube != null && !_sinVideo) {
       pantalla = ClipRRect(
         borderRadius: BorderRadius.circular(18),
         child: ReproductorYoutube(
+          autoPlay: true,
           id: _youtube!,
           onVisto: () {
             if (mounted && !_visto) setState(() => _visto = true);
@@ -1745,7 +1751,6 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
         ],
       );
     }
-    final puedeSeguir = _visto || _sinVideo;
     return Escenario(
       velo: 0.2,
       colorVelo: const Color(0xFF3D5AFE),
@@ -1754,7 +1759,7 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
         const Positioned(
           left: 64,
           top: 14,
-          child: EtiquetaSeccion('Video del tema'),
+          child: EtiquetaSeccion('Video complementario'),
         ),
         Positioned(
           left: 300,
@@ -1765,8 +1770,7 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
           left: 0,
           top: 80,
           child: ZatiConGlobo(
-            texto:
-                '¡Hora del cine científico! 🎬\n\nMira este video para repasar ${widget.tema}. ¡Pon mucha atención!',
+            texto: '¿Te quedaron dudas? 🎬\n\nMira este video para comprender mejor lo que acabas de aprender.',
             tamZati: 170,
             anchoGlobo: 200,
             altoGlobo: 190,
@@ -1796,37 +1800,22 @@ class _PantallaVideoTemaState extends State<PantallaVideoTema> {
             child: pantalla,
           ),
         ),
+        // El video es opcional: siempre se puede seguir con la aventura.
         Positioned(
-          left: 660,
+          left: 560,
           top: 420,
           child: BotonSiguiente(
-            latir: puedeSeguir,
-            texto: _sinVideo ? 'Continuar' : 'Siguiente',
-            onTap: puedeSeguir
-                ? () => _terminarPaso(
-                      context,
-                      actividad: widget.actividad,
-                      estrellas: _sinVideo ? 2 : 3,
-                      titulo: _sinVideo ? '¡Seguimos!' : '¡Video completado!',
-                      mensaje: widget.siguiente,
-                    )
-                : null,
-          ),
-        ),
-        if (!puedeSeguir && !_cargando)
-          const Positioned(
-            left: 300,
-            top: 428,
-            child: Text(
-              'Mira el video hasta el final para continuar.',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                shadows: [Shadow(blurRadius: 4)],
-              ),
+            latir: _visto || _sinVideo,
+            texto: 'Continuar con mi aventura',
+            onTap: () => _terminarPaso(
+              context,
+              actividad: widget.actividad,
+              estrellas: 3,
+              titulo: '¡Seguimos con la aventura!',
+              mensaje: widget.siguiente,
             ),
           ),
+        ),
       ],
     );
   }

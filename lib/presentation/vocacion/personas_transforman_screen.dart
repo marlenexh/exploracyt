@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../biology/tema1/comunes.dart' show Reloj;
+import 'creditos_retratos.dart';
 import 'personajes_datos.dart';
 
 const _claveVisitadas = 'personas_visitadas';
@@ -261,9 +262,7 @@ class _RetratoState extends State<_Retrato> {
                       border: Border.all(color: const Color(0xFF5D4037), width: 2),
                     ),
                     child: Stack(alignment: Alignment.center, children: [
-                      Reloj(
-                          builder: (_, t) => Transform.translate(
-                              offset: Offset(0, math.sin(t * 1.8 + widget.indice) * 3), child: Text(p.avatar, style: const TextStyle(fontSize: 66)))),
+                      Positioned.fill(child: RetratoPersonaje(personaje: p, tamEmoji: 66)),
                       Positioned(right: 4, bottom: 2, child: Text(p.objeto.$1, style: const TextStyle(fontSize: 24))),
                       if (widget.visitado)
                         Positioned(
@@ -532,7 +531,7 @@ class DetallePersonajeScreenState extends State<DetallePersonajeScreen> {
                   border: Border.all(color: const Color(0xFF5D4037), width: 3),
                 ),
                 child: Stack(alignment: Alignment.center, children: [
-                  Transform.translate(offset: Offset(0, math.sin(t * 1.6) * 5), child: Text(p.avatar, style: const TextStyle(fontSize: 140))),
+                  Positioned.fill(child: RetratoPersonaje(personaje: p, tamEmoji: 140)),
                   Positioned(bottom: 8, right: 10, child: Text(p.objeto.$1, style: const TextStyle(fontSize: 44))),
                 ]),
               ),
@@ -552,6 +551,12 @@ class DetallePersonajeScreenState extends State<DetallePersonajeScreen> {
             Text(p.nombre, textAlign: TextAlign.center, style: const TextStyle(fontSize: 24, fontFamily: 'LilitaOne', color: Color(0xFF3E2723))),
             Text('${p.pais} · ${p.anios}',
                 textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: Color(0xFF5D4037))),
+            if (creditosRetratos[archivoRetrato(p.nombre)] != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text('📷 ${creditosRetratos[archivoRetrato(p.nombre)]}',
+                    textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, color: Color(0xFF5D4037), height: 1.1)),
+              ),
           ]),
         ),
       ]);
@@ -818,10 +823,10 @@ class QuienSoyScreenState extends State<QuienSoyScreen> {
                 ),
                 child: Column(children: [
                   Container(
-                    height: 110,
-                    alignment: Alignment.center,
+                    height: 130,
+                    width: double.infinity,
                     color: Color.lerp(colorSala(p.sala), Colors.white, 0.5),
-                    child: Text(p.avatar, style: const TextStyle(fontSize: 64)),
+                    child: RetratoPersonaje(personaje: p, tamEmoji: 64),
                   ),
                   const SizedBox(height: 6),
                   Text(p.nombre, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.w900, color: Color(0xFF3E2723))),
@@ -868,5 +873,21 @@ class QuienSoyScreenState extends State<QuienSoyScreen> {
             FilledButton(onPressed: () => Navigator.pop(context), child: const Text('Volver al museo')),
           ]),
         ),
+      );
+}
+
+/// Retrato de una persona: su imagen, o su emoji si todavía no hay imagen.
+class RetratoPersonaje extends StatelessWidget {
+  const RetratoPersonaje({super.key, required this.personaje, this.tamEmoji = 64});
+  final PersonajeInfo personaje;
+  final double tamEmoji;
+
+  @override
+  Widget build(BuildContext context) => Image.asset(
+        personaje.imagen,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, -0.4),
+        filterQuality: FilterQuality.medium,
+        errorBuilder: (_, __, ___) => Center(child: Text(personaje.avatar, style: TextStyle(fontSize: tamEmoji))),
       );
 }
