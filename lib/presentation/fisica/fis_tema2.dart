@@ -5,6 +5,7 @@ import '../biology/temas/motor.dart';
 import 'fondos_fis.dart';
 import 'ilustraciones_fis.dart';
 import 'sims_fis.dart';
+import '../minijuegos/minijuegos.dart';
 
 /// Física · Tema 2: La gravedad en acción.
 
@@ -153,6 +154,7 @@ final fisTema2 = TemaBio(
                   mensajeFinal: '¡Ahora haz el experimento!',
                 )),
         PasoBio('¿Cuál cae primero?', TipoPasoBio.simulacion, 'f2_m2_sim', (a) => SimCaida(actividad: a, color: _c2)),
+        PasoBio('Lanza con gravedad', TipoPasoBio.juego, 'f2_m2_flame', (a) => juegoLanzamiento(a, color: _c2)),
         PasoBio(
             'Video del tema',
             TipoPasoBio.video,

@@ -241,6 +241,22 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 - Progreso: clave `v1.ia.temaN.juego`; misiones `ia-tN-m1..m3` y `ia-tN-integration` (`lib/data/ia_topics.dart`).
 - Pruebas: `test/ia_modelo_test.dart` (el motor aprende, falla con rasgos inútiles o etiquetas equivocadas y corrige el sesgo) y `test/ia_test.dart` (datos, mapa, todas las pantallas, cada simulación y el laboratorio completo).
 
+## Mini-juegos con Flame
+
+Mini-juegos de acción hechos con [Flame](https://flame-engine.org/) (motor de juegos 2D para Flutter), en `lib/presentation/minijuegos/`. Cada uno se ve con el fondo de su mundo. La lógica de cada juego es un *modelo* en Dart puro (fácil de probar) y Flame se encarga del ciclo de juego, los componentes, el sprite de Zati, las partículas y los efectos (`base.dart`).
+
+| Mundo | Mini-juego | Dónde | Qué se aprende |
+|---|---|---|---|
+| Biología | Glóbulo blanco al ataque | Tema 1, Misión 3 | Los glóbulos blancos atrapan a los microbios |
+| Química | Arma moléculas | Tema 3, Misión 2 | Los átomos se unen en moléculas (H₂O, O₂, CO₂, CH₄) |
+| Física | Lanza con gravedad | Tema 2, Misión 2 | Con menos gravedad (Luna, Marte) se llega más lejos |
+| Electrónica | El viaje del electrón | Tema 2, Misión 3 | Circuito cerrado y peligro del cortocircuito |
+| IA | Etiqueta para entrenar | Tema 3, Misión 2 | Una IA es tan buena como sus datos |
+| Programación | Plataformas con bloques | Tema 3, Misión 2 | Secuencias y ciclos (repite) |
+| Brújula | Aventura final: Zati recupera la Brújula | Pantalla de la Brújula (con las 6 piezas) | Repaso final de los 6 mundos |
+
+Prueba: `test/minijuegos_test.dart` (cada juego se juega solo hasta ganar y las 7 pantallas se abren sin errores).
+
 ## Para pensar y aprender mejor
 
 - **Opciones mezcladas:** en todas las preguntas las opciones se muestran revueltas (`lib/presentation/ciencia/barajar.dart`), así la respuesta correcta no siempre es la primera. El orden es siempre el mismo para la misma pregunta.

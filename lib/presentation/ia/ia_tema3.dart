@@ -7,6 +7,7 @@ import 'ilustraciones_ia.dart';
 import 'proyectos_ia.dart';
 import 'sims_ia.dart';
 import 'sim_3d_red.dart';
+import '../minijuegos/minijuegos.dart';
 
 /// Inteligencia Artificial · Tema 3: Enseña a una máquina.
 
@@ -153,6 +154,7 @@ final iaTema3 = TemaBio(
       mensajeFinal: '¡Entrenaste tu primera IA!',
       pasos: [
         PasoBio('¿Mamífero o ave?', TipoPasoBio.laboratorio, 'i3_m2_sim', (a) => SimEntrenar(actividad: a, color: _c2, proyecto: proyectoMamiferoAve)),
+        PasoBio('Etiqueta para entrenar', TipoPasoBio.juego, 'i3_m2_flame', (a) => juegoEtiquetas(a, color: _c2)),
         PasoBio(
             '¿Sabías que…?',
             TipoPasoBio.explicacion,
