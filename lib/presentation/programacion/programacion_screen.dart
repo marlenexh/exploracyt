@@ -91,8 +91,8 @@ class TarjetaLaboratorio extends StatelessWidget {
                       style: TextStyle(fontFamily: 'LilitaOne', fontSize: 19, color: Color(0xFF5D4037), height: 1.05)),
                   Text(
                       hecho
-                          ? '🏅 $proLabBadge'
-                          : 'Programa los eventos de tu propio juego, pruébalo, encuentra sus bugs y publícalo. ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                          ? '🏅 $proLabBadge · 🧭 ¡Pieza del Código recuperada!'
+                          : '🧭 Aquí está la Pieza del Código. Programa los eventos de tu propio juego, pruébalo, encuentra sus bugs y publícalo. ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontFamily: 'Fredoka', fontSize: 13, fontWeight: FontWeight.w600, color: hecho ? const Color(0xFFB8860B) : const Color(0xFF6D4C41))),

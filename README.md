@@ -241,6 +241,10 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 - Progreso: clave `v1.ia.temaN.juego`; misiones `ia-tN-m1..m3` y `ia-tN-integration` (`lib/data/ia_topics.dart`).
 - Pruebas: `test/ia_modelo_test.dart` (el motor aprende, falla con rasgos inútiles o etiquetas equivocadas y corrige el sesgo) y `test/ia_test.dart` (datos, mapa, todas las pantallas, cada simulación y el laboratorio completo).
 
+## La Brújula de la Ciencia
+
+En la historia, la Brújula de la Ciencia se rompió y sus 6 piezas quedaron en los 6 mundos. Al terminar el **laboratorio final** de cada mundo el alumno recupera su pieza (Vida, Materia, Energía, Circuitos, Inteligencia y Código): aparece una celebración sobre cualquier pantalla con la pieza volando a su lugar, y con las 6 la brújula queda reconstruida. En el mapa de los mundos el botón **Brújula n/6** abre la brújula y dice dónde está cada pieza que falta. Datos en `lib/data/brujula.dart`, pantallas en `lib/presentation/brujula/brujula.dart`; prueba: `test/brujula_test.dart`.
+
 ## Videos de YouTube
 
 Los videos son **opcionales y complementarios**. Se configuran en un solo archivo: `lib/data/enlaces_videos.dart`. Cada tema tiene un video al final de la Misión 3 (Biología Tema 1 tiene uno por misión); los pasos de video sin enlace no se muestran. La pantalla dice “¿Te quedaron dudas? Mira este video para comprender mejor lo que acabas de aprender.”, muestra la carátula con el botón **Reproducir** (necesita internet; sin conexión se avisa) y el botón **Continuar con mi aventura** siempre deja seguir. El reproductor (`lib/presentation/videos/video_youtube.dart`, paquete `youtube_player_iframe`) funciona en web, Android e iOS. Prueba: `test/videos_youtube_test.dart`.

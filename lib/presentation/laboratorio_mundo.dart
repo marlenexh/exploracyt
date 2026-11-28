@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../data/laboratorios.dart';
+import '../data/brujula.dart';
 import '../main.dart' show store;
 import 'biology/tema1/comunes.dart' show temaJuego;
 import 'biology/tema1/estilo_mundo.dart';
@@ -70,8 +71,8 @@ class TarjetaLaboratorioMundo extends StatelessWidget {
                         Text(lab.titulo, style: TextStyle(fontFamily: 'LilitaOne', fontSize: 19, color: oscuro, height: 1.05)),
                         Text(
                           hecho
-                              ? '🏅 ${lab.insignia}'
-                              : '${lab.descripcion} ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                              ? '🏅 ${lab.insignia} · 🧭 ¡${piezaDelMundo(lab.mundo).nombre} recuperada!'
+                              : '🧭 Aquí está la ${piezaDelMundo(lab.mundo).nombre}. ${lab.descripcion} ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: sub,

@@ -92,8 +92,8 @@ class TarjetaLaboratorioIA extends StatelessWidget {
                         const Text('$_titulo: construye tu IA', style: TextStyle(fontFamily: 'LilitaOne', fontSize: 19, color: cafe, height: 1.05)),
                         Text(
                           hecho
-                              ? '🏅 $iaLabBadge'
-                              : '$_texto ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                              ? '🏅 $iaLabBadge · 🧭 ¡Pieza de la Inteligencia recuperada!'
+                              : '🧭 Aquí está la Pieza de la Inteligencia. $_texto ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: sub,

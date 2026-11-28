@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'core/theme.dart';
 import 'domain/progress_store.dart';
+import 'presentation/brujula/brujula.dart';
 import 'presentation/home_screens.dart';
 
 
@@ -21,7 +22,11 @@ class ExploraApp extends StatelessWidget {
         theme: buildTheme(),
         builder: (context, child) => ListenableBuilder(
           listenable: store,
-          builder: (_, __) => MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(store.textoGrande ? 1.25 : 1.0)), child: child!),
+          builder: (_, __) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaler: TextScaler.linear(store.textoGrande ? 1.25 : 1.0)),
+            // La celebración de la Brújula de la Ciencia aparece sobre cualquier pantalla.
+            child: Stack(fit: StackFit.expand, children: [child!, const CelebracionPieza()]),
+          ),
         ),
         home: store.registrado ? const Home() : const Bienvenida(),
       );
