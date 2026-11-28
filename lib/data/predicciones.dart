@@ -263,4 +263,12 @@ const predicciones = <String, Prediccion>{
       'Si el robot mira a la derecha y le dices «girar a la derecha», ¿hacia dónde quedará mirando?',
       ['Hacia abajo', 'Hacia arriba', 'Hacia la izquierda'],
       'Girar a la derecha es dar un cuarto de vuelta como las manecillas del reloj: de mirar a la derecha pasa a mirar hacia abajo.'),
+  'f5_m1_3d': Prediccion(
+      '¿Qué planeta crees que da la vuelta al Sol más rápido?',
+      ['Mercurio, el más cercano al Sol', 'Neptuno, el más lejano', 'Todos tardan lo mismo'],
+      'Mientras más cerca está un planeta del Sol, más corto es su camino y más rápido va. ¡Un año en Mercurio dura solo 88 días!'),
+  'q2_m1_3d': Prediccion(
+      'Si calientas mucho el agua, ¿qué crees que les pasa a sus partículas?',
+      ['Se mueven más rápido y se separan', 'Se quedan quietas', 'Se hacen más pequeñas'],
+      'El calor les da energía: se mueven cada vez más rápido y se separan, hasta que el agua se vuelve vapor (gas).'),
 };

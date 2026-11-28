@@ -4,7 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/comunes.dart';
 import 'package:explora_ciencia/presentation/biology/tema1/misiones.dart' show ConfiguracionJuego;
 import 'package:explora_ciencia/presentation/biology/tema1/progreso.dart';
+import 'package:explora_ciencia/presentation/biology/tema1/estilo_mundo.dart';
+import 'package:explora_ciencia/presentation/biology/temas/motor.dart';
 import 'package:explora_ciencia/presentation/electronica/sim_3d_circuito.dart';
+import 'package:explora_ciencia/presentation/fisica/fis_tema5.dart';
+import 'package:explora_ciencia/presentation/fisica/sim_3d_sistema_solar.dart';
+import 'package:explora_ciencia/presentation/quimica/qui_tema2.dart';
+import 'package:explora_ciencia/presentation/quimica/sim_3d_estados.dart';
 import 'package:explora_ciencia/presentation/ia/sim_3d_red.dart';
 import 'package:explora_ciencia/presentation/programacion/sim_3d_robot.dart';
 
@@ -129,5 +135,61 @@ void main() {
     expect(st.logrado, isTrue);
     expect(find.text('Terminar'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Sistema Solar 3D: el Sol, la Tierra, Júpiter y 6 planetas', (tester) async {
+    for (final s in _tamanos) {
+      pantalla(tester, s);
+      await tester.pumpWidget(_app(SimSistemaSolar3D(key: ValueKey(s), actividad: 'x', color: Colors.orange), ProgresoJuego()));
+      await cuadros(tester, 4);
+      expect(tester.takeException(), isNull, reason: '$s');
+    }
+    final st = tester.state<SimSistemaSolar3DState>(find.byType(SimSistemaSolar3D));
+    st.tocar('sol');
+    await tester.pump();
+    expect(find.textContaining('El Sol es una estrella'), findsOneWidget);
+    for (final i in [2, 4, 0, 1, 3, 5]) {
+      st.tocar(SimSistemaSolar3DState.idPlaneta(i));
+    }
+    await tester.tap(find.text('🚀 Más rápido'));
+    await cuadros(tester, 4);
+    expect(st.logros.length, SimSistemaSolar3DState.objetivos.length);
+    expect(find.text('Terminar'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Estados de la materia 3D: sólido, líquido, gas y la pregunta', (tester) async {
+    for (final s in _tamanos) {
+      pantalla(tester, s);
+      await tester.pumpWidget(_app(SimEstados3D(key: ValueKey(s), actividad: 'x', color: Colors.blue), ProgresoJuego()));
+      await cuadros(tester, 4);
+      expect(tester.takeException(), isNull, reason: '$s');
+    }
+    await tester.tap(find.text('🌡️ Templado (25 °C)'));
+    await cuadros(tester, 6);
+    expect(find.textContaining('se deslizan'), findsOneWidget);
+    await tester.tap(find.text('🔥 Calentar (110 °C)'));
+    await cuadros(tester, 6);
+    expect(find.text(SimEstados3DState.pregunta), findsOneWidget);
+    await tester.tap(find.text('En el sólido'));
+    await tester.pump();
+    expect(find.text('Terminar'), findsNothing);
+    await tester.tap(find.text('En el gas'));
+    await tester.pump();
+    expect(find.text('Terminar'), findsOneWidget);
+    // Las partículas del gas se quedan dentro de la caja
+    for (var i = 0; i < 27; i++) {
+      final p = SimEstados3DState.posEn(EstadoMateria.gas, i, i * 1.37);
+      expect([p.x.abs(), p.y.abs(), p.z.abs()].every((v) => v < 0.9), isTrue);
+    }
+    expect(tester.takeException(), isNull);
+  });
+
+  test('Los 5 pasos 3D están en sus mundos y esos mundos tienen su propio fondo', () {
+    bool tiene(TemaBio t, String id) => t.misiones.any((m) => m.pasos.any((p) => p.id == id));
+    expect(tiene(fisTema5, 'f5_m1_3d'), isTrue);
+    expect(tiene(quiTema2, 'q2_m1_3d'), isTrue);
+    expect(fisTema5.estilo, isA<EstiloMundo>());
+    expect(quiTema2.estilo, isA<EstiloMundo>());
   });
 }

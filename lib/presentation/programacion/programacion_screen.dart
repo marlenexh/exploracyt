@@ -57,7 +57,7 @@ class TarjetaLaboratorio extends StatelessWidget {
         color: const Color(0xFFFFF8E1),
         child: InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => conPrediccion('pro-lab', const LaboratorioProgramadorScreen()))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LaboratorioProgramadorScreen())),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
@@ -77,30 +77,38 @@ class TarjetaLaboratorio extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(hecho ? '🏅 $proLabBadge' : 'Crea, prueba y publica tu propio videojuego.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Fredoka', fontSize: 12.5, fontWeight: FontWeight.w600, color: hecho ? const Color(0xFFB8860B) : const Color(0xFF6D4C41))),
+                            style: TextStyle(
+                                fontFamily: 'Fredoka',
+                                fontSize: 12.5,
+                                fontWeight: FontWeight.w600,
+                                color: hecho ? const Color(0xFFB8860B) : const Color(0xFF6D4C41))),
                         const SizedBox(height: 8),
                         const Icon(Icons.play_circle_fill_rounded, color: Color(0xFFFF8F00), size: 40),
                       ]),
                     ),
                   )
                 : Row(children: [
-              const Text('🎮', style: TextStyle(fontSize: 40)),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-                  const Text('Laboratorio del programador: crea tu videojuego',
-                      style: TextStyle(fontFamily: 'LilitaOne', fontSize: 19, color: Color(0xFF5D4037), height: 1.05)),
-                  Text(
-                      hecho
-                          ? '🏅 $proLabBadge · 🧭 ¡Pieza del Código recuperada!'
-                          : '🧭 Aquí está la Pieza del Código. Programa los eventos de tu propio juego, pruébalo, encuentra sus bugs y publícalo. ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontFamily: 'Fredoka', fontSize: 13, fontWeight: FontWeight.w600, color: hecho ? const Color(0xFFB8860B) : const Color(0xFF6D4C41))),
-                ]),
-              ),
-              const Icon(Icons.play_circle_fill_rounded, color: Color(0xFFFF8F00), size: 40),
-            ]),
+                    const Text('🎮', style: TextStyle(fontSize: 40)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                        const Text('Laboratorio del programador: crea tu videojuego',
+                            style: TextStyle(fontFamily: 'LilitaOne', fontSize: 19, color: Color(0xFF5D4037), height: 1.05)),
+                        Text(
+                            hecho
+                                ? '🏅 $proLabBadge · 🧭 ¡Pieza del Código recuperada!'
+                                : '🧭 Aquí está la Pieza del Código. Programa los eventos de tu propio juego, pruébalo, encuentra sus bugs y publícalo. ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontFamily: 'Fredoka',
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: hecho ? const Color(0xFFB8860B) : const Color(0xFF6D4C41))),
+                      ]),
+                    ),
+                    const Icon(Icons.play_circle_fill_rounded, color: Color(0xFFFF8F00), size: 40),
+                  ]),
           ),
         ),
       ),
@@ -116,8 +124,9 @@ class LaboratorioProgramadorScreen extends StatelessWidget {
         estilo: estiloPro(FondoPro.castillo),
         child: Theme(
           data: temaJuego(),
-          child: EstudioVideojuegos(
-            onTerminar: (_) => store.completar(proLabId, recompensaId: proLabBadgeId),
+          child: conPrediccion(
+            'pro-lab',
+            EstudioVideojuegos(onTerminar: (_) => store.completar(proLabId, recompensaId: proLabBadgeId)),
           ),
         ),
       );

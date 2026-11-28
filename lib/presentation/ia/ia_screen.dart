@@ -62,7 +62,7 @@ class TarjetaLaboratorioIA extends StatelessWidget {
         color: const Color(0xFFF3E5F5),
         child: InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => conPrediccion('ia-lab', const LaboratorioIAScreen()))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LaboratorioIAScreen())),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
@@ -118,7 +118,7 @@ class LaboratorioIAScreen extends StatelessWidget {
         estilo: estiloIA(FondoIA.laboratorio),
         child: Theme(
           data: temaJuego(),
-          child: LaboratorioIA(onTerminar: (_) => store.completar(iaLabId, recompensaId: iaLabBadgeId)),
+          child: conPrediccion('ia-lab', LaboratorioIA(onTerminar: (_) => store.completar(iaLabId, recompensaId: iaLabBadgeId))),
         ),
       );
 }

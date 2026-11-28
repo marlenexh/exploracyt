@@ -41,7 +41,7 @@ class TarjetaLaboratorioMundo extends StatelessWidget {
         color: claro,
         child: InkWell(
           borderRadius: BorderRadius.circular(22),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (c) => conPrediccion(lab.id, pantalla(c)))),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: pantalla)),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
@@ -92,11 +92,15 @@ class TarjetaLaboratorioMundo extends StatelessWidget {
 /// Envoltura común de las pantallas de laboratorio: fondo del mundo y tema
 /// del juego.
 class PantallaLaboratorioMundo extends StatelessWidget {
-  const PantallaLaboratorioMundo({super.key, required this.estilo, required this.child});
+  const PantallaLaboratorioMundo({super.key, required this.estilo, required this.child, this.prediccion});
   final EstiloMundo estilo;
   final Widget child;
+
+  /// Id de la pregunta “Piensa antes de empezar” (se muestra con el fondo del mundo).
+  final String? prediccion;
   @override
-  Widget build(BuildContext context) => FondoJuego(estilo: estilo, child: Theme(data: temaJuego(), child: child));
+  Widget build(BuildContext context) =>
+      FondoJuego(estilo: estilo, child: Theme(data: temaJuego(), child: prediccion == null ? child : conPrediccion(prediccion!, child)));
 }
 
 /// Registra el laboratorio como terminado y entrega su insignia.

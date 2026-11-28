@@ -41,6 +41,7 @@ class QuimicaScreen extends StatelessWidget {
           enFila: enFila,
           temasHechos: quiTopics.values.where((i) => store.completadas.contains(i.missionIds.last)).length,
           pantalla: (_) => PantallaLaboratorioMundo(
+            prediccion: 'qui-lab',
             estilo: estiloQui(FondoQui.laboratorio),
             child: LaboratorioQui(onTerminar: (_) => completarLaboratorio(laboratoriosMundos['qui']!)),
           ),

@@ -69,7 +69,7 @@ class SimCircuito3DState extends State<SimCircuito3D> {
         Objeto3D(id: id, malla: Malla.tubo(camino, 0.045, segmentos: 8), color: id.contains('roto') ? const Color(0xFFE53935) : const Color(0xFF2E7D32));
     return Escena3D(
       distancia: 6.2,
-      fondo: const [Color(0xFF0F2A3D), Color(0xFF1F4E6B)],
+      fondo: const [Color(0xC80F2A3D), Color(0xC81F4E6B)],
       objetos: [
         Objeto3D(
             id: 'tablero',

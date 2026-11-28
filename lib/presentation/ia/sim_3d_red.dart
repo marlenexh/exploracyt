@@ -128,7 +128,7 @@ class SimRedNeuronal3DState extends State<SimRedNeuronal3D> {
     }
     return Escena3D(
       distancia: 7,
-      fondo: const [Color(0xFF1A0B2E), Color(0xFF3B1E6B)],
+      fondo: const [Color(0xC81A0B2E), Color(0xC83B1E6B)],
       objetos: objs,
       particulas: (t) {
         final (h, o) = calcularRed(entradas);

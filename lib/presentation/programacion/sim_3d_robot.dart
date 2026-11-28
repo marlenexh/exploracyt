@@ -171,7 +171,7 @@ class SimRobot3DState extends State<SimRobot3D> with SingleTickerProviderStateMi
       pieza(mallaCilindro(segmentos: 10).rotarZ(math.pi / 2), const Color(0xFF37474F), const V3(0.04, 0.09, 0.09), const V3(-0.23, 0.1, 0)),
       pieza(mallaCilindro(segmentos: 10).rotarZ(math.pi / 2), const Color(0xFF37474F), const V3(0.04, 0.09, 0.09), const V3(0.23, 0.1, 0)),
     ]);
-    return Escena3D(distancia: 7.5, fondo: const [Color(0xFF0D2B45), Color(0xFF1E5A7A)], objetos: objs);
+    return Escena3D(distancia: 7.5, fondo: const [Color(0xC80D2B45), Color(0xC81E5A7A)], objetos: objs);
   }
 
   Map<String, double> get opacidad => {
