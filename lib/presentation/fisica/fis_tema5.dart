@@ -417,7 +417,7 @@ final fisTema5 = TemaBio(
                           explicacion: '365 días y 6 horas.'),
                     ], color: const Color(0xFF4527A0), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Astronauta Explorador!',
+                  mensajeFinal: '¡Ganaste la insignia «Astronauta Explorador»!',
                 )),
       ],
     ),

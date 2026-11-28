@@ -370,7 +370,7 @@ final proTema3 = TemaBio(
                   ),
                 ], color: const Color(0xFF00897B), instruccion: 'Demuestra todo lo que sabes de bloques.'),
               ],
-              mensajeFinal: '¡Eres un Programador de Bloques!',
+              mensajeFinal: '¡Ganaste la insignia «Programador de Bloques»!',
             )),
       ],
     ),

@@ -227,7 +227,7 @@ final fisTema4 = TemaBio(
       emoji: '🌱',
       color: _c3,
       intro: 'La energía no es infinita. ¡Aprende a ahorrarla y cuidar el planeta!',
-      mensajeFinal: '¡Eres un guardián de la energía!',
+      mensajeFinal: '¡Cuidas muy bien la energía!',
       pasos: [
         PasoBio(
             'Fuentes de energía',
@@ -361,7 +361,7 @@ final fisTema4 = TemaBio(
                           explicacion: 'Falta un camino completo.'),
                     ], color: const Color(0xFFE65100), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Guardián de la Energía!',
+                  mensajeFinal: '¡Ganaste la insignia «Guardián de la Energía»!',
                 )),
       ],
     ),

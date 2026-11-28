@@ -270,7 +270,7 @@ class LaboratorioQuiState extends State<LaboratorioQui> {
   String get mensaje {
     if (!equipado) {
       return avisoEquipo ??
-          '¡Bienvenido al Laboratorio de Experimentos! Antes de empezar, ponte el equipo de seguridad. Toca lo que necesitas y presiona “Comprobar”.';
+          '¡Te damos la bienvenida al Laboratorio de Experimentos! Antes de empezar, ponte el equipo de seguridad. Toca lo que necesitas y presiona “Comprobar”.';
     }
     if (experimento == null) {
       return terminado

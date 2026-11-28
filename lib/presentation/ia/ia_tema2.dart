@@ -352,7 +352,7 @@ final iaTema2 = TemaBio(
                           explicacion: 'Comparar es buscar semejanzas y diferencias.'),
                     ], color: const Color(0xFFBF360C), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Detective de Patrones!',
+                  mensajeFinal: '¡Ganaste la insignia «Detective de Patrones»!',
                 )),
       ],
     ),

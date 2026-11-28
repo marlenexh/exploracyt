@@ -454,7 +454,7 @@ final tema3 = TemaBio(
                   ),
                 ], color: const Color(0xFF8E24AA), instruccion: 'Demuestra todo lo que sabes de alimentación.'),
               ],
-              mensajeFinal: '¡Eres un experto en alimentación saludable!',
+              mensajeFinal: '¡Ya sabes mucho de alimentación saludable!',
             )),
       ],
     ),

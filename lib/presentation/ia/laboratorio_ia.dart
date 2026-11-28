@@ -5,14 +5,108 @@ import 'package:flutter/material.dart';
 
 import '../biology/tema1/comunes.dart';
 import '../biology/tema1/escenario.dart';
+import '../biology/temas/motor.dart' show dibujarEmoji;
 import '../electronica/comun.dart';
-import 'modelo_ia.dart';
-import 'proyectos_ia.dart';
-import 'sims_ia.dart' show TarjetaEjemplo;
 
-/// Laboratorio de IA: el alumno construye su propia inteligencia artificial
-/// como lo hace un equipo de ingenieros: elige un problema, reúne datos, los
-/// etiqueta, elige qué rasgos observar, entrena, prueba y publica.
+/// Laboratorio de IA · “Enséñale a tu robot”: el alumno elige un problema,
+/// escoge al menos 6 objetos del estante (los que quiera), les pone etiqueta
+/// uno por uno, entrena a su robot y lo pone a prueba con los objetos del
+/// mismo estante que NO eligió. Si etiquetó mal o eligió poco variado, el
+/// robot se equivoca: así se ve que una IA aprende de sus datos.
+
+/// Un objeto del estante: sus rasgos (números de 0 a 1) y su grupo verdadero.
+class ObjetoLab {
+  const ObjetoLab(this.nombre, this.emoji, this.rasgos, this.grupo, {this.color});
+  final String nombre, emoji;
+  final List<double> rasgos;
+  final int grupo;
+
+  /// Para los objetos que se dibujan (tomates), su color.
+  final Color? color;
+}
+
+class ProblemaLab {
+  const ProblemaLab(this.titulo, this.emoji, this.pregunta, this.grupos, this.objetos);
+  final String titulo, emoji, pregunta;
+
+  /// Nombre y emoji de cada grupo (etiqueta).
+  final List<(String, String)> grupos;
+  final List<ObjetoLab> objetos;
+}
+
+Color _tomate(double rojo) => Color.lerp(const Color(0xFF7CB342), const Color(0xFFE53935), rojo)!;
+
+final problemasLab = [
+  ProblemaLab('Tomates', '🍅', '¿El tomate está maduro o verde?', const [
+    ('Maduro', '🔴'),
+    ('Verde', '🟢')
+  ], [
+    for (final (n, r) in const [
+      ('Tomate 1', 0.95),
+      ('Tomate 2', 0.12),
+      ('Tomate 3', 0.82),
+      ('Tomate 4', 0.25),
+      ('Tomate 5', 0.7),
+      ('Tomate 6', 0.05),
+      ('Tomate 7', 0.88),
+      ('Tomate 8', 0.35),
+      ('Tomate 9', 0.62),
+      ('Tomate 10', 0.18),
+      ('Tomate 11', 0.76),
+      ('Tomate 12', 0.3),
+    ])
+      ObjetoLab(n, '', [r], r > 0.5 ? 0 : 1, color: _tomate(r)),
+  ]),
+  const ProblemaLab('Mascotas', '🐾', '¿Es un perro o un gato?', [
+    ('Perro', '🐶'),
+    ('Gato', '🐱')
+  ], [
+    ObjetoLab('Perro café', '🐕', [0.2, 0.9], 0),
+    ObjetoLab('Gato naranja', '🐈', [0.9, 0.2], 1),
+    ObjetoLab('Cachorro', '🐶', [0.3, 0.7], 0),
+    ObjetoLab('Gato negro', '🐈‍⬛', [0.95, 0.25], 1),
+    ObjetoLab('Poodle', '🐩', [0.15, 0.8], 0),
+    ObjetoLab('Gatito', '🐱', [0.85, 0.15], 1),
+    ObjetoLab('Perro guía', '🦮', [0.25, 0.85], 0),
+    ObjetoLab('Gato feliz', '😺', [0.8, 0.1], 1),
+    ObjetoLab('Perro de servicio', '🐕‍🦺', [0.2, 0.75], 0),
+    ObjetoLab('Gato risueño', '😸', [0.9, 0.3], 1),
+  ]),
+  const ProblemaLab('Reciclaje', '♻️', '¿Se puede reciclar o no?', [
+    ('Se recicla', '♻️'),
+    ('No se recicla', '🗑️')
+  ], [
+    ObjetoLab('Lata', '🥫', [0.9, 0.05], 0),
+    ObjetoLab('Cáscara de plátano', '🍌', [0.1, 0.9], 1),
+    ObjetoLab('Periódico', '📰', [0.8, 0.1], 0),
+    ObjetoLab('Restos de pizza', '🍕', [0.15, 0.95], 1),
+    ObjetoLab('Botella de vidrio', '🍾', [0.95, 0.1], 0),
+    ObjetoLab('Papel sanitario usado', '🧻', [0.2, 0.7], 1),
+    ObjetoLab('Caja de cartón', '📦', [0.85, 0.15], 0),
+    ObjetoLab('Curita usada', '🩹', [0.25, 0.65], 1),
+    ObjetoLab('Botella de plástico', '🧴', [0.9, 0.2], 0),
+    ObjetoLab('Hojas secas', '🍂', [0.1, 0.8], 1),
+  ]),
+];
+
+const pasosLaboratorio = [('🎯', 'Problema'), ('🧺', 'Escoge'), ('🏷️', 'Etiqueta'), ('🏋️', 'Entrena'), ('🧪', 'Prueba')];
+
+/// El “cerebro” del robot: compara un objeto nuevo con los ejemplos que
+/// aprendió y responde el grupo del ejemplo más parecido.
+int? predecir(List<(ObjetoLab, int)> ejemplos, ObjetoLab o) {
+  if (ejemplos.isEmpty) return null;
+  double distancia(ObjetoLab a) {
+    var d = 0.0;
+    for (var k = 0; k < a.rasgos.length; k++) {
+      d += math.pow(a.rasgos[k] - o.rasgos[k], 2);
+    }
+    return d;
+  }
+
+  final ordenados = [...ejemplos]..sort((a, b) => distancia(a.$1).compareTo(distancia(b.$1)));
+  return ordenados.first.$2;
+}
+
 class LaboratorioIA extends StatefulWidget {
   const LaboratorioIA({super.key, required this.onTerminar, this.color = const Color(0xFF8E24AA)});
 
@@ -23,23 +117,21 @@ class LaboratorioIA extends StatefulWidget {
   State<LaboratorioIA> createState() => LaboratorioIAState();
 }
 
-const pasosLaboratorio = [('🎯', 'Problema'), ('🗂️', 'Datos'), ('🏷️', 'Etiquetas'), ('🔍', 'Rasgos'), ('🏋️', 'Entrenar'), ('🧪', 'Probar')];
-
 class LaboratorioIAState extends State<LaboratorioIA> {
+  static const minimo = 6;
   int paso = 0;
-  int? proyectoElegido;
-  final usados = <int>{};
+  int? problemaElegido;
+  final elegidos = <int>[];
   final etiquetas = <int, int>{};
-  final rasgos = <String>{};
-  int? elegido;
+  bool entrenando = false, entrenado = false;
   double progreso = 0;
-  bool entrenando = false;
-  ModeloIA? modelo;
   int intentos = 0;
   Timer? _timer;
 
-  ProyectoIA get proyecto => proyectosLaboratorio[proyectoElegido ?? 0];
-  List<int> get datos => usados.toList()..sort();
+  /// Resultados de la prueba: (objeto, lo que dijo el robot).
+  final prueba = <(int, int)>[];
+
+  ProblemaLab get problema => problemasLab[problemaElegido ?? 0];
 
   @override
   void dispose() {
@@ -49,43 +141,40 @@ class LaboratorioIAState extends State<LaboratorioIA> {
 
   // --- Acciones ----------------------------------------------------------------
 
-  void elegirProyecto(int i) => setState(() {
-        proyectoElegido = i;
-        usados.clear();
+  void elegirProblema(int i) => setState(() {
+        problemaElegido = i;
+        elegidos.clear();
         etiquetas.clear();
-        rasgos.clear();
-        modelo = null;
+        prueba.clear();
+        entrenado = false;
         paso = 1;
       });
 
-  void usar(int i) => setState(() {
-        if (!usados.remove(i)) usados.add(i);
+  void alternar(int i) => setState(() {
+        if (!elegidos.remove(i)) elegidos.add(i);
         etiquetas.remove(i);
-        modelo = null;
+        entrenado = false;
       });
 
-  void usarTodos() => setState(() {
-        usados.addAll(List.generate(proyecto.banco.length, (i) => i));
-        modelo = null;
+  /// El siguiente objeto que falta etiquetar (o null si ya están todos).
+  int? get porEtiquetar => elegidos.where((i) => !etiquetas.containsKey(i)).firstOrNull;
+
+  void etiquetar(int grupo) {
+    final i = porEtiquetar;
+    if (i == null) return;
+    setState(() {
+      etiquetas[i] = grupo;
+      entrenado = false;
+    });
+  }
+
+  void reetiquetar() => setState(() {
+        etiquetas.clear();
+        entrenado = false;
+        paso = 2;
       });
 
-  void elegir(int i) => setState(() => elegido = elegido == i ? null : i);
-
-  void etiquetar(int i, int e) => setState(() {
-        etiquetas[i] = e;
-        elegido = null;
-        modelo = null;
-      });
-
-  void alternarRasgo(String id) => setState(() {
-        if (!rasgos.remove(id)) rasgos.add(id);
-        modelo = null;
-      });
-
-  void irA(int p) => setState(() {
-        paso = p;
-        elegido = null;
-      });
+  void irA(int p) => setState(() => paso = p);
 
   void entrenar() {
     if (entrenando) return;
@@ -98,450 +187,373 @@ class LaboratorioIAState extends State<LaboratorioIA> {
     _timer = Timer.periodic(const Duration(milliseconds: 60), (tm) {
       if (!mounted) return tm.cancel();
       setState(() {
-        progreso += 0.04;
+        progreso += 0.05;
         if (progreso >= 1) {
           tm.cancel();
           progreso = 1;
           entrenando = false;
-          modelo = ModeloIA([for (final i in datos) (proyecto.banco[i], etiquetas[i]!)], {...rasgos});
+          entrenado = true;
+          _probar();
         }
       });
     });
   }
 
-  double get precision => modelo?.precision(proyecto.prueba) ?? 0;
-  int get estrellas => precision == 1 && intentos <= 2 ? 3 : (precision == 1 ? 2 : 1);
+  /// El robot se prueba con los objetos del estante que el alumno NO eligió.
+  void _probar() {
+    prueba.clear();
+    final ejemplos = [for (final i in elegidos) (problema.objetos[i], etiquetas[i]!)];
+    var nuevos = [
+      for (var i = 0; i < problema.objetos.length; i++)
+        if (!elegidos.contains(i)) i
+    ];
+    if (nuevos.length < 3) nuevos = List.generate(problema.objetos.length, (i) => i);
+    for (final i in nuevos.take(6)) {
+      prueba.add((i, predecir(ejemplos, problema.objetos[i])!));
+    }
+  }
+
+  int get aciertos => prueba.where((p) => problema.objetos[p.$1].grupo == p.$2).length;
+  double get precision => prueba.isEmpty ? 0 : aciertos / prueba.length;
+  int get estrellas => precision == 1 && intentos <= 1 ? 3 : (precision >= 0.8 ? 2 : 1);
+
+  bool get puedeAvanzar => switch (paso) {
+        0 => problemaElegido != null,
+        1 => elegidos.length >= minimo,
+        2 => porEtiquetar == null && elegidos.isNotEmpty,
+        3 => entrenado,
+        _ => false,
+      };
 
   Future<void> publicar() async {
     await mostrarCelebracion(context,
         titulo: '¡IA publicada!',
-        mensaje:
-            'Tu “${proyecto.titulo}” acierta el ${(precision * 100).round()} % con datos nuevos. Hiciste todo el trabajo de un equipo de IA. ¡Ganaste la insignia “Ingeniero de IA”!',
+        mensaje: 'Tu robot reconoce “${problema.titulo}” y acertó $aciertos de ${prueba.length} con objetos que no conocía. ¡Ganaste la insignia de IA!',
         estrellas: estrellas);
     widget.onTerminar(estrellas);
     if (mounted) Navigator.of(context).maybePop();
   }
 
-  // --- Reglas de cada paso -------------------------------------------------------
-
-  /// Cuántos ejemplos de cada grupo se eligieron (según su etiqueta verdadera).
-  List<int> get porGrupo => [for (var k = 0; k < proyecto.etiquetas.length; k++) datos.where((i) => proyecto.banco[i].etiqueta == k).length];
-
-  String? get faltaDatos {
-    if (datos.length < 6) return 'Elige al menos 6 ejemplos.';
-    final g = porGrupo;
-    for (var k = 0; k < g.length; k++) {
-      if (g[k] < 2) return 'Faltan ejemplos de “${proyecto.etiquetas[k].nombre}”: elige al menos 2.';
+  /// Lo que Zati dice en cada momento.
+  String get mensaje {
+    switch (paso) {
+      case 0:
+        return 'Te damos la bienvenida al laboratorio. Hoy vas a enseñarle a un robot a reconocer cosas. ¿Qué problema quieres que resuelva?';
+      case 1:
+        final faltan = minimo - elegidos.length;
+        if (faltan > 0) {
+          return 'Escoge al menos $minimo objetos del estante para enseñarle al robot. Te faltan $faltan. 💡 Mientras más variados, mejor aprende.';
+        }
+        final grupos = {for (final i in elegidos) problema.objetos[i].grupo};
+        return grupos.length < 2
+            ? '¡Ya puedes seguir! Pero ojo: todos se parecen. Si el robot solo ve un tipo, puede equivocarse con los otros.'
+            : '¡Muy bien! Escogiste ${elegidos.length} objetos variados. Presiona «Siguiente paso».';
+      case 2:
+        final i = porEtiquetar;
+        return i == null
+            ? '¡Etiquetaste todo! Ahora el robot puede aprender de tus ejemplos.'
+            : '${problema.pregunta} Pon la etiqueta correcta: el robot aprenderá exactamente lo que tú le digas.';
+      case 3:
+        return entrenando
+            ? 'El robot está comparando tus ejemplos y buscando lo que tienen en común…'
+            : (entrenado
+                ? '¡Entrenado! Ahora vamos a probarlo con objetos que nunca vio.'
+                : 'Presiona «Entrenar» para que el robot aprenda de tus ${elegidos.length} ejemplos.');
+      default:
+        if (precision == 1) return '¡Perfecto! Acertó todo con objetos nuevos. Ya puedes publicar tu IA.';
+        final malas = elegidos.where((i) => etiquetas[i] != problema.objetos[i].grupo).length;
+        return malas > 0
+            ? 'Se equivocó porque $malas ${malas == 1 ? 'etiqueta estaba mal' : 'etiquetas estaban mal'}. ¡Una IA aprende de sus datos! Corrige las etiquetas.'
+            : 'Se equivocó porque le faltaron ejemplos variados. Regresa a «Escoge» y agrega otros.';
     }
-    return null;
-  }
-
-  bool get puedeAvanzar => switch (paso) {
-        0 => proyectoElegido != null,
-        1 => faltaDatos == null,
-        2 => datos.every(etiquetas.containsKey),
-        3 => rasgos.isNotEmpty,
-        4 => modelo != null,
-        _ => false,
-      };
-
-  /// Pistas cuando la IA no alcanza el 80 %.
-  List<String> get pistas {
-    final p = <String>[];
-    final malas = datos.where((i) => etiquetas[i] != proyecto.banco[i].etiqueta).length;
-    if (malas > 0) p.add('🏷️ Hay $malas ${malas == 1 ? 'etiqueta equivocada' : 'etiquetas equivocadas'} en tus datos.');
-    final inutiles = proyecto.rasgos.where((r) => rasgos.contains(r.id) && !r.util).map((r) => r.nombre.toLowerCase());
-    final utiles = proyecto.rasgos.where((r) => r.util && rasgos.contains(r.id));
-    if (utiles.isEmpty) {
-      p.add('🔍 Los rasgos que elegiste no ayudan a distinguir los grupos.');
-    } else if (inutiles.isNotEmpty) {
-      p.add('🔍 Quizá “${inutiles.join('” y “')}” confunde a tu IA.');
-    }
-    if (datos.length < proyecto.banco.length * 0.75) p.add('🗂️ Con más datos variados tu IA aprende mejor.');
-    return p;
   }
 
   // --- Interfaz ----------------------------------------------------------------
 
-  String get mensaje => switch (paso) {
-        0 => 'Bienvenido al laboratorio. Hoy serás ingeniero de IA. Primero elige el problema que tu inteligencia artificial va a resolver.',
-        1 =>
-          '${proyecto.descripcion} Paso 2: reúne datos. Toca los ejemplos que usará tu IA para aprender. ${faltaDatos ?? '¡Bien! Más datos y más variados = una IA más lista.'}',
-        2 => 'Paso 3: etiqueta. Toca cada ejemplo y dile a la IA a qué grupo pertenece. Si te equivocas, ¡la IA aprenderá mal!',
-        3 =>
-          'Paso 4: elige los rasgos. ¿En qué características debe fijarse tu IA? Elige las que de verdad ayudan a distinguir: ${proyecto.etiquetas.map((e) => e.nombre).join(', ')}.',
-        4 => entrenando
-            ? 'Entrenando… La red compara los ejemplos y ajusta sus conexiones.'
-            : modelo == null
-                ? 'Paso 5: entrena. Presiona “Entrenar” para que la IA busque los patrones en tus datos.'
-                : 'Entrenamiento listo. Con sus propios datos acierta el ${((modelo!.precisionEntrenamiento()) * 100).round()} %. Ahora pruébala con datos que nunca ha visto.',
-        _ => precision >= 0.8
-            ? '¡Tu IA acierta el ${(precision * 100).round()} % con datos nuevos! Está lista para publicarse.'
-            : 'Tu IA acierta el ${(precision * 100).round()} %. Necesita al menos 80 %. ${pistas.join(' ')}',
-      };
-
   @override
-  Widget build(BuildContext context) {
-    final c = widget.color;
-    return Escenario(
-      velo: 0.06,
-      colorVelo: c,
-      children: [
-        encabezadoEle('Laboratorio', 'Construye tu IA', c),
-        Positioned(left: 8, top: 60, width: 230, height: 230, child: GloboZatiEle(mensaje, tam: 12)),
-        Positioned(left: 8, top: 296, width: 230, height: 176, child: _resumen(c)),
-        Positioned(
-          left: 244,
-          top: 56,
-          width: 608,
-          height: 34,
-          child: Row(children: [
-            for (var k = 0; k < pasosLaboratorio.length; k++) ...[
-              Expanded(
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: k == paso ? c : (k < paso ? c.withValues(alpha: 0.35) : Colors.white.withValues(alpha: 0.85)),
-                    borderRadius: BorderRadius.circular(17),
-                    border: Border.all(color: c, width: 2),
-                  ),
-                  child: FittedBox(
-                    child: Text(' ${pasosLaboratorio[k].$1} ${k + 1}. ${pasosLaboratorio[k].$2} ',
-                        style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: k == paso ? Colors.white : oscurecer(c, 0.2))),
-                  ),
-                ),
-              ),
-              if (k < pasosLaboratorio.length - 1) const SizedBox(width: 3),
-            ],
-          ]),
-        ),
-        Positioned(left: 244, top: 96, width: 608, height: 316, child: _contenido(c)),
-        if (paso > 0)
+  Widget build(BuildContext context) => Escenario(
+        velo: 0.08,
+        colorVelo: widget.color,
+        children: [
+          encabezadoEle('Laboratorio de IA', '🤖 Enséñale a tu robot', widget.color),
+          // Pasos
           Positioned(
             left: 244,
-            top: 420,
-            child: Tooltip(
-                message: 'Paso anterior',
-                child: BotonJuego(texto: 'Atrás', icono: Icons.arrow_back_rounded, color: const Color(0xFF757575), onTap: () => irA(paso - 1))),
-          ),
-        if (paso >= 1 && paso <= 4)
-          Positioned(
-            left: 640,
-            top: 420,
-            child: Tooltip(
-              message: 'Siguiente paso',
-              child: BotonJuego(
-                  texto: 'Siguiente paso',
-                  icono: Icons.arrow_forward_rounded,
-                  color: puedeAvanzar ? c : Colors.grey,
-                  onTap: puedeAvanzar ? () => irA(paso + 1) : null),
-            ),
-          ),
-        if (paso == 4)
-          Positioned(
-            left: 420,
-            top: 420,
-            child: Tooltip(
-                message: 'Entrenar',
-                child: BotonJuego(texto: modelo == null ? 'Entrenar' : 'Otra vez', icono: Icons.model_training_rounded, color: c, onTap: entrenar)),
-          ),
-        if (paso == 5 && precision >= 0.8) Positioned(left: 640, top: 420, child: BotonSiguiente(texto: 'Publicar IA', onTap: publicar)),
-        if (paso == 5 && precision < 0.8)
-          Positioned(
-            left: 370,
-            top: 420,
+            top: 56,
+            width: 608,
             child: Row(children: [
-              Tooltip(message: 'Revisar datos', child: BotonJuego(texto: 'Datos', icono: Icons.dataset_rounded, color: c, onTap: () => irA(1))),
-              const SizedBox(width: 6),
-              Tooltip(message: 'Revisar etiquetas', child: BotonJuego(texto: 'Etiquetas', icono: Icons.sell_rounded, color: c, onTap: () => irA(2))),
-              const SizedBox(width: 6),
-              Tooltip(message: 'Cambiar rasgos', child: BotonJuego(texto: 'Rasgos', icono: Icons.search_rounded, color: c, onTap: () => irA(3))),
+              for (var i = 0; i < pasosLaboratorio.length; i++) ...[
+                if (i > 0) Expanded(child: Container(height: 3, color: i <= paso ? widget.color : Colors.white54)),
+                _PasoChip(pasosLaboratorio[i].$1, pasosLaboratorio[i].$2, activo: i == paso, hecho: i < paso, color: widget.color),
+              ],
             ]),
           ),
-        const BotonVolverEscena(),
-      ],
-    );
-  }
-
-  Widget _resumen(Color c) => PanelEle(
-        titulo: 'Tu IA',
-        icono: Icons.memory_rounded,
-        color: c,
-        child: proyectoElegido == null
-            ? const Center(child: Text('Todavía no eliges un problema.', textAlign: TextAlign.center, style: TextStyle(fontSize: 12.5)))
-            : DefaultTextStyle(
-                style: const TextStyle(fontSize: 12.5, color: ColoresJuego.texto, fontWeight: FontWeight.w600, height: 1.35),
-                child: SingleChildScrollView(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text('${proyecto.emoji} ${proyecto.titulo}', style: const TextStyle(fontWeight: FontWeight.w800)),
-                    Text('🗂️ Datos: ${datos.length}'),
-                    Text('🏷️ Etiquetados: ${datos.where(etiquetas.containsKey).length}'),
-                    Text('🔍 Rasgos: ${rasgos.isEmpty ? '—' : proyecto.rasgos.where((r) => rasgos.contains(r.id)).map((r) => r.emoji).join(' ')}'),
-                    Text('🎯 Aciertos: ${modelo == null ? '—' : '${(precision * 100).round()} %'}'),
-                  ]),
-                ),
-              ),
+          Positioned(left: 8, top: 60, width: 230, height: 200, child: GloboZatiEle(mensaje, tam: 13)),
+          Positioned(left: 8, top: 266, width: 230, height: 208, child: _robot()),
+          Positioned(left: 244, top: 100, width: 608, height: 310, child: _contenido()),
+          Positioned(left: 244, top: 418, width: 608, child: _botones()),
+          const BotonVolverEscena(),
+        ],
       );
 
-  Widget _contenido(Color c) {
-    final p = proyecto;
-    switch (paso) {
-      case 0:
-        return Row(children: [
-          for (var i = 0; i < proyectosLaboratorio.length; i++)
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Tooltip(
-                  message: 'Proyecto ${proyectosLaboratorio[i].titulo}',
-                  child: GestureDetector(
-                    onTap: () => elegirProyecto(i),
+  Widget _robot() => PanelEle(
+        titulo: 'Tu robot',
+        icono: Icons.smart_toy_rounded,
+        color: widget.color,
+        child: Column(children: [
+          Expanded(child: Center(child: Text(entrenado ? '🤖💡' : '🤖', style: const TextStyle(fontSize: 52)))),
+          Text(
+            problemaElegido == null
+                ? 'Esperando un problema…'
+                : '${problema.emoji} ${problema.titulo}\n🧺 ${elegidos.length} ejemplos · 🏷️ ${etiquetas.length} etiquetas',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+          ),
+        ]),
+      );
+
+  Widget _contenido() => switch (paso) {
+        0 => _problemas(),
+        1 => _estante(),
+        2 => _etiquetar(),
+        3 => _entrenar(),
+        _ => _prueba(),
+      };
+
+  Widget _tarjeta(Widget hijo, {Color? borde}) => Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.96),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: borde ?? widget.color, width: 3),
+        ),
+        child: hijo,
+      );
+
+  Widget _problemas() => Row(children: [
+        for (var i = 0; i < problemasLab.length; i++)
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Tooltip(
+                message: 'Problema ${problemasLab[i].titulo}',
+                child: Rebote(
+                  onTap: () => elegirProblema(i),
+                  child: _tarjeta(
+                    Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(problemasLab[i].emoji, style: const TextStyle(fontSize: 54)),
+                      Text(problemasLab[i].titulo, style: TextStyle(fontFamily: 'LilitaOne', fontSize: 22, color: oscurecer(widget.color, 0.2))),
+                      const SizedBox(height: 4),
+                      Text(problemasLab[i].pregunta, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 6),
+                      Text('${problemasLab[i].grupos[0].$2} o ${problemasLab[i].grupos[1].$2}', style: const TextStyle(fontSize: 24)),
+                    ]),
+                    borde: problemaElegido == i ? const Color(0xFFFFB300) : null,
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ]);
+
+  Widget _objeto(int i, {double tam = 46}) {
+    final o = problema.objetos[i];
+    if (o.color != null) {
+      return SizedBox(width: tam, height: tam, child: CustomPaint(painter: _PintorTomate(o.color!)));
+    }
+    return SizedBox(width: tam, height: tam, child: CustomPaint(painter: _PintorEmoji(o.emoji)));
+  }
+
+  Widget _estante() => _tarjeta(Column(children: [
+        Text('Escoge al menos $minimo (${elegidos.length} elegidos)',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: elegidos.length >= minimo ? ColoresJuego.correcto : ColoresJuego.texto)),
+        const SizedBox(height: 6),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 6,
+            mainAxisSpacing: 6,
+            crossAxisSpacing: 6,
+            children: [
+              for (var i = 0; i < problema.objetos.length; i++)
+                Tooltip(
+                  message: 'Objeto ${problema.objetos[i].nombre}',
+                  child: Rebote(
+                    onTap: () => alternar(i),
                     child: Container(
-                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.96),
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: c, width: 3),
-                        boxShadow: const [BoxShadow(color: Color(0x44000000), blurRadius: 6, offset: Offset(0, 3))],
+                        color: elegidos.contains(i) ? const Color(0xFFE8F5E9) : const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: elegidos.contains(i) ? ColoresJuego.correcto : Colors.black12, width: elegidos.contains(i) ? 3 : 1.5),
                       ),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                        Text(proyectosLaboratorio[i].emoji, style: const TextStyle(fontSize: 52)),
-                        const SizedBox(height: 6),
-                        Text(proyectosLaboratorio[i].titulo, textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
-                        const SizedBox(height: 6),
-                        Text(proyectosLaboratorio[i].descripcion, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12.5, height: 1.2)),
-                        const SizedBox(height: 8),
-                        Text(proyectosLaboratorio[i].etiquetas.map((e) => e.emoji).join('  '), style: const TextStyle(fontSize: 22)),
+                      child: Stack(children: [
+                        Center(child: _objeto(i)),
+                        if (elegidos.contains(i))
+                          const Positioned(right: 4, top: 2, child: Icon(Icons.check_circle_rounded, color: ColoresJuego.correcto, size: 20)),
                       ]),
                     ),
                   ),
                 ),
-              ),
-            ),
-        ]);
-      case 1:
-        return PanelEle(
-          titulo: 'Banco de datos · elegidos: ${datos.length} de ${p.banco.length}',
-          icono: Icons.dataset_rounded,
-          color: c,
-          child: Column(children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Wrap(spacing: 6, runSpacing: 6, children: [
-                  for (var i = 0; i < p.banco.length; i++)
-                    Tooltip(
-                      message: 'Usar ${p.banco[i].nombre}',
-                      child: Opacity(
-                        opacity: usados.contains(i) ? 1 : 0.55,
-                        child: TarjetaEjemplo(ejemplo: p.banco[i], color: usados.contains(i) ? c : Colors.grey, ancho: 90, marca: null, onTap: () => usar(i)),
-                      ),
-                    ),
-                ]),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Tooltip(message: 'Usar todos', child: ChipEle(texto: '✅ Usar todos', activo: false, color: c, onTap: usarTodos)),
-            ),
-          ]),
-        );
-      case 2:
-        return Column(children: [
-          Expanded(
-            child: PanelEle(
-              titulo: 'Etiqueta tus datos',
-              icono: Icons.sell_rounded,
-              color: c,
-              child: SingleChildScrollView(
-                child: Wrap(spacing: 6, runSpacing: 6, children: [
-                  for (final i in datos)
-                    Tooltip(
-                      message: 'Ejemplo ${p.banco[i].nombre}',
-                      child: TarjetaEjemplo(
-                          ejemplo: p.banco[i], etiqueta: etiquetas[i] == null ? null : p.etiquetas[etiquetas[i]!], color: c, ancho: 90, onTap: () => elegir(i)),
-                    ),
-                ]),
-              ),
-            ),
+            ],
           ),
-          if (elegido != null)
-            Container(
-              margin: const EdgeInsets.only(top: 6),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: c, width: 2.5)),
-              child: Row(children: [
-                Text('${p.banco[elegido!].emoji} ${p.banco[elegido!].nombre}:', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800)),
-                const Spacer(),
-                for (var k = 0; k < p.etiquetas.length; k++)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: Tooltip(
-                      message: '${p.banco[elegido!].nombre}: ${p.etiquetas[k].nombre}',
-                      child: ChipEle(
-                          texto: '${p.etiquetas[k].emoji} ${p.etiquetas[k].nombre}',
-                          activo: true,
-                          color: p.etiquetas[k].color,
-                          onTap: () => etiquetar(elegido!, k)),
-                    ),
-                  ),
-              ]),
-            ),
-        ]);
-      case 3:
-        return PanelEle(
-          titulo: '¿En qué se fija tu IA?',
-          icono: Icons.search_rounded,
-          color: c,
-          child: Column(children: [
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 3,
-                childAspectRatio: 2.4,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                children: [
-                  for (final r in p.rasgos)
+        ),
+      ]));
+
+  Widget _etiquetar() {
+    final i = porEtiquetar;
+    return _tarjeta(Row(children: [
+      Expanded(
+        flex: 3,
+        child: i == null
+            ? const Center(child: Text('✅ ¡Todos etiquetados!', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900)))
+            : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text('Objeto ${etiquetas.length + 1} de ${elegidos.length}', style: const TextStyle(fontWeight: FontWeight.w800)),
+                const SizedBox(height: 6),
+                _objeto(i, tam: 110),
+                const SizedBox(height: 6),
+                Text(problema.pregunta, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 8),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  for (var g = 0; g < 2; g++) ...[
+                    if (g > 0) const SizedBox(width: 10),
                     Tooltip(
-                      message: 'Rasgo ${r.nombre}',
-                      child: GestureDetector(
-                        onTap: () => alternarRasgo(r.id),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: rasgos.contains(r.id) ? c : Colors.white,
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: c, width: 2.5),
-                          ),
-                          child: Text('${r.emoji} ${r.nombre}${rasgos.contains(r.id) ? ' ✔️' : ''}',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: rasgos.contains(r.id) ? Colors.white : ColoresJuego.texto)),
-                        ),
-                      ),
+                      message: 'Etiqueta ${problema.grupos[g].$1}',
+                      child: BotonJuego(
+                          texto: '${problema.grupos[g].$2} ${problema.grupos[g].$1}',
+                          color: g == 0 ? const Color(0xFF2E7D32) : const Color(0xFF6A1B9A),
+                          onTap: () => etiquetar(g)),
                     ),
-                ],
-              ),
-            ),
-            Text(
-                'Ejemplo: ${p.banco.first.emoji} ${p.banco.first.nombre} → ${p.rasgos.map((r) => '${r.nombre.toLowerCase()}: ${p.banco.first.rasgos[r.id]}').join(' · ')}',
-                style: const TextStyle(fontSize: 11.5)),
-          ]),
-        );
-      case 4:
-        return Container(
-          decoration: BoxDecoration(color: const Color(0xEE0B1020), borderRadius: BorderRadius.circular(18), border: Border.all(color: c, width: 2.5)),
-          child: Column(children: [
-            Expanded(
-                child: Reloj(
-                    builder: (_, t) =>
-                        CustomPaint(painter: _PintorRed(t, entrenando ? progreso : (modelo == null ? 0 : 1), rasgos.length), size: Size.infinite))),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 0, 14, 10),
-              child: Row(children: [
-                Text(entrenando ? 'Época ${(progreso * 25).ceil()} de 25' : (modelo == null ? 'Lista para entrenar' : '✔️ Entrenada'),
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
-                const SizedBox(width: 10),
-                Expanded(
-                    child: LinearProgressIndicator(value: entrenando ? progreso : (modelo == null ? 0 : 1), minHeight: 12, color: const Color(0xFF69F0AE))),
+                  ],
+                ]),
               ]),
-            ),
-          ]),
-        );
-      default:
-        return PanelEle(
-          titulo: 'Prueba con datos nuevos · ${(precision * 100).round()} % de aciertos',
-          icono: Icons.science_rounded,
-          color: c,
-          child: SingleChildScrollView(
-            child: Wrap(spacing: 8, runSpacing: 8, children: [
-              for (final x in p.prueba)
-                () {
-                  final pr = modelo!.predecir(x);
-                  return Container(
-                    width: 186,
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: (pr.etiqueta == x.etiqueta ? ColoresJuego.correcto : const Color(0xFFE53935)).withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: pr.etiqueta == x.etiqueta ? ColoresJuego.correcto : const Color(0xFFE53935), width: 2),
-                    ),
-                    child: Row(children: [
-                      Text(x.emoji, style: const TextStyle(fontSize: 30)),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          Text(x.nombre, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800)),
-                          Text(pr.etiqueta < 0 ? '🤔 No sé' : 'IA: ${p.etiquetas[pr.etiqueta].emoji} ${p.etiquetas[pr.etiqueta].nombre}',
-                              style: const TextStyle(fontSize: 11.5)),
-                          Text('Seguridad: ${(pr.confianza * 100).round()} % ${pr.etiqueta == x.etiqueta ? '✔️' : '❌'}', style: const TextStyle(fontSize: 11)),
-                        ]),
-                      ),
+      ),
+      // Lo ya etiquetado, en dos canastas
+      Expanded(
+        flex: 2,
+        child: Column(children: [
+          for (var g = 0; g < 2; g++)
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(3),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(color: const Color(0xFFF3E5F5), borderRadius: BorderRadius.circular(12)),
+                child: Column(children: [
+                  Text('${problema.grupos[g].$2} ${problema.grupos[g].$1}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 12.5)),
+                  Expanded(
+                    child: Wrap(spacing: 2, runSpacing: 2, children: [
+                      for (final e in etiquetas.entries)
+                        if (e.value == g) _objeto(e.key, tam: 30),
                     ]),
-                  );
-                }(),
-            ]),
-          ),
-        );
-    }
+                  ),
+                ]),
+              ),
+            ),
+        ]),
+      ),
+    ]));
   }
+
+  Widget _entrenar() => _tarjeta(Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Wrap(spacing: 4, runSpacing: 4, alignment: WrapAlignment.center, children: [for (final i in elegidos) _objeto(i, tam: 34)]),
+        const SizedBox(height: 12),
+        Text(entrenando ? '🧠 Aprendiendo… ${(progreso * 100).round()}%' : (entrenado ? '✅ ¡Entrenado!' : '🤖 Listo para aprender'),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900)),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: LinearProgressIndicator(value: progreso, minHeight: 16, color: widget.color, backgroundColor: const Color(0xFFE1BEE7)),
+        ),
+      ]));
+
+  Widget _prueba() => _tarjeta(Column(children: [
+        Text('🧪 Prueba con objetos que el robot no conocía: $aciertos de ${prueba.length} bien',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: precision == 1 ? ColoresJuego.correcto : ColoresJuego.texto)),
+        const SizedBox(height: 6),
+        Expanded(
+          child: GridView.count(
+            crossAxisCount: 3,
+            mainAxisSpacing: 6,
+            crossAxisSpacing: 6,
+            childAspectRatio: 1.9,
+            children: [
+              for (final (i, dijo) in prueba)
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: problema.objetos[i].grupo == dijo ? const Color(0xFFE8F5E9) : const Color(0xFFFFEBEE),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(children: [
+                    _objeto(i, tam: 44),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text('Dijo: ${problema.grupos[dijo].$1} ${problema.objetos[i].grupo == dijo ? '✅' : '❌'}',
+                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800)),
+                    ),
+                  ]),
+                ),
+            ],
+          ),
+        ),
+      ]));
+
+  Widget _boton(String texto, IconData icono, Color color, VoidCallback? onTap) =>
+      Tooltip(message: texto, child: BotonJuego(texto: texto, icono: icono, color: color, onTap: onTap));
+
+  Widget _botones() => Wrap(spacing: 8, runSpacing: 4, children: [
+        if (paso > 0 && paso < 4) _boton('Paso anterior', Icons.arrow_back_rounded, const Color(0xFF78909C), () => irA(paso - 1)),
+        if (paso == 3 && !entrenado) _boton('Entrenar', Icons.fitness_center_rounded, const Color(0xFFFF8A00), entrenando ? null : entrenar),
+        if (paso >= 1 && paso <= 3) _boton('Siguiente paso', Icons.arrow_forward_rounded, const Color(0xFF2DB84C), puedeAvanzar ? () => irA(paso + 1) : null),
+        if (paso == 4 && precision < 1) ...[
+          _boton('Corregir etiquetas', Icons.label_rounded, const Color(0xFF8E24AA), reetiquetar),
+          _boton('Escoger otros', Icons.shopping_basket_rounded, const Color(0xFF00897B), () => irA(1)),
+        ],
+        if (paso == 4 && precision >= 0.8) _boton('Publicar IA', Icons.rocket_launch_rounded, const Color(0xFF2DB84C), publicar),
+      ]);
 }
 
-/// Red neuronal que se “enciende” al entrenar.
-class _PintorRed extends CustomPainter {
-  _PintorRed(this.t, this.avance, this.entradas);
-  final double t, avance;
-  final int entradas;
+class _PasoChip extends StatelessWidget {
+  const _PasoChip(this.emoji, this.texto, {required this.activo, required this.hecho, required this.color});
+  final String emoji, texto;
+  final bool activo, hecho;
+  final Color color;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: activo ? color : (hecho ? aclarar(color, 0.6) : Colors.white),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: color, width: 2),
+        ),
+        child: Text('$emoji $texto', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: activo ? Colors.white : oscurecer(color, 0.2))),
+      );
+}
+
+/// Un tomate dibujado (su color va de verde a rojo).
+class _PintorTomate extends CustomPainter {
+  _PintorTomate(this.color);
+  final Color color;
   @override
   void paint(Canvas c, Size s) {
-    final capas = [math.max(1, entradas), 5, 4, 2];
-    final pos = <List<Offset>>[
-      for (var i = 0; i < capas.length; i++)
-        [for (var j = 0; j < capas[i]; j++) Offset(s.width * (0.12 + 0.76 * i / (capas.length - 1)), s.height * (j + 1) / (capas[i] + 1))]
-    ];
-    final rnd = math.Random(3);
-    for (var i = 0; i < capas.length - 1; i++) {
-      for (final a in pos[i]) {
-        for (final b in pos[i + 1]) {
-          final w = rnd.nextDouble();
-          final fuerza = (avance * (0.3 + w)).clamp(0.0, 1.0);
-          c.drawLine(
-              a,
-              b,
-              Paint()
-                ..color = Color.lerp(const Color(0x33FFFFFF), w > 0.5 ? const Color(0xFF69F0AE) : const Color(0xFFFF80AB), fuerza)!
-                ..strokeWidth = 1 + fuerza * 2.5);
-        }
-      }
+    final centro = s.center(Offset(0, s.height * 0.06));
+    final r = s.shortestSide * 0.4;
+    c.drawOval(Rect.fromCenter(center: centro, width: r * 2.1, height: r * 1.85), Paint()..color = color);
+    c.drawOval(Rect.fromCenter(center: centro + Offset(-r * 0.35, -r * 0.3), width: r * 0.5, height: r * 0.35), Paint()..color = Colors.white38);
+    final hoja = Paint()..color = const Color(0xFF2E7D32);
+    for (var k = 0; k < 5; k++) {
+      final a = -math.pi / 2 + (k - 2) * 0.55;
+      c.drawOval(Rect.fromCenter(center: centro + Offset(math.cos(a) * r * 0.35, -r * 0.82 + math.sin(a) * r * 0.1), width: r * 0.5, height: r * 0.2), hoja);
     }
-    if (avance > 0 && avance < 1) {
-      for (var k = 0; k < 8; k++) {
-        final f = (t * 0.8 + k / 8) % 1;
-        final capa = (f * (capas.length - 1)).floor();
-        final fr = f * (capas.length - 1) - capa;
-        final a = pos[capa][k % capas[capa]], b = pos[capa + 1][(k * 3) % capas[capa + 1]];
-        c.drawCircle(Offset.lerp(a, b, fr)!, 4, Paint()..color = const Color(0xFFFFF176));
-      }
-    }
-    for (var i = 0; i < capas.length; i++) {
-      for (final p in pos[i]) {
-        c.drawCircle(p, 11, Paint()..color = Color.lerp(const Color(0xFF4A148C), const Color(0xFFCE93D8), avance)!);
-        c.drawCircle(
-            p,
-            11,
-            Paint()
-              ..color = Colors.white70
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 2);
-      }
-    }
-    final tp = TextPainter(
-        text: const TextSpan(
-            text: 'rasgos  →  neuronas  →  neuronas  →  respuesta', style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w700)),
-        textDirection: TextDirection.ltr)
-      ..layout();
-    tp.paint(c, Offset((s.width - tp.width) / 2, s.height - tp.height - 2));
   }
 
   @override
-  bool shouldRepaint(_PintorRed old) => true;
+  bool shouldRepaint(_PintorTomate old) => old.color != color;
+}
+
+class _PintorEmoji extends CustomPainter {
+  _PintorEmoji(this.emoji);
+  final String emoji;
+  @override
+  void paint(Canvas c, Size s) => dibujarEmoji(c, emoji, s.center(Offset.zero), s.shortestSide * 0.8);
+  @override
+  bool shouldRepaint(_PintorEmoji old) => old.emoji != emoji;
 }

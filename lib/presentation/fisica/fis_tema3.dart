@@ -402,7 +402,7 @@ final fisTema3 = TemaBio(
                           explicacion: 'Casi no deja pasar el calor.'),
                     ], color: const Color(0xFFC62828), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Experto en Calor!',
+                  mensajeFinal: '¡Ganaste la insignia «Experto en Calor»!',
                 )),
       ],
     ),

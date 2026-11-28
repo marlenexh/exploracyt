@@ -21,8 +21,17 @@ void main() {
   setUpAll(fuentes);
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
-  test('Profesiones: más de 20, completas y con reto válido', () {
-    expect(profesiones.length, greaterThanOrEqualTo(20));
+  test('Profesiones: las 31 carreras de ciencia y tecnología, completas y con reto válido', () {
+    const carreras = [
+      'Biología', 'Ecología', 'Ciencias Ambientales', 'Ciencias Genómicas', 'Bioquímica Diagnóstica', 'Química', 'Química de Alimentos',
+      'Química Farmacéutico Biológica', 'Física', 'Física Biomédica', 'Ciencia de la Nutrición Humana', 'Ciencias Agroforestales',
+      'Ciencias Agrogenómicas', 'Neurociencias', 'Ingeniería en Computación', 'Ingeniería en Sistemas Computacionales',
+      'Ciencias de la Computación', 'Desarrollo de software', 'Ingeniería Mecánica', 'Ingeniería Industrial', 'Ingeniería Civil',
+      'Ingeniería Química', 'Ingeniería Mecatrónica', 'Ingeniería en Electrónica', 'Ingeniería Aeroespacial', 'Ingeniería Ambiental',
+      'Ingeniería en Energías Renovables', 'Tecnologías para la Información en Ciencias', 'Nanotecnología', 'Inteligencia artificial',
+      'Ingeniería de telecomunicaciones',
+    ];
+    expect(profesiones.map((p) => p.nombre).toSet(), carreras.toSet());
     expect(profesiones.map((p) => p.nombre).toSet().length, profesiones.length);
     final areas = {for (final a in areasProfesiones) a.$1};
     for (final p in profesiones) {
@@ -34,11 +43,12 @@ void main() {
       final (_, opciones, correcta, _) = p.reto;
       expect(correcta, inInclusiveRange(0, opciones.length - 1), reason: p.nombre);
       for (final m in p.mundos) {
-        expect(areas, contains(m), reason: '${p.nombre}: $m');
+        expect(['Biología', 'Química', 'Física', 'Electrónica', 'Inteligencia Artificial', 'Programación'], contains(m), reason: '${p.nombre}: $m');
       }
     }
-    // Hay profesiones de áreas fuera de los mundos del juego
-    expect(profesiones.where((p) => ['Salud', 'Espacio', 'Planeta', 'Ingeniería'].contains(p.area)).length, greaterThanOrEqualTo(6));
+    for (final a in areasProfesiones) {
+      expect(profesiones.where((p) => p.area == a.$1).length, greaterThanOrEqualTo(4), reason: a.$1);
+    }
   });
 
   test('Museo: más de 20 personas en todas las salas', () {
@@ -86,9 +96,9 @@ void main() {
       expect(tester.takeException(), isNull, reason: '$s');
     }
     final st = tester.state<ExploraProfesionesScreenState>(find.byType(ExploraProfesionesScreen));
-    st.filtrar('Espacio');
+    st.filtrar('Física');
     await cuadros(tester, 8);
-    expect(st.visibles.every((p) => p.area == 'Espacio'), isTrue);
+    expect(st.visibles.every((p) => p.area == 'Física'), isTrue);
     expect(st.visibles, isNotEmpty);
     final astro = st.visibles.first;
     await tester.tap(find.byTooltip('Favorita ${astro.nombre}'));

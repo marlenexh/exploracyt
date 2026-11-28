@@ -457,7 +457,7 @@ final quiTema1 = TemaBio(
                           explicacion: 'Dureza y fragilidad son propiedades distintas.'),
                     ], color: const Color(0xFF1565C0), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Detective de Materiales!',
+                  mensajeFinal: '¡Ganaste la insignia «Detective de Materiales»!',
                 )),
       ],
     ),

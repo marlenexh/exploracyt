@@ -438,7 +438,7 @@ final quiTema3 = TemaBio(
                           explicacion: 'Indica que se formó algo nuevo.'),
                     ], color: const Color(0xFF8E24AA), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Maestro de las Transformaciones!',
+                  mensajeFinal: '¡Ganaste la insignia «Maestro de las Transformaciones»!',
                 )),
       ],
     ),

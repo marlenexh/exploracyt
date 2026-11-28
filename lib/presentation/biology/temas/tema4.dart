@@ -448,7 +448,7 @@ final tema4 = TemaBio(
                   ),
                 ], color: const Color(0xFF5E35B1), instruccion: 'Demuestra todo lo que sabes de los seres vivos.'),
               ],
-              mensajeFinal: '¡Eres un verdadero guardián de los seres vivos!',
+              mensajeFinal: '¡Cuidas muy bien a los seres vivos!',
             )),
       ],
     ),

@@ -416,7 +416,7 @@ final proTema4 = TemaBio(
                   ),
                 ], color: const Color(0xFFD81B60), instruccion: 'Demuestra todo lo que sabes.'),
               ],
-              mensajeFinal: '¡Eres un Experto en Ciclos y Decisiones!',
+              mensajeFinal: '¡Ganaste la insignia «Experto en Ciclos y Decisiones»!',
             )),
       ],
     ),

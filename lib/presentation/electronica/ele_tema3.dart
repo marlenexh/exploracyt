@@ -427,7 +427,7 @@ final eleTema3 = TemaBio(
                   ),
                 ], color: const Color(0xFFC2185B), instruccion: 'Demuestra todo lo que sabes de sensores.'),
               ],
-              mensajeFinal: '¡Eres un Detective Electrónico!',
+              mensajeFinal: '¡Ganaste la insignia «Detective Electrónico»!',
             )),
       ],
     ),

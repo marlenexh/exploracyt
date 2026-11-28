@@ -94,7 +94,7 @@ class TarjetaLaboratorioIA extends StatelessWidget {
                         Text(
                           hecho
                               ? '🏅 $iaLabBadge · 🧭 ¡Pieza de la Inteligencia recuperada!'
-                              : '🧭 Aquí está la Pieza de la Inteligencia. $_texto ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya estás listo!'}',
+                              : '🧭 Aquí está la Pieza de la Inteligencia. $_texto ${temasHechos < 5 ? 'Recomendado al terminar los 5 temas ($temasHechos de 5).' : '¡Ya puedes hacerlo!'}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: sub,

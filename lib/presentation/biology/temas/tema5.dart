@@ -438,7 +438,7 @@ final tema5 = TemaBio(
                   ),
                 ], color: const Color(0xFFC2185B), instruccion: 'Demuestra todo lo que sabes de ecosistemas.'),
               ],
-              mensajeFinal: '¡Eres un verdadero Protector de la Biodiversidad!',
+              mensajeFinal: '¡Ganaste la insignia «Protector de la Biodiversidad»!',
             )),
       ],
     ),

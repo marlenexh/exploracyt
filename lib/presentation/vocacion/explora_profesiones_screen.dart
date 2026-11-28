@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../biology/tema1/comunes.dart' show Reloj;
 import 'fondo_vocacion.dart';
+import '../../data/worlds.dart' show mundos;
+import 'escena_profesion.dart';
 import 'profesiones_datos.dart';
 import '../ciencia/barajar.dart';
 
@@ -224,22 +226,11 @@ class _TarjetaProfesionState extends State<_TarjetaProfesion> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
                   child: Column(children: [
+                    // Imagen animada de la profesión
                     Expanded(
-                      child: Reloj(
-                        builder: (_, t) => Stack(alignment: Alignment.center, children: [
-                          Container(
-                            width: 96 + 6 * math.sin(t * 2 + widget.indice),
-                            height: 96 + 6 * math.sin(t * 2 + widget.indice),
-                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white.withValues(alpha: 0.25)),
-                          ),
-                          Container(width: 78, height: 78, decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white)),
-                          Transform.translate(
-                            offset: Offset(0, math.sin(t * 2.2 + widget.indice) * 4),
-                            child: Hero(tag: 'prof-${p.nombre}', child: Text(p.emoji, style: const TextStyle(fontSize: 44))),
-                          ),
-                        ]),
-                      ),
+                      child: Hero(tag: 'prof-${p.nombre}', child: EscenaAnimadaProfesion(profesion: p, radio: 16)),
                     ),
+                    const SizedBox(height: 6),
                     Text(p.nombre,
                         textAlign: TextAlign.center,
                         maxLines: 2,
@@ -397,34 +388,15 @@ class DetalleProfesionScreenState extends State<DetalleProfesionScreen> {
       ];
 
   Widget _encabezado(bool ancho) {
-    final icono = SizedBox(
-      width: 190,
-      height: 190,
-      child: Reloj(
-        builder: (_, t) => Stack(alignment: Alignment.center, children: [
-          for (var k = 0; k < p.herramientas.length; k++)
-            Transform.translate(
-              offset: Offset(math.cos(t * 0.7 + k * math.pi / 2) * 78, math.sin(t * 0.7 + k * math.pi / 2) * 78),
-              child: Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), shape: BoxShape.circle),
-                child: Text(p.herramientas[k].$1, style: const TextStyle(fontSize: 22)),
-              ),
-            ),
-          Container(
-            width: 112,
-            height: 112,
-            decoration:
-                BoxDecoration(color: Colors.white, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 12)]),
-          ),
-          Transform.translate(
-            offset: Offset(0, math.sin(t * 2) * 5),
-            child: Hero(tag: 'prof-${p.nombre}', child: Text(p.emoji, style: const TextStyle(fontSize: 64))),
-          ),
-        ]),
+    final icono = Container(
+      width: 280,
+      height: 200,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.white, width: 4),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 12)],
       ),
+      child: Hero(tag: 'prof-${p.nombre}', child: EscenaAnimadaProfesion(profesion: p)),
     );
     final textos = Column(crossAxisAlignment: ancho ? CrossAxisAlignment.start : CrossAxisAlignment.center, children: [
       Container(
@@ -715,11 +687,13 @@ class DetalleProfesionScreenState extends State<DetalleProfesionScreen> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                  color: Color.lerp(colorArea(m), Colors.white, 0.8),
+                  color: Color.lerp(_colorMundo(m), Colors.white, 0.8),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: colorArea(m), width: 2)),
-              child: Text('${emojiArea(m)} Mundo de $m', style: TextStyle(fontWeight: FontWeight.w900, color: Color.lerp(colorArea(m), Colors.black, 0.3))),
+                  border: Border.all(color: _colorMundo(m), width: 2)),
+              child: Text('🗺️ Mundo de $m', style: TextStyle(fontWeight: FontWeight.w900, color: Color.lerp(_colorMundo(m), Colors.black, 0.3))),
             ),
         ]),
       );
 }
+
+Color _colorMundo(String nombre) => mundos.firstWhere((m) => m.nombre == nombre, orElse: () => mundos.first).color;

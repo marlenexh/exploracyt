@@ -38,7 +38,7 @@ final quiTema4 = TemaBio(
       emoji: '🍲',
       color: _c1,
       intro: '¿Por qué cocinamos los alimentos? ¡El calor y el tiempo los transforman!',
-      mensajeFinal: '¡Cocinas como científico!',
+      mensajeFinal: '¡Cocinas con ciencia!',
       pasos: [
         PasoBio(
             '¿Qué pasa al cocinar?',
@@ -370,7 +370,7 @@ final quiTema4 = TemaBio(
                           explicacion: 'El alimento no vuelve a estar crudo.'),
                     ], color: const Color(0xFF6A1B9A), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Chef Científico!',
+                  mensajeFinal: '¡Ganaste la insignia «Chef Científico»!',
                 )),
       ],
     ),

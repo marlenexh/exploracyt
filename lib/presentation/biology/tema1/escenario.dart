@@ -175,6 +175,7 @@ class EtiquetaParte extends StatelessWidget {
     this.resaltar = false,
     this.onTap,
     this.ancho = 170,
+    this.oculta = false,
   });
   final String titulo;
   final String? subtitulo;
@@ -184,8 +185,43 @@ class EtiquetaParte extends StatelessWidget {
   final VoidCallback? onTap;
   final double ancho;
 
+  /// Si es true, solo se ve el ícono y “¿?”: el nombre se descubre al tocarla
+  /// (así hay menos texto en pantalla y el alumno explora).
+  final bool oculta;
+
   @override
   Widget build(BuildContext context) {
+    if (oculta) {
+      return Semantics(
+        button: true,
+        label: 'Descubre: $titulo',
+        child: Rebote(
+          onTap: onTap,
+          child: Movimiento(
+            tipo: TipoMovimiento.latir,
+            child: Container(
+              width: ancho,
+              padding: const EdgeInsets.fromLTRB(6, 6, 8, 6),
+              decoration: BoxDecoration(
+                color: aclarar(color, 0.88),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: color, width: 2.5),
+                boxShadow: [BoxShadow(color: oscurecer(color, 0.3).withValues(alpha: 0.6), offset: const Offset(0, 3))],
+              ),
+              child: Row(children: [
+                if (icono != null) ...[
+                  SizedBox(width: 30, height: 30, child: icono),
+                  const SizedBox(width: 5),
+                ],
+                Expanded(
+                  child: Text('¿? 👆', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w900, color: oscurecer(color, 0.15))),
+                ),
+              ]),
+            ),
+          ),
+        ),
+      );
+    }
     final tarjeta = AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       width: ancho,
@@ -334,8 +370,42 @@ class ZatiConGlobo extends StatefulWidget {
   State<ZatiConGlobo> createState() => _ZatiConGloboState();
 }
 
+/// Divide un texto largo en partes cortas (1 o 2 oraciones) para que los
+/// niños lean poco a poco.
+List<String> partesDeTexto(String texto, {int maximo = 135}) {
+  final partes = <String>[];
+  for (final parrafo in texto.split(RegExp(r'\n\s*\n'))) {
+    final oraciones = parrafo.trim().split(RegExp(r'(?<=[.!?…])\s+(?=[¡¿A-ZÁÉÍÓÚÑ0-9“"(])'));
+    var actual = '';
+    for (final o in oraciones) {
+      if (o.trim().isEmpty) continue;
+      if (actual.isEmpty) {
+        actual = o.trim();
+      } else if (actual.length + o.length + 1 <= maximo) {
+        actual = '$actual ${o.trim()}';
+      } else {
+        partes.add(actual);
+        actual = o.trim();
+      }
+    }
+    if (actual.isNotEmpty) partes.add(actual);
+  }
+  return partes.isEmpty ? [texto] : partes;
+}
+
 class _ZatiConGloboState extends State<ZatiConGlobo> {
   bool _hablando = false;
+  int _pagina = 0;
+  late List<String> _partes = partesDeTexto(widget.texto);
+
+  @override
+  void didUpdateWidget(ZatiConGlobo old) {
+    super.didUpdateWidget(old);
+    if (old.texto != widget.texto) {
+      _partes = partesDeTexto(widget.texto);
+      _pagina = 0;
+    }
+  }
 
   void _hablar(bool v) {
     if (v == _hablando) return;
@@ -344,26 +414,54 @@ class _ZatiConGloboState extends State<ZatiConGlobo> {
     });
   }
 
+  void _siguiente() => setState(() => _pagina = (_pagina + 1) % _partes.length);
+
   @override
   Widget build(BuildContext context) {
+    final texto = TextoMaquina(
+      _partes[_pagina],
+      key: ValueKey('${widget.texto}#$_pagina'),
+      letrasPorSegundo: 55,
+      estilo: TextStyle(
+        fontSize: widget.tamLetra,
+        height: 1.3,
+        color: ColoresJuego.texto,
+      ),
+      alCambiar: _hablar,
+    );
+    // Si el texto es largo, se lee por partes con el botón ▶.
+    final boton = _partes.length < 2
+        ? null
+        : Align(
+            alignment: Alignment.centerRight,
+            child: Tooltip(
+              message: 'Seguir leyendo',
+              child: Rebote(
+                onTap: _siguiente,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  decoration: BoxDecoration(color: moradoBanner, borderRadius: BorderRadius.circular(12)),
+                  child: Text(
+                    _pagina < _partes.length - 1 ? '▶ ${_pagina + 1}/${_partes.length}' : '↺ ${_pagina + 1}/${_partes.length}',
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12.5),
+                  ),
+                ),
+              ),
+            ),
+          );
+    final contenido = widget.altoGlobo == null
+        ? Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [texto, if (boton != null) boton])
+        : Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Expanded(child: SingleChildScrollView(child: texto)),
+            if (boton != null) boton,
+          ]);
     final globo = SizedBox(
       width: widget.anchoGlobo,
       height: widget.altoGlobo,
-      child: GloboTexto(
-        colita: !widget.globoArriba,
-        child: SingleChildScrollView(
-          child: TextoMaquina(
-            widget.texto,
-            key: ValueKey(widget.texto),
-            letrasPorSegundo: 55,
-            estilo: TextStyle(
-              fontSize: widget.tamLetra,
-              height: 1.3,
-              color: ColoresJuego.texto,
-            ),
-            alCambiar: _hablar,
-          ),
-        ),
+      child: GestureDetector(
+        onTap: _partes.length < 2 ? null : _siguiente,
+        child: GloboTexto(colita: !widget.globoArriba, child: contenido),
       ),
     );
     final zati = SizedBox(

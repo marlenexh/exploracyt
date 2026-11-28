@@ -248,7 +248,7 @@ class _PantallaRecorridoState extends State<PantallaRecorrido> {
       estrellas: estrellas,
       titulo: '¡Explicación terminada!',
       mensaje: estrellas == 3
-          ? 'Exploraste todo y respondiste perfecto. ¡Eres un gran científico!'
+          ? 'Exploraste todo y respondiste perfecto. ¡Hiciste un gran trabajo científico!'
           : 'Para ganar 3 estrellas explora todos los puntos y responde bien a la primera.',
     );
     if (mounted) Navigator.of(context).pop();

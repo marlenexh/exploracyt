@@ -384,7 +384,7 @@ final quiTema5 = TemaBio(
                           explicacion: 'Rompen el triángulo del fuego.'),
                     ], color: const Color(0xFF2E7D32), instruccion: 'Demuestra todo lo que sabes.'),
                   ],
-                  mensajeFinal: '¡Eres un Guardián del Fuego!',
+                  mensajeFinal: '¡Ganaste la insignia «Guardián del Fuego»!',
                 )),
       ],
     ),

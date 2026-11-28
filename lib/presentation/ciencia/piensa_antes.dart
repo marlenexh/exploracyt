@@ -63,7 +63,7 @@ class PiensaAntesState extends State<PiensaAntes> {
           height: 200,
           child: GloboZatiEle(
               elegida == null
-                  ? 'Antes de empezar, ¡piensa como científico! Elige lo que crees que va a pasar. No hay calificación: es tu idea (tu hipótesis).'
+                  ? 'Antes de empezar, ¡piensa como en la ciencia! Elige lo que crees que va a pasar. No hay calificación: es tu idea (tu hipótesis).'
                   : '¡Buena idea! 💡 Ahora haz la actividad y compruébalo. Si quieres ver tu idea otra vez, toca el botón 🤔.',
               tam: 14),
         ),

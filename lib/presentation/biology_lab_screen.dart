@@ -254,9 +254,7 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
       body: ListenableBuilder(
         listenable: store,
         builder: (context, _) {
-          final explorerName = store.nombre.trim().isEmpty
-              ? 'explorador'
-              : store.nombre.trim();
+          final explorerName = store.nombre.trim();
 
           return LayoutBuilder(
             builder: (context, constraints) {
@@ -894,7 +892,7 @@ class _BiologyLabScreenState extends State<BiologyLabScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '¡Hola, $explorerName! 🌿',
+              explorerName.isEmpty ? '¡Hola! 🌿' : '¡Hola, $explorerName! 🌿',
               style: TextStyle(
                 color: darkBlue,
                 fontSize: isMobile ? 17 : 22,

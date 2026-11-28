@@ -241,6 +241,24 @@ Mapa en `lib/presentation/ia/ia_screen.dart`, con su propio fondo animado (una e
 - Progreso: clave `v1.ia.temaN.juego`; misiones `ia-tN-m1..m3` y `ia-tN-integration` (`lib/data/ia_topics.dart`).
 - Pruebas: `test/ia_modelo_test.dart` (el motor aprende, falla con rasgos inútiles o etiquetas equivocadas y corrige el sesgo) y `test/ia_test.dart` (datos, mapa, todas las pantallas, cada simulación y el laboratorio completo).
 
+## Menos texto, más exploración
+
+- **Zati lee por partes:** los textos largos de Zati se muestran de 1 o 2 oraciones a la vez con el botón ▶ (`partesDeTexto` en `escenario.dart`).
+- **Etiquetas que se descubren:** en las explicaciones de todos los mundos las partes del dibujo empiezan como “¿?” y se descubren al tocarlas.
+- **Biología Tema 1, Misión 1:** los paneles laterales aparecen solo en la pestaña que les corresponde, “Vasos sanguíneos” muestra un paso a la vez y “El viaje de la sangre” avanza paso por paso con su parte de la animación.
+- **Tarjetas con imagen:** cada tarjeta interactiva muestra su imagen junto con la descripción (`lib/data/imagenes_tarjetas.dart`).
+- **Textos neutros:** Zati no supone si quien juega es niño o niña (“¿Comenzamos?”, “¡Hola!”).
+- **Video:** al tocar “Continuar con mi aventura” primero se cierra el reproductor, así la celebración ya no se queda congelada.
+
+## Vocación, museo e insignias
+
+- **Explora profesiones:** 31 carreras de ciencia y tecnología en 6 áreas, cada una con una escena animada de su lugar de trabajo (`escena_profesion.dart`).
+- **Museo:** se recorre una sala a la vez (la pared toma el color del área) con los cuadros colgados; la información de cada persona son 5 tarjetas que se deslizan de 1 en 1, con íconos de Flutter en lugar de emojis.
+- **Laboratorio de IA “Enséñale a tu robot”:** escoge al menos 6 objetos (los que quieras), etiquétalos uno por uno, entrena y prueba con los objetos del mismo estante que no elegiste.
+- **Mis insignias:** cada insignia se ve con su medalla dorada, como cuando se ganó (`lib/presentation/insignias/`).
+
+Pruebas: `test/mejoras_lectura_test.dart`, `test/vocacion_test.dart`, `test/ia_test.dart`.
+
 ## Mini-juegos con Flame
 
 Mini-juegos de acción hechos con [Flame](https://flame-engine.org/) (motor de juegos 2D para Flutter), en `lib/presentation/minijuegos/`. Cada uno se ve con el fondo de su mundo. La lógica de cada juego es un *modelo* en Dart puro (fácil de probar) y Flame se encarga del ciclo de juego, los componentes, el sprite de Zati, las partículas y los efectos (`base.dart`).
