@@ -629,7 +629,7 @@ class Planeta {
 const planetas = [
   Planeta('Mercurio', '⚫', Color(0xFF9E9E9E), 5, 0.13, 0.24, 'Rocoso', 'Es el más cercano al Sol y el más pequeño. Su año dura solo 88 días.'),
   Planeta('Venus', '🟡', Color(0xFFFFCC80), 7, 0.2, 0.62, 'Rocoso', 'Es el más caliente (unos 460 °C) por sus nubes que atrapan el calor. Gira al revés.'),
-  Planeta('Tierra', '🌍', Color(0xFF42A5F5), 7.5, 0.28, 1, 'Rocoso', 'Nuestro hogar: el único planeta conocido con vida y agua líquida en la superficie.'),
+  Planeta('Tierra', '🌍', Color(0xFF42A5F5), 8.5, 0.28, 1, 'Rocoso', 'Nuestro hogar: el único planeta conocido con vida y agua líquida en la superficie.'),
   Planeta('Marte', '🔴', Color(0xFFE53935), 6, 0.36, 1.88, 'Rocoso',
       'El planeta rojo: su suelo tiene óxido de hierro. Tiene el volcán más grande del Sistema Solar.'),
   Planeta('Júpiter', '🟠', Color(0xFFFFB74D), 16, 0.5, 11.9, 'Gaseoso',
@@ -715,6 +715,144 @@ class SimSistemaSolarState extends State<SimSistemaSolar> {
   }
 }
 
+/// Dibuja un planeta con su aspecto real: luz del lado del Sol, bandas en los
+/// gigantes gaseosos, anillos de Saturno y la Tierra con océanos, continentes,
+/// hielo en los polos y nubes.
+void dibujarPlaneta(Canvas c, Planeta p, Offset pos, double r, Offset sol, double t, {bool grande = false}) {
+  final circulo = Rect.fromCircle(center: pos, radius: r);
+  final anillo = Rect.fromCenter(center: pos, width: r * 3.6, height: r * 1.1);
+  if (p.nombre == 'Saturno') {
+    // Mitad trasera del anillo
+    c.drawArc(anillo, math.pi, math.pi, false, linea(const Color(0xFFD7C08A), r * 0.28));
+  }
+  if (p.nombre == 'Tierra') {
+    // Atmósfera
+    c.drawCircle(pos, r * 1.18, relleno(const Color(0x5581D4FA)));
+  }
+  c.save();
+  c.clipPath(Path()..addOval(circulo));
+  switch (p.nombre) {
+    case 'Tierra':
+      c.drawRect(circulo,
+          Paint()..shader = const RadialGradient(colors: [Color(0xFF4FC3F7), Color(0xFF1E88E5), Color(0xFF0D47A1)], stops: [0, 0.55, 1]).createShader(circulo));
+      // Continentes que giran con la Tierra
+      final giro = (t * 0.15) % 2;
+      for (final dx in [-2.0, 0.0]) {
+        final o = pos + Offset((giro + dx) * r, 0);
+        void tierra(List<Offset> pts, Color col) {
+          final path = Path()..moveTo(o.dx + pts[0].dx * r, o.dy + pts[0].dy * r);
+          for (var k = 1; k < pts.length; k++) {
+            final a = pts[k - 1], b = pts[k];
+            path.quadraticBezierTo(o.dx + a.dx * r, o.dy + a.dy * r, o.dx + (a.dx + b.dx) / 2 * r, o.dy + (a.dy + b.dy) / 2 * r);
+          }
+          path.close();
+          c.drawPath(path, relleno(col));
+        }
+
+        // América
+        tierra(const [
+          Offset(-0.75, -0.7),
+          Offset(-0.3, -0.75),
+          Offset(-0.25, -0.35),
+          Offset(-0.5, -0.1),
+          Offset(-0.3, 0.15),
+          Offset(-0.15, 0.45),
+          Offset(-0.35, 0.8),
+          Offset(-0.5, 0.35),
+          Offset(-0.7, 0.05),
+          Offset(-0.85, -0.35)
+        ], const Color(0xFF43A047));
+        // África y Europa
+        tierra(const [
+          Offset(0.2, -0.75),
+          Offset(0.6, -0.65),
+          Offset(0.65, -0.2),
+          Offset(0.75, 0.1),
+          Offset(0.55, 0.55),
+          Offset(0.4, 0.7),
+          Offset(0.3, 0.3),
+          Offset(0.15, 0.0),
+          Offset(0.12, -0.4)
+        ], const Color(0xFF7CB342));
+        // Desierto
+        tierra(const [Offset(0.3, -0.3), Offset(0.6, -0.3), Offset(0.6, -0.05), Offset(0.35, -0.05)], const Color(0xFFD7B56D));
+        // Australia
+        tierra(const [Offset(0.85, 0.35), Offset(1.05, 0.3), Offset(1.1, 0.55), Offset(0.9, 0.6)], const Color(0xFF8D6E63));
+      }
+      // Hielo de los polos
+      c.drawOval(Rect.fromCenter(center: pos + Offset(0, -r * 0.98), width: r * 1.3, height: r * 0.45), relleno(Colors.white));
+      c.drawOval(Rect.fromCenter(center: pos + Offset(0, r * 0.98), width: r * 1.5, height: r * 0.5), relleno(Colors.white));
+      // Nubes
+      final nubes = Paint()
+        ..color = const Color(0xCCFFFFFF)
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = math.max(1.2, r * 0.12);
+      final g = (t * 0.22) % 2;
+      for (final (x, y, w) in const [(-0.6, -0.45, 0.5), (0.1, 0.15, 0.6), (-0.4, 0.55, 0.45), (0.5, -0.5, 0.35)]) {
+        final cx = pos.dx + (((x + g + 1) % 2) - 1) * r;
+        c.drawArc(Rect.fromCenter(center: Offset(cx, pos.dy + y * r), width: w * r * 2, height: r * 0.35), 0.3, 2.5, false, nubes);
+      }
+    case 'Júpiter' || 'Saturno':
+      final colores = p.nombre == 'Júpiter'
+          ? const [Color(0xFFF3E0C7), Color(0xFFC58B5A), Color(0xFFEBD3B0), Color(0xFFA86A3E), Color(0xFFF1DDBE), Color(0xFFC9935F), Color(0xFFEAD6B8)]
+          : const [Color(0xFFF6E7B8), Color(0xFFE2C98C), Color(0xFFF3E2AE), Color(0xFFD9BC7B), Color(0xFFF4E4B2)];
+      final h = r * 2 / colores.length;
+      for (var k = 0; k < colores.length; k++) {
+        c.drawRect(Rect.fromLTWH(pos.dx - r, pos.dy - r + k * h, r * 2, h + 0.5), relleno(colores[k]));
+      }
+      if (p.nombre == 'Júpiter') {
+        // Gran Mancha Roja
+        c.drawOval(Rect.fromCenter(center: pos + Offset(r * 0.3, r * 0.35), width: r * 0.5, height: r * 0.28), relleno(const Color(0xFFB5452B)));
+      }
+    case 'Marte':
+      c.drawRect(circulo, relleno(const Color(0xFFC1440E)));
+      c.drawCircle(pos + Offset(-r * 0.3, r * 0.1), r * 0.35, relleno(const Color(0xFF8E2F0A)));
+      c.drawCircle(pos + Offset(r * 0.35, -r * 0.3), r * 0.2, relleno(const Color(0xFF9E3810)));
+      c.drawOval(Rect.fromCenter(center: pos + Offset(0, -r * 0.95), width: r * 0.8, height: r * 0.3), relleno(Colors.white));
+    case 'Mercurio':
+      c.drawRect(circulo, relleno(const Color(0xFF9E9E9E)));
+      for (final (x, y, q) in const [(-0.3, -0.2, 0.22), (0.35, 0.25, 0.18), (0.1, -0.5, 0.12), (-0.2, 0.5, 0.15)]) {
+        c.drawCircle(pos + Offset(x * r, y * r), q * r, relleno(const Color(0xFF757575)));
+      }
+    case 'Venus':
+      c.drawRect(
+          circulo,
+          Paint()
+            ..shader =
+                const LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Color(0xFFFFE0A3), Color(0xFFE8B86A), Color(0xFFF5D08A)])
+                    .createShader(circulo));
+    case 'Urano':
+      c.drawRect(circulo, relleno(const Color(0xFF9FE3EA)));
+    case 'Neptuno':
+      c.drawRect(
+          circulo,
+          Paint()
+            ..shader =
+                const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF5C7CFA), Color(0xFF3F51B5), Color(0xFF283593)])
+                    .createShader(circulo));
+      c.drawOval(Rect.fromCenter(center: pos + Offset(-r * 0.2, r * 0.2), width: r * 0.45, height: r * 0.25), relleno(const Color(0xFF1A237E)));
+    default:
+      c.drawRect(circulo, relleno(p.color));
+  }
+  // Sombra: el lado contrario al Sol queda de noche.
+  final haciaSol = (sol - pos).direction;
+  final luz = pos + Offset.fromDirection(haciaSol, r * 0.6);
+  c.drawRect(
+      circulo,
+      Paint()
+        ..shader = RadialGradient(
+            center: Alignment((luz.dx - pos.dx) / r, (luz.dy - pos.dy) / r),
+            radius: 0.85,
+            colors: const [Color(0x00000000), Color(0x00000000), Color(0x99000000)],
+            stops: const [0, 0.55, 1]).createShader(circulo));
+  c.restore();
+  if (p.nombre == 'Saturno') {
+    // Mitad delantera del anillo
+    c.drawArc(anillo, 0, math.pi, false, linea(const Color(0xFFE8D49A), r * 0.28));
+  }
+}
+
 class _PintorSistema extends CustomPainter {
   _PintorSistema(this.t, this.sel);
   final double t;
@@ -740,9 +878,17 @@ class _PintorSistema extends CustomPainter {
           Rect.fromCircle(center: sol, radius: r), -0.6, 1.2, false, linea(i == sel ? const Color(0xAAFFD54F) : const Color(0x33FFFFFF), i == sel ? 2 : 1));
       final a = (t / p.periodo) % 1 * 1.2 - 0.6;
       final pos = sol + Offset(math.cos(a), math.sin(a)) * r;
-      if (p.nombre == 'Saturno') c.drawOval(Rect.fromCenter(center: pos, width: p.radio * 3.6, height: p.radio * 1.1), linea(const Color(0xFFFFE082), 2));
-      c.drawCircle(pos, p.radio, relleno(p.color));
+      dibujarPlaneta(c, p, pos, p.radio, sol, t);
       if (i == sel) c.drawCircle(pos, p.radio + 6, linea(const Color(0xFFFFD54F), 2.5));
+    }
+    // Lupa: el planeta elegido se ve grande en la esquina.
+    if (sel != null) {
+      final p = planetas[sel!];
+      final centro = Offset(s.width - 70, 72);
+      c.drawCircle(centro, 60, relleno(const Color(0x66000000)));
+      c.drawCircle(centro, 60, linea(const Color(0xFFFFD54F), 2));
+      dibujarPlaneta(c, p, centro, p.nombre == 'Saturno' ? 30 : 42, sol, t, grande: true);
+      textoEn(c, p.nombre, centro + const Offset(0, 74), tam: 13, color: Colors.white, fondo: const Color(0x99000000));
     }
   }
 

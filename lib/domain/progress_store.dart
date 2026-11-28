@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../data/body_topic.dart';
+import '../data/brujula.dart';
 
 /// Progreso local, sin cuenta. Claves versionadas para migraciones futuras.
 class ProgressStore extends ChangeNotifier {
@@ -14,6 +15,13 @@ class ProgressStore extends ChangeNotifier {
   String avatar = 'zati';
   final Set<String> completadas = {};
   final Set<String> recompensas = {}; // Set: nunca hay duplicados
+
+  /// Mundo cuya pieza de la Brújula de la Ciencia se acaba de recuperar
+  /// (se muestra la celebración y luego vuelve a null).
+  final ValueNotifier<String?> piezaNueva = ValueNotifier(null);
+
+  /// Mundos cuya pieza de la brújula ya se recuperó.
+  Set<String> get piezas => piezasObtenidas(recompensas);
 
   bool get registrado => nombre.isNotEmpty;
 
@@ -90,6 +98,8 @@ class ProgressStore extends ChangeNotifier {
     final nueva = recompensaId != null && recompensas.add(recompensaId);
     await _p.setStringList('$_v.completadas', completadas.toList());
     await _p.setStringList('$_v.recompensas', recompensas.toList());
+    final pieza = nueva ? piezaDeRecompensa(recompensaId) : null;
+    if (pieza != null) piezaNueva.value = pieza.mundo;
     notifyListeners();
     return nueva;
   }
@@ -112,6 +122,5 @@ class ProgressStore extends ChangeNotifier {
     notifyListeners();
   }
 
-  double progresoMundo(List<String> ids) =>
-      ids.isEmpty ? 0 : ids.where(completadas.contains).length / ids.length;
+  double progresoMundo(List<String> ids) => ids.isEmpty ? 0 : ids.where(completadas.contains).length / ids.length;
 }

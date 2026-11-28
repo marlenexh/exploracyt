@@ -6,6 +6,7 @@ import '../core/theme.dart';
 import '../data/models.dart';
 import '../data/body_topic.dart';
 import '../data/worlds.dart';
+import 'brujula/brujula.dart';
 import '../main.dart' show store;
 import 'game_widgets.dart';
 import 'screens.dart' show RutaMundo;
@@ -1570,19 +1571,10 @@ class _MapaState extends State<MapaMundos>
                     child: LayoutBuilder(
                       builder: (context, box) {
                         final ancho = box.maxWidth;
-                        final columnas = ancho > 850
-                            ? 3
-                            : ancho > 500
-                                ? 3
-                                : 2;
-
-                        final separacion = ancho > 500 ? 20.0 : 10.0;
-
-                        final w = ((ancho -
-                                    32 -
-                                    separacion * (columnas - 1)) /
-                                columnas)
-                            .clamp(135.0, 250.0);
+                        // Siempre 3 islas por fila: 3 arriba y 3 abajo.
+                        const columnas = 3;
+                        final separacion = ancho > 500 ? 20.0 : 8.0;
+                        final w = ((ancho - 24 - separacion * (columnas - 1)) / columnas).clamp(96.0, 250.0);
 
                         return ListView(
                           padding: const EdgeInsets.fromLTRB(
@@ -1629,36 +1621,26 @@ class _MapaState extends State<MapaMundos>
 
                             const SizedBox(height: 22),
 
-                            Wrap(
-                              alignment: WrapAlignment.center,
-                              spacing: separacion,
-                              runSpacing: 24,
-                              children: [
-                                for (var i = 0;
-                                    i < mundos.length;
-                                    i++)
-                                  AnimatedBuilder(
-                                    animation: _c,
-                                    builder: (_, child) {
-                                      final desplazamiento =
-                                          math.sin(
-                                            (_c.value * 2 * math.pi) +
-                                                (i * 1.1),
-                                          ) *
-                                          5;
-
-                                      return Transform.translate(
-                                        offset: Offset(
-                                          0,
-                                          desplazamiento,
-                                        ),
+                            for (var fila = 0; fila < mundos.length; fila += columnas) ...[
+                              if (fila > 0) const SizedBox(height: 24),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (var i = fila; i < math.min(fila + columnas, mundos.length); i++) ...[
+                                    if (i > fila) SizedBox(width: separacion),
+                                    AnimatedBuilder(
+                                      animation: _c,
+                                      builder: (_, child) => Transform.translate(
+                                        offset: Offset(0, math.sin((_c.value * 2 * math.pi) + (i * 1.1)) * 5),
                                         child: child,
-                                      );
-                                    },
-                                    child: _Isla(mundos[i], w),
-                                  ),
-                              ],
-                            ),
+                                      ),
+                                      child: _Isla(mundos[i], w),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ],
                           ],
                         );
                       },
@@ -1709,6 +1691,9 @@ class _MapaState extends State<MapaMundos>
 ),
 
           const Spacer(),
+          // Piezas recuperadas de la Brújula de la Ciencia.
+          const BotonBrujula(),
+          const SizedBox(width: 8),
 
           if (MediaQuery.of(context).size.width > 600)
             Wrap(
@@ -1882,10 +1867,10 @@ class _Isla extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'LilitaOne',
-                    fontSize: 15,
+                    fontSize: w < 150 ? 12 : 15,
                   ),
                 ),
               ),

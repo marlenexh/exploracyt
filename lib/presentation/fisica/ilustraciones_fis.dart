@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import '../biology/tema1/comunes.dart' show linea, relleno, textoEn;
 import '../biology/temas/motor.dart' show dibujarEmoji;
 import '../ciencia/escena.dart';
+import 'sims_fis.dart' show planetas, dibujarPlaneta;
+import '../biology/temas/ilustraciones.dart' show Ilustracion;
 
 /// Ilustraciones de Física.
 
@@ -173,20 +175,35 @@ void _orbitas(Canvas c, Rect r, double t, double s) {
   }
 }
 
-final ilSistemaSolar = escena(const [
+const _objSistemaSolar = [
   ObjEscena('sol', '☀️', 0.5, 0.12, tam: 0.18, anim: Anim.latir),
-  ObjEscena('mercurio', '⚫', 0.3, 0.23, tam: 0.06),
-  ObjEscena('venus', '🟡', 0.64, 0.32, tam: 0.07),
-  ObjEscena('tierra', '🌍', 0.36, 0.41, tam: 0.08),
-  ObjEscena('marte', '🔴', 0.66, 0.5, tam: 0.07),
-  ObjEscena('jupiter', '🟠', 0.3, 0.62, tam: 0.14),
-  ObjEscena('saturno', '🪐', 0.7, 0.72, tam: 0.14),
-  ObjEscena('urano', '🔵', 0.33, 0.84, tam: 0.1),
-  ObjEscena('neptuno', '🔷', 0.68, 0.92, tam: 0.1),
-], fondo: const [
-  Color(0xFF0B0D2A),
-  Color(0xFF1A1F4D)
-], antes: _orbitas);
+  ObjEscena('mercurio', '', 0.3, 0.23, tam: 0.06),
+  ObjEscena('venus', '', 0.64, 0.32, tam: 0.07),
+  ObjEscena('tierra', '', 0.36, 0.41, tam: 0.08),
+  ObjEscena('marte', '', 0.66, 0.5, tam: 0.07),
+  ObjEscena('jupiter', '', 0.3, 0.62, tam: 0.14),
+  ObjEscena('saturno', '', 0.7, 0.72, tam: 0.1),
+  ObjEscena('urano', '', 0.33, 0.84, tam: 0.1),
+  ObjEscena('neptuno', '', 0.68, 0.92, tam: 0.1),
+];
+
+/// Los planetas se dibujan con su aspecto real (como en la simulación).
+void _planetasReales(Canvas c, Rect r, double t, double s) {
+  final sol = en(r, 0.5, 0.12);
+  for (var i = 0; i < planetas.length; i++) {
+    final o = _objSistemaSolar[i + 1];
+    final pos = en(r, o.x, o.y) + Offset(0, math.sin(t * 2 + i + 1) * o.tam * r.width * 0.06);
+    dibujarPlaneta(c, planetas[i], pos, o.tam * r.width * 0.45, sol, t);
+  }
+}
+
+final ilSistemaSolar = escena(_objSistemaSolar, fondo: const [Color(0xFF0B0D2A), Color(0xFF1A1F4D)], antes: _orbitas, despues: _planetasReales);
+
+/// La misma ilustración, pero las líneas de las etiquetas llegan al borde de
+/// cada planeta (del lado de su etiqueta) para no taparlo.
+final ilSistemaSolarSenalado = Ilustracion(ilSistemaSolar.dibujar, {
+  for (final o in _objSistemaSolar) o.id: Offset(o.x + (o.x > 0.5 ? 1 : -1) * (o.tam * (o.id == 'saturno' ? 0.85 : 0.5) + 0.03), o.y),
+});
 
 final ilMovimientos = escena(const [
   ObjEscena('sol', '☀️', 0.5, 0.5, tam: 0.2, anim: Anim.latir),

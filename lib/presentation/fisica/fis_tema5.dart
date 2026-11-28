@@ -48,7 +48,7 @@ final fisTema5 = TemaBio(
                   seccion: '1. Sistema Solar',
                   titulo: 'El Sol y sus planetas',
                   color: _c1,
-                  il: ilSistemaSolar,
+                  il: ilSistemaSolarSenalado,
                   textos: const [
                     'El Sistema Solar está formado por el Sol, ocho planetas con sus lunas, planetas enanos como Plutón, asteroides y cometas. El Sol es una estrella: una enorme esfera de gases muy calientes.',
                     'El Sol nos da luz y calor; sin él no habría vida en la Tierra. Las plantas lo usan para fabricar su alimento.',
